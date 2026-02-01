@@ -106,3 +106,30 @@ def test_generate_preview_resizing():
     # Ratio should be preserved: 1600/1200 = 800/600
     assert result_img.width == 800
     assert result_img.height == 600
+
+def test_watermark_controls_setup():
+    # Setup
+    mock_page = MagicMock(spec=ft.Page)
+    mock_page.controls = []
+    mock_page.overlay = []
+    
+    # Execute
+    main(mock_page)
+    
+    # Find main layout Row
+    main_layout = None
+    for call in mock_page.add.call_args_list:
+        ctrl = call.args[0]
+        if isinstance(ctrl, ft.Row):
+            main_layout = ctrl
+            break
+            
+    assert main_layout is not None
+    left_panel = main_layout.controls[0]
+    controls_column = left_panel.content
+    
+    # Verify TextField (Task 4.1)
+    text_field = next((c for c in controls_column.controls if isinstance(c, ft.TextField)), None)
+    assert text_field is not None, "Watermark TextField should exist"
+    assert text_field.value == "COPIE", "Default watermark text should be 'COPIE'"
+    assert text_field.label == "Texte du filigrane", "TextField label should be correct"

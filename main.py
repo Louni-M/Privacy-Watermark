@@ -33,13 +33,33 @@ def main(page: ft.Page):
     def on_file_result(e: ft.FilePickerResultEvent):
         if e.files:
             file_path = e.files[0].path
-            with open(file_path, "rb") as f:
-                image_bytes = f.read()
-            
-            preview_bytes = generate_preview(io.BytesIO(image_bytes))
-            preview_image.src_base64 = base64.b64encode(preview_bytes).decode("utf-8")
-            preview_image.visible = True
-            page.update()
+            if not file_path:
+                return
+                
+            try:
+                with open(file_path, "rb") as f:
+                    image_bytes = f.read()
+                
+                preview_bytes = generate_preview(io.BytesIO(image_bytes))
+                preview_image.src_base64 = base64.b64encode(preview_bytes).decode("utf-8")
+                preview_image.visible = True
+                page.update()
+            except PermissionError:
+                page.snack_bar = ft.SnackBar(
+                    ft.Text("Erreur de permission : Impossible d'accéder au fichier (vérifiez les accès macOS ou essayez un dossier local)"),
+                    bgcolor=ft.colors.ERROR
+                )
+                page.snack_bar.open = True
+                page.update()
+            except Exception as ex:
+                page.snack_bar = ft.SnackBar(
+                    ft.Text(f"Erreur lors du chargement de l'image : {ex}"),
+                    bgcolor=ft.colors.ERROR
+                )
+                page.snack_bar.open = True
+                page.update()
+        else:
+            print("Selection cancelled")
 
     # FilePicker pour la sélection d'image
     file_picker = ft.FilePicker(on_result=on_file_result)
@@ -51,6 +71,13 @@ def main(page: ft.Page):
         content=ft.Column(
             controls=[
                 ft.Text("Contrôles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                ft.TextField(
+                    label="Texte du filigrane",
+                    value="COPIE",
+                    color="#ffffff",
+                    border_color="#3b82f6",
+                    focused_border_color="#60a5fa",
+                ),
                 ft.ElevatedButton(
                     "Sélectionner une image",
                     icon=ft.icons.IMAGE,
