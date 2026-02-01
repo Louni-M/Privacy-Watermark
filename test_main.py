@@ -134,25 +134,30 @@ def test_watermark_controls_setup():
     assert text_field.value == "COPIE", "Default watermark text should be 'COPIE'"
     assert text_field.label == "Texte du filigrane", "TextField label should be correct"
     
-    # Verify Opacity Slider (Task 4.3)
-    def find_control(controls, control_type):
+    # Verify Sliders (Task 4.3, 4.5, 4.7)
+    def find_all_controls(controls, control_type, results=None):
+        if results is None: results = []
         for c in controls:
             if isinstance(c, control_type):
-                return c
+                results.append(c)
             if hasattr(c, "controls") and c.controls:
-                found = find_control(c.controls, control_type)
-                if found:
-                    return found
+                find_all_controls(c.controls, control_type, results)
             if hasattr(c, "content") and c.content:
                 if isinstance(c.content, ft.Column) or isinstance(c.content, ft.Row):
-                    found = find_control(c.content.controls, control_type)
-                    if found:
-                        return found
-        return None
+                    find_all_controls(c.content.controls, control_type, results)
+        return results
 
-    slider = find_control(controls_column.controls, ft.Slider)
+    sliders = find_all_controls(controls_column.controls, ft.Slider)
+    assert len(sliders) == 3, "There should be 3 sliders (Opacity, Font Size, Spacing)"
     
-    assert slider is not None, "Opacity Slider should exist"
-    assert slider.min == 0, "Slider min should be 0"
-    assert slider.max == 100, "Slider max should be 100"
-    assert slider.value == 30, "Default opacity should be 30"
+    # Opacity (Task 4.3)
+    opacity_slider = sliders[0]
+    assert opacity_slider.min == 0 and opacity_slider.max == 100 and opacity_slider.value == 30
+    
+    # Font Size (Task 4.5)
+    font_slider = sliders[1]
+    assert font_slider.min == 12 and font_slider.max == 72 and font_slider.value == 36
+    
+    # Spacing (Task 4.7)
+    spacing_slider = sliders[2]
+    assert spacing_slider.min == 50 and spacing_slider.max == 300 and spacing_slider.value == 150
