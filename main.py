@@ -4,13 +4,29 @@ def main(page: ft.Page):
     page.title = "Passport Filigrane"
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 0
-    page.bgcolor = "#1a1a1a" # Fond principal: Noir profond
+    page.bgcolor = "#1a1a1a"
+
+    # FilePicker pour la sélection d'image
+    file_picker = ft.FilePicker()
+    file_picker.on_result = lambda e: print(f"Selected: {e.files}") # Placeholder for now
+    file_picker.file_type = ft.FilePickerFileType.IMAGE
+    page.overlay.append(file_picker)
 
     # Panneau de contrôles (gauche)
     controls_panel = ft.Container(
         content=ft.Column(
             controls=[
                 ft.Text("Contrôles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                ft.ElevatedButton(
+                    content=ft.Text("Sélectionner une image"),
+                    icon=ft.Icons.IMAGE,
+                    on_click=lambda _: file_picker.pick_files(
+                        allow_multiple=False,
+                        allowed_extensions=["jpg", "jpeg", "png"]
+                    ),
+                    bgcolor="#3b82f6",
+                    color="#ffffff",
+                ),
             ],
             spacing=12,
         ),
