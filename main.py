@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import base64
 import os
+import threading
 
 def generate_preview(image_bytes_io):
     """Génère un thumbnail de l'image (max 800px) pour la prévisualisation."""
@@ -98,36 +99,49 @@ def main(page: ft.Page):
 
     # État de l'application
     original_image_bytes = None
+    update_timer = None
 
     def update_preview(e=None):
-        nonlocal original_image_bytes
+        nonlocal original_image_bytes, update_timer
+        
+        # Mise à jour immédiate des labels (pour la réactivité UI)
+        try:
+            opacity_label.value = f"Opacité ({int(opacity_slider.value)}%)"
+            font_size_label.value = f"Taille de police ({int(font_size_slider.value)} px)"
+            spacing_label.value = f"Espacement ({int(spacing_slider.value)} px)"
+            page.update()
+        except NameError:
+            pass # Les contrôles ne sont pas encore tous créés à l'initialisation
+
         if original_image_bytes is None:
             return
             
-        try:
-            # Récupération des valeurs des contrôles
-            text = watermark_text.value
-            opacity = opacity_slider.value
-            font_size = int(font_size_slider.value)
-            spacing = int(spacing_slider.value)
+        if update_timer:
+            update_timer.cancel()
             
-            # Mise à jour des labels (affichage utilisateur)
-            opacity_label.value = f"Opacité ({int(opacity)}%)"
-            font_size_label.value = f"Taille de police ({font_size} px)"
-            spacing_label.value = f"Espacement ({spacing} px)"
-            
-            # Application du filigrane
-            watermarked_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
-            
-            # Mise à jour de la prévisualisation
-            import base64
-            preview_image.src_base64 = base64.b64encode(watermarked_bytes).decode("utf-8")
-            preview_image.update()
-            page.update()
-        except Exception as ex:
-            page.snack_bar = ft.SnackBar(ft.Text(f"Erreur de mise à jour : {ex}"), bgcolor=ft.colors.ERROR)
-            page.snack_bar.open = True
-            page.update()
+        def do_update():
+            try:
+                # Récupération des valeurs des contrôles
+                text = watermark_text.value
+                opacity = opacity_slider.value
+                font_size = int(font_size_slider.value)
+                spacing = int(spacing_slider.value)
+                
+                # Application du filigrane
+                watermarked_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
+                
+                # Mise à jour de la prévisualisation
+                preview_image.src_base64 = base64.b64encode(watermarked_bytes).decode("utf-8")
+                preview_image.update()
+                page.update()
+            except Exception as ex:
+                page.snack_bar = ft.SnackBar(ft.Text(f"Erreur de mise à jour : {ex}"), bgcolor=ft.colors.ERROR)
+                page.snack_bar.open = True
+                page.update()
+
+        # Debounce de 200ms pour éviter de surcharger le CPU
+        update_timer = threading.Timer(0.2, do_update)
+        update_timer.start()
 
     def on_file_result(e: ft.FilePickerResultEvent):
         nonlocal original_image_bytes
