@@ -1,0 +1,8 @@
+{
+  "track_id": "mvp_20260201",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-02-01T17:30:00Z",
+  "updated_at": "2026-02-01T17:30:00Z",
+  "description": "Construire le MVP de Passport Filigrane avec l'interface deux colonnes, les contrôles de filigrane (texte, opacité, taille, espacement), l'algorithme de tiling diagonal, et la fonctionnalité de sauvegarde."
+}
