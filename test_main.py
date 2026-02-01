@@ -133,3 +133,26 @@ def test_watermark_controls_setup():
     assert text_field is not None, "Watermark TextField should exist"
     assert text_field.value == "COPIE", "Default watermark text should be 'COPIE'"
     assert text_field.label == "Texte du filigrane", "TextField label should be correct"
+    
+    # Verify Opacity Slider (Task 4.3)
+    def find_control(controls, control_type):
+        for c in controls:
+            if isinstance(c, control_type):
+                return c
+            if hasattr(c, "controls") and c.controls:
+                found = find_control(c.controls, control_type)
+                if found:
+                    return found
+            if hasattr(c, "content") and c.content:
+                if isinstance(c.content, ft.Column) or isinstance(c.content, ft.Row):
+                    found = find_control(c.content.controls, control_type)
+                    if found:
+                        return found
+        return None
+
+    slider = find_control(controls_column.controls, ft.Slider)
+    
+    assert slider is not None, "Opacity Slider should exist"
+    assert slider.min == 0, "Slider min should be 0"
+    assert slider.max == 100, "Slider max should be 100"
+    assert slider.value == 30, "Default opacity should be 30"
