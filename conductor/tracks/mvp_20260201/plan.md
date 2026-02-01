@@ -14,10 +14,10 @@ Initialiser le projet avec les dépendances et créer la structure de base de l'
 
 ### Tâches
 
-- [ ] Task 1.1: Créer le fichier requirements.txt avec les dépendances (flet, pillow, pytest, pytest-cov)
-- [ ] Task 1.2: Écrire les tests pour la structure de base de l'application Flet (fenêtre, titre, thème dark)
-- [ ] Task 1.3: Implémenter la structure de base de l'application Flet avec fenêtre et thème dark mode
-- [ ] Task 1.4: Conductor - User Manual Verification 'Phase 1: Setup et Structure de Base' (Protocol in workflow.md)
+- [x] Task 1.1: Créer le fichier requirements.txt avec les dépendances (flet, pillow, pytest, pytest-cov) [670028d]
+- [x] Task 1.2: Écrire les tests pour la structure de base de l'application Flet (fenêtre, titre, thème dark) [82d091b]
+- [x] Task 1.3: Implémenter la structure de base de l'application Flet avec fenêtre et thème dark mode [82d091b]
+- [~] Task 1.4: Conductor - User Manual Verification 'Phase 1: Setup et Structure de Base' (Protocol in workflow.md)
 
 ---
 
