@@ -96,7 +96,41 @@ def main(page: ft.Page):
         visible=False,
     )
 
+    # État de l'application
+    original_image_bytes = None
+
+    def update_preview(e=None):
+        nonlocal original_image_bytes
+        if original_image_bytes is None:
+            return
+            
+        try:
+            # Récupération des valeurs des contrôles
+            text = watermark_text.value
+            opacity = opacity_slider.value
+            font_size = int(font_size_slider.value)
+            spacing = int(spacing_slider.value)
+            
+            # Mise à jour des labels (affichage utilisateur)
+            opacity_label.value = f"Opacité ({int(opacity)}%)"
+            font_size_label.value = f"Taille de police ({font_size} px)"
+            spacing_label.value = f"Espacement ({spacing} px)"
+            
+            # Application du filigrane
+            watermarked_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
+            
+            # Mise à jour de la prévisualisation
+            import base64
+            preview_image.src_base64 = base64.b64encode(watermarked_bytes).decode("utf-8")
+            preview_image.update()
+            page.update()
+        except Exception as ex:
+            page.snack_bar = ft.SnackBar(ft.Text(f"Erreur de mise à jour : {ex}"), bgcolor=ft.colors.ERROR)
+            page.snack_bar.open = True
+            page.update()
+
     def on_file_result(e: ft.FilePickerResultEvent):
+        nonlocal original_image_bytes
         if e.files:
             file_path = e.files[0].path
             if not file_path:
@@ -104,10 +138,10 @@ def main(page: ft.Page):
                 
             try:
                 with open(file_path, "rb") as f:
-                    image_bytes = f.read()
+                    original_image_bytes = f.read()
                 
-                preview_bytes = generate_preview(io.BytesIO(image_bytes))
-                preview_image.src_base64 = base64.b64encode(preview_bytes).decode("utf-8")
+                # Première passe de prévisualisation (avec valeurs par défaut)
+                update_preview()
                 preview_image.visible = True
                 page.update()
             except PermissionError:
@@ -132,63 +166,43 @@ def main(page: ft.Page):
     file_picker.file_type = ft.FilePickerFileType.IMAGE
     page.overlay.append(file_picker)
 
+    # Références aux contrôles pour update_preview
+    watermark_text = ft.TextField(
+        label="Texte du filigrane",
+        value="COPIE",
+        color="#ffffff",
+        border_color="#3b82f6",
+        focused_border_color="#60a5fa",
+        on_change=update_preview,
+    )
+    
+    opacity_label = ft.Text("Opacité (30%)", size=14, color="#ffffff")
+    opacity_slider = ft.Slider(
+        min=0, max=100, value=30, divisions=100, label="{value}%",
+        active_color="#3b82f6", on_change=update_preview
+    )
+    
+    font_size_label = ft.Text("Taille de police (36 px)", size=14, color="#ffffff")
+    font_size_slider = ft.Slider(
+        min=12, max=72, value=36, divisions=60, label="{value}px",
+        active_color="#3b82f6", on_change=update_preview
+    )
+    
+    spacing_label = ft.Text("Espacement (150 px)", size=14, color="#ffffff")
+    spacing_slider = ft.Slider(
+        min=50, max=300, value=150, divisions=250, label="{value}px",
+        active_color="#3b82f6", on_change=update_preview
+    )
+
     # Panneau de contrôles (gauche)
     controls_panel = ft.Container(
         content=ft.Column(
             controls=[
                 ft.Text("Contrôles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
-                ft.TextField(
-                    label="Texte du filigrane",
-                    value="COPIE",
-                    color="#ffffff",
-                    border_color="#3b82f6",
-                    focused_border_color="#60a5fa",
-                ),
-                ft.Column(
-                    controls=[
-                        ft.Text("Opacité (30%)", size=14, color="#ffffff"),
-                        ft.Slider(
-                            min=0,
-                            max=100,
-                            value=30,
-                            divisions=100,
-                            label="{value}%",
-                            active_color="#3b82f6",
-                            on_change=lambda e: print(f"Opacity changed: {e.control.value}") # Placeholder
-                        ),
-                    ],
-                    spacing=0,
-                ),
-                ft.Column(
-                    controls=[
-                        ft.Text("Taille de police (36 px)", size=14, color="#ffffff"),
-                        ft.Slider(
-                            min=12,
-                            max=72,
-                            value=36,
-                            divisions=60,
-                            label="{value}px",
-                            active_color="#3b82f6",
-                            on_change=lambda e: print(f"Font size changed: {e.control.value}") # Placeholder
-                        ),
-                    ],
-                    spacing=0,
-                ),
-                ft.Column(
-                    controls=[
-                        ft.Text("Espacement (150 px)", size=14, color="#ffffff"),
-                        ft.Slider(
-                            min=50,
-                            max=300,
-                            value=150,
-                            divisions=250,
-                            label="{value}px",
-                            active_color="#3b82f6",
-                            on_change=lambda e: print(f"Spacing changed: {e.control.value}") # Placeholder
-                        ),
-                    ],
-                    spacing=0,
-                ),
+                watermark_text,
+                ft.Column(controls=[opacity_label, opacity_slider], spacing=0),
+                ft.Column(controls=[font_size_label, font_size_slider], spacing=0),
+                ft.Column(controls=[spacing_label, spacing_slider], spacing=0),
                 ft.ElevatedButton(
                     "Sélectionner une image",
                     icon=ft.icons.IMAGE,

@@ -161,3 +161,45 @@ def test_watermark_controls_setup():
     # Spacing (Task 4.7)
     spacing_slider = sliders[2]
     assert spacing_slider.min == 50 and spacing_slider.max == 300 and spacing_slider.value == 150
+
+def test_realtime_update_event_binding():
+    # Setup
+    mock_page = MagicMock(spec=ft.Page)
+    mock_page.controls = []
+    mock_page.overlay = []
+    
+    # Execute
+    main(mock_page)
+    
+    # Find main layout Row
+    main_layout = None
+    for call in mock_page.add.call_args_list:
+        ctrl = call.args[0]
+        if isinstance(ctrl, ft.Row):
+            main_layout = ctrl
+            break
+            
+    assert main_layout is not None
+    left_panel = main_layout.controls[0]
+    controls_column = left_panel.content
+    
+    # Helper to find controls
+    def find_all_controls(controls, control_type, results=None):
+        if results is None: results = []
+        for c in controls:
+            if isinstance(c, control_type):
+                results.append(c)
+            if hasattr(c, "controls") and c.controls:
+                find_all_controls(c.controls, control_type, results)
+            if hasattr(c, "content") and c.content:
+                if isinstance(c.content, ft.Column) or isinstance(c.content, ft.Row):
+                    find_all_controls(c.content.controls, control_type, results)
+        return results
+
+    text_field = next((c for c in controls_column.controls if isinstance(c, ft.TextField)), None)
+    sliders = find_all_controls(controls_column.controls, ft.Slider)
+    
+    # Verify events are bound (Task 6.1)
+    assert text_field.on_change is not None, "TextField on_change should be bound"
+    for s in sliders:
+        assert s.on_change is not None, f"Slider {s.label} on_change should be bound"
