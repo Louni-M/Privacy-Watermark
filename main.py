@@ -1,4 +1,20 @@
 import flet as ft
+from PIL import Image
+import io
+
+def generate_preview(image_bytes_io):
+    """Génère un thumbnail de l'image (max 800px) pour la prévisualisation."""
+    img = Image.open(image_bytes_io)
+    
+    # Calcul du ratio pour redimensionnement (max 800px)
+    max_size = 800
+    if img.width > max_size or img.height > max_size:
+        img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+    
+    # Conversion en bytes pour Flet
+    img_byte_arr = io.BytesIO()
+    img.save(img_byte_arr, format='PNG')
+    return img_byte_arr.getvalue()
 
 def main(page: ft.Page):
     page.title = "Passport Filigrane"
