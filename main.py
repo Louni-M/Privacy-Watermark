@@ -1,7 +1,8 @@
 import flet as ft
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import io
 import base64
+import os
 
 def generate_preview(image_bytes_io):
     """Génère un thumbnail de l'image (max 800px) pour la prévisualisation."""
@@ -16,6 +17,71 @@ def generate_preview(image_bytes_io):
     img_byte_arr = io.BytesIO()
     img.save(img_byte_arr, format='PNG')
     return img_byte_arr.getvalue()
+
+def get_font(size):
+    """Essaye de charger une police système, sinon retourne la police par défaut."""
+    font_paths = [
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
+        "/Library/Fonts/Arial.ttf",
+    ]
+    for path in font_paths:
+        if os.path.exists(path):
+            try:
+                return ImageFont.truetype(path, size)
+            except Exception:
+                continue
+    return ImageFont.load_default()
+
+def apply_watermark(image_bytes, text, opacity, font_size, spacing):
+    """Applique un filigrane répété en diagonale sur l'image."""
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
+    txt_layer = Image.new("RGBA", img.size, (255, 255, 255, 0))
+    d = ImageDraw.Draw(txt_layer)
+    
+    font = get_font(font_size)
+    
+    # Couleur du texte avec opacité (0-255)
+    # On mappe 0-100 (user) -> 0-255 (alpha)
+    alpha = int((opacity / 100) * 255)
+    fill_color = (255, 255, 255, alpha)
+    
+    # Création d'une petite image pour le texte pivoté
+    # On calcule la taille du texte
+    try:
+        left, top, right, bottom = font.getbbox(text)
+        txt_w = right - left
+        txt_h = bottom - top
+    except AttributeError: # Fallback pour anciennes versions de Pillow
+        txt_w, txt_h = d.textsize(text, font=font)
+    
+    # Créer un canvas pour un seul texte pivoté
+    # On prend une marge pour la rotation
+    padding = 20
+    sw, sh = txt_w + padding, txt_h + padding
+    stamp = Image.new("RGBA", (sw, sh), (255, 255, 255, 0))
+    sd = ImageDraw.Draw(stamp)
+    sd.text((padding//2, padding//2), text, font=font, fill=fill_color)
+    
+    # Rotation
+    rotated_stamp = stamp.rotate(45, expand=True, resample=Image.Resampling.BICUBIC)
+    rw, rh = rotated_stamp.size
+    
+    # Tiling (Répétition)
+    for y in range(-rh, img.height + rh, spacing):
+        for x in range(-rw, img.width + rw, spacing):
+            # Décalage d'une ligne sur deux pour un effet "quinconce"
+            offset = (spacing // 2) if (y // spacing) % 2 == 0 else 0
+            txt_layer.paste(rotated_stamp, (x + offset, y), rotated_stamp)
+            
+    # Fusion
+    out = Image.alpha_composite(img, txt_layer)
+    
+    # Retour en bytes (PNG pour garder la transparence si besoin, ou JPEG si on veut compresser)
+    output = io.BytesIO()
+    # On reconvertit en RGB pour la sortie si l'original était RGB (optionnel)
+    out.convert("RGB").save(output, format="JPEG", quality=90)
+    return output.getvalue()
 
 def main(page: ft.Page):
     page.title = "Passport Filigrane"
