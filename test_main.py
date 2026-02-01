@@ -85,3 +85,24 @@ def test_file_picker_setup():
     
     # Check text in content
     assert "Sélectionner" in button.content.value, "Button text should be correct"
+
+def test_generate_preview_resizing():
+    from PIL import Image
+    from main import generate_preview
+    import io
+    
+    # Create a large test image (1600x1200)
+    large_image = Image.new("RGB", (1600, 1200), color="red")
+    img_byte_arr = io.BytesIO()
+    large_image.save(img_byte_arr, format='PNG')
+    img_byte_arr.seek(0)
+    
+    # Execute generate_preview (should resize to max 800px width)
+    preview_bytes = generate_preview(img_byte_arr)
+    
+    # Verify results
+    result_img = Image.open(io.BytesIO(preview_bytes))
+    assert result_img.width <= 800
+    # Ratio should be preserved: 1600/1200 = 800/600
+    assert result_img.width == 800
+    assert result_img.height == 600
