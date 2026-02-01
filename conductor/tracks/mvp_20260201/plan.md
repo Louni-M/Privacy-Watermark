@@ -21,7 +21,7 @@ Initialiser le projet avec les dépendances et créer la structure de base de l'
 
 ---
 
-## Phase 2: Layout Deux Colonnes
+## Phase 2: Layout Deux Colonnes [checkpoint: 04bb6a4]
 
 ### Objectif
 Créer le layout principal avec le panneau de contrôles à gauche et la zone de prévisualisation à droite.
@@ -31,7 +31,7 @@ Créer le layout principal avec le panneau de contrôles à gauche et la zone de
 - [x] Task 2.1: Écrire les tests pour le layout deux colonnes (panneau gauche 300px, panneau droit extensible) [b3ccb11]
 - [x] Task 2.2: Implémenter le layout deux colonnes avec Row et Column Flet [b3ccb11]
 - [x] Task 2.3: Appliquer les styles du product-guidelines (couleurs, espacements, border-radius) [f1504a1]
-- [~] Task 2.4: Conductor - User Manual Verification 'Phase 2: Layout Deux Colonnes' (Protocol in workflow.md)
+- [x] Task 2.4: Conductor - User Manual Verification 'Phase 2: Layout Deux Colonnes' (Protocol in workflow.md) [04bb6a4]
 
 ---
 
@@ -42,7 +42,7 @@ Implémenter le FilePicker pour sélectionner une image et l'afficher dans la zo
 
 ### Tâches
 
-- [ ] Task 3.1: Écrire les tests pour le FilePicker (formats acceptés, gestion des erreurs)
+- [~] Task 3.1: Écrire les tests pour le FilePicker (formats acceptés, gestion des erreurs)
 - [ ] Task 3.2: Implémenter le bouton "Sélectionner une image" avec FilePicker
 - [ ] Task 3.3: Écrire les tests pour la fonction de génération de thumbnail
 - [ ] Task 3.4: Implémenter la fonction generate_preview() pour créer un thumbnail (max 800px)
@@ -149,7 +149,7 @@ _Cette section sera mise à jour au fur et à mesure de l'implémentation._
 | Phase | Description | Checkpoint SHA |
 |-------|-------------|----------------|
 | 1 | Setup et Structure de Base | 4a90ba3 |
-| 2 | Layout Deux Colonnes | - |
+| 2 | Layout Deux Colonnes | 04bb6a4 |
 | 3 | Sélection d'Image et Prévisualisation | - |
 | 4 | Contrôles du Filigrane | - |
 | 5 | Algorithme de Filigrane | - |
