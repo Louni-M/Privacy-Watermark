@@ -83,8 +83,8 @@ def test_file_picker_setup():
     button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton)), None)
     assert button is not None, "Selection button should exist in controls panel"
     
-    # Check text in content
-    assert "Sélectionner" in button.content.value, "Button text should be correct"
+    # Check text in positional arg or attribute
+    assert button.text == "Sélectionner une image"
 
 def test_generate_preview_resizing():
     from PIL import Image

@@ -25,11 +25,10 @@ def main(page: ft.Page):
 
     # Zone d'image pour la prévisualisation
     preview_image = ft.Image(
-        src="",
+        src_base64="",
         fit="contain",
         visible=False,
     )
-    preview_image.src_base64 = ""
 
     def on_file_result(e: ft.FilePickerResultEvent):
         if e.files:
@@ -38,14 +37,12 @@ def main(page: ft.Page):
                 image_bytes = f.read()
             
             preview_bytes = generate_preview(io.BytesIO(image_bytes))
-            import base64
             preview_image.src_base64 = base64.b64encode(preview_bytes).decode("utf-8")
             preview_image.visible = True
             page.update()
 
     # FilePicker pour la sélection d'image
-    file_picker = ft.FilePicker()
-    file_picker.on_result = on_file_result
+    file_picker = ft.FilePicker(on_result=on_file_result)
     file_picker.file_type = ft.FilePickerFileType.IMAGE
     page.overlay.append(file_picker)
 
@@ -55,8 +52,8 @@ def main(page: ft.Page):
             controls=[
                 ft.Text("Contrôles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
                 ft.ElevatedButton(
-                    content=ft.Text("Sélectionner une image"),
-                    icon=ft.Icons.IMAGE,
+                    "Sélectionner une image",
+                    icon=ft.icons.IMAGE,
                     on_click=lambda _: file_picker.pick_files(
                         allow_multiple=False,
                         allowed_extensions=["jpg", "jpeg", "png"]
@@ -70,7 +67,7 @@ def main(page: ft.Page):
         width=300,
         bgcolor="#252525", # Fond secondaire: Gris foncé
         padding=16, # Padding interne des panneaux
-        border_radius=ft.BorderRadius.all(8), # Coins arrondis
+        border_radius=ft.border_radius.all(8), # Coins arrondis
     )
 
     # Panneau de prévisualisation (droite)
@@ -81,7 +78,7 @@ def main(page: ft.Page):
                 ft.Container(
                     content=preview_image,
                     expand=True,
-                    alignment=ft.Alignment(0, 0),
+                    alignment=ft.alignment.center,
                 ),
             ],
             spacing=12,
