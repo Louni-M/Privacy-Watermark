@@ -93,6 +93,36 @@ def main(page: ft.Page):
                     ],
                     spacing=0,
                 ),
+                ft.Column(
+                    controls=[
+                        ft.Text("Taille de police (36 px)", size=14, color="#ffffff"),
+                        ft.Slider(
+                            min=12,
+                            max=72,
+                            value=36,
+                            divisions=60,
+                            label="{value}px",
+                            active_color="#3b82f6",
+                            on_change=lambda e: print(f"Font size changed: {e.control.value}") # Placeholder
+                        ),
+                    ],
+                    spacing=0,
+                ),
+                ft.Column(
+                    controls=[
+                        ft.Text("Espacement (150 px)", size=14, color="#ffffff"),
+                        ft.Slider(
+                            min=50,
+                            max=300,
+                            value=150,
+                            divisions=250,
+                            label="{value}px",
+                            active_color="#3b82f6",
+                            on_change=lambda e: print(f"Spacing changed: {e.control.value}") # Placeholder
+                        ),
+                    ],
+                    spacing=0,
+                ),
                 ft.ElevatedButton(
                     "Sélectionner une image",
                     icon=ft.icons.IMAGE,
