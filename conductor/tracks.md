@@ -4,6 +4,6 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: MVP Passport Filigrane - Interface complète avec filigrane diagonal
+## [~] Track: MVP Passport Filigrane - Interface complète avec filigrane diagonal
 
 _Link: [./tracks/mvp_20260201/](./tracks/mvp_20260201/)_
