@@ -78,6 +78,21 @@ def main(page: ft.Page):
                     border_color="#3b82f6",
                     focused_border_color="#60a5fa",
                 ),
+                ft.Column(
+                    controls=[
+                        ft.Text("Opacité (30%)", size=14, color="#ffffff"),
+                        ft.Slider(
+                            min=0,
+                            max=100,
+                            value=30,
+                            divisions=100,
+                            label="{value}%",
+                            active_color="#3b82f6",
+                            on_change=lambda e: print(f"Opacity changed: {e.control.value}") # Placeholder
+                        ),
+                    ],
+                    spacing=0,
+                ),
                 ft.ElevatedButton(
                     "Sélectionner une image",
                     icon=ft.icons.IMAGE,
