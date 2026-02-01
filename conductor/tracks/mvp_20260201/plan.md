@@ -28,10 +28,10 @@ Créer le layout principal avec le panneau de contrôles à gauche et la zone de
 
 ### Tâches
 
-- [ ] Task 2.1: Écrire les tests pour le layout deux colonnes (panneau gauche 300px, panneau droit extensible)
-- [ ] Task 2.2: Implémenter le layout deux colonnes avec Row et Column Flet
-- [ ] Task 2.3: Appliquer les styles du product-guidelines (couleurs, espacements, border-radius)
-- [ ] Task 2.4: Conductor - User Manual Verification 'Phase 2: Layout Deux Colonnes' (Protocol in workflow.md)
+- [x] Task 2.1: Écrire les tests pour le layout deux colonnes (panneau gauche 300px, panneau droit extensible) [b3ccb11]
+- [x] Task 2.2: Implémenter le layout deux colonnes avec Row et Column Flet [b3ccb11]
+- [x] Task 2.3: Appliquer les styles du product-guidelines (couleurs, espacements, border-radius) [f1504a1]
+- [~] Task 2.4: Conductor - User Manual Verification 'Phase 2: Layout Deux Colonnes' (Protocol in workflow.md)
 
 ---
 
