@@ -163,6 +163,26 @@ flet run main.py
 - macOS 10.15+ (Catalina et supérieur)
 - Architecture Intel et Apple Silicon (M1/M2/M3)
 
-### Formats Supportés
+### v1.0 (MVP) - [x]
+
+#### Dépendances
+- **Python** : 3.14.2
+- **Flet** : 0.21.2
+- **Pillow** : 10.3.0
+- **Pytest** : 8.1.1 (avec `pytest-cov`)
+
+#### Architecture & Patterns
+- **Fichier unique** : `main.py` concentre la logique UI et métier (contrainte respectée).
+- **Gestion de l'état** : Variables locales `nonlocal` dans `main()`.
+- **Réactivité** : Debounce de 0.2s via `threading.Timer`.
+- **Traitement d'image** : Tiling diagonal via `Image.rotate` et `Image.alpha_composite`.
+
+#### Tests
+- **Unitaires** : `test_processing.py` (logique Pillow).
+- **Intégration UI** : `test_main.py` (Mocks Flet Page/FilePicker).
+- **Couverture** : ~54% total, >90% sur la partie `processing`.
+
+---
+
 - **Entrée** : JPG, JPEG, PNG
-- **Sortie** : JPG, PNG (même format que l'entrée)
+- **Sortie** : JPEG (qualité 90)

@@ -34,15 +34,16 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
 
 ## Fonctionnalités
 
-### MVP (v1.0)
-- **Sélection d'image** : Import via FilePicker (formats JPG/PNG)
+### v1.0 (MVP) - [x]
+- **Sélection d'image** : Import via FilePicker (formats JPG/PNG/JPEG).
 - **Contrôles du filigrane** :
-  - Texte personnalisable
-  - Opacité ajustable (slider)
-  - Taille de police ajustable (slider)
-  - Espacement entre répétitions (slider)
-- **Prévisualisation en temps réel** : Affichage de l'image filigranée dans l'interface
-- **Export** : Sauvegarde de l'image traitée sur le disque
+  - Texte personnalisable avec mise à jour temps réel.
+  - Opacité ajustable (0-100%).
+  - Taille de police ajustable (12-72px).
+  - Espacement ajustable (50-300px) dynamisant la densité du tiling.
+- **Prévisualisation en temps réel** : Affichage via `src_base64` avec debounce de 200ms pour la fluidité.
+- **Gestion des erreurs** : Notifications via SnackBar pour les erreurs de format, de corruption ou de permissions.
+- **Export** : Sauvegarde JPEG (qualité 90) via FilePicker.
 
 ### Fonctionnalités Futures (v2.0)
 - **Préréglages de filigrane** : Textes prédéfinis ("COPIE", "NE PAS DIFFUSER", "À L'USAGE EXCLUSIF DE [nom]")
