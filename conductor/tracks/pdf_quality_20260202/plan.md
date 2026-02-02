@@ -53,7 +53,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md) [036d171]
 
-## Phase 4: Preview & Polish
+## Phase 4: Preview & Polish [checkpoint: 600e155]
 
 - [x] Task: Evaluate preview rendering approach
   - [x] Sub-task: Determine if vector watermark can be shown in preview
@@ -70,7 +70,7 @@
   - [ ] Sub-task: Measure watermarking time for 10-page PDF
   - [ ] Sub-task: Optimize if exceeds 5 second target
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md) [600e155]
 
 ## Phase 5: Final Validation
 
