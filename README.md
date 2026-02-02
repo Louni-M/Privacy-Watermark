@@ -10,12 +10,17 @@ Application macOS pour filigraner des documents d'identité et protéger votre v
 - **Mode Sécurisé** : rasterisation haute définition (300/450/600 DPI) rendant le filigrane impossible à supprimer
 - **Prévisualisation temps réel** : aperçu instantané des modifications
 
-## Captures d'écran
+## Démonstration du Mode Sécurisé (Raster)
 
-| Mode Vectoriel | Mode Sécurisé |
-|----------------|---------------|
-| Texte sélectionnable | Filigrane indélébile |
-| Fichier léger | Protection maximale |
+Le **Mode Sécurisé** transforme chaque page du PDF en une image haute résolution avant d'appliquer le filigrane. Cela rend le filigrane indissociable du contenu et empêche toute tentative de suppression ou d'extraction de texte.
+
+| Mode Vectoriel (Standard) | Mode Sécurisé (Raster) |
+|:-------------------------:|:----------------------:|
+| ![Vector Mode](assets/demo_vector.png) | ![Secure Mode](assets/demo_secure.png) |
+| **Texte sélectionnable** : Le filigrane est une couche de texte par-dessus le PDF. | **Image aplatie** : Le filigrane est fusionné avec les pixels du document. |
+| **Suppression** : Possible via des outils d'édition PDF. | **Suppression** : Impossible sans altérer l'image elle-même. |
+| **Recherche de texte** : Le filigrane est détectable techniquement. | **Recherche de texte** : Le filigrane est invisible pour les algorithmes (0 texte trouvé). |
+| **Poids** : Très léger. | **Poids** : Plus important (300+ DPI). |
 
 ## Installation
 
