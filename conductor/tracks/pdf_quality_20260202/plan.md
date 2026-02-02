@@ -1,0 +1,88 @@
+# Plan: PDF Quality Preservation with Native Vector Watermark
+
+## Phase 1: Research & Foundation
+
+- [~] Task: Investigate PyMuPDF vector text/shape APIs for watermark rendering
+  - [ ] Sub-task: Study `page.insert_text()` with rotation parameters
+  - [ ] Sub-task: Study `page.draw_*()` shape methods as alternative
+  - [ ] Sub-task: Test opacity/transparency support in PyMuPDF text rendering
+  - [ ] Sub-task: Document findings and chosen approach
+
+- [ ] Task: Create test PDF fixtures for quality validation
+  - [ ] Sub-task: Create a multi-page test PDF with text, vectors, and images
+  - [ ] Sub-task: Create a high-resolution test PDF for zoom testing
+
+- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+
+## Phase 2: Core Vector Watermark Implementation (TDD)
+
+- [ ] Task: Write failing tests for vector watermark function
+  - [ ] Sub-task: Test that watermark text is added to PDF page
+  - [ ] Sub-task: Test that watermark respects opacity parameter
+  - [ ] Sub-task: Test that watermark respects font size parameter
+  - [ ] Sub-task: Test that watermark respects spacing parameter
+  - [ ] Sub-task: Test that watermark respects color parameter (White, Black, Gray)
+  - [ ] Sub-task: Test diagonal tiling pattern (45° rotation)
+
+- [ ] Task: Implement `apply_vector_watermark_to_pdf()` function
+  - [ ] Sub-task: Create function signature matching existing parameters
+  - [ ] Sub-task: Implement diagonal text placement algorithm using PyMuPDF
+  - [ ] Sub-task: Implement opacity mapping to PDF transparency
+  - [ ] Sub-task: Implement color mapping (White, Black, Gray to RGB)
+  - [ ] Sub-task: Ensure watermark is added as overlay layer
+
+- [ ] Task: Verify all tests pass (Green phase)
+
+- [ ] Task: Refactor for code clarity and performance
+
+- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+
+## Phase 3: Integration & Migration
+
+- [ ] Task: Write failing tests for PDF processing integration
+  - [ ] Sub-task: Test that original PDF text remains selectable after watermarking
+  - [ ] Sub-task: Test that original PDF quality is preserved (no rasterization)
+  - [ ] Sub-task: Test file size remains within 110% of original
+
+- [ ] Task: Integrate vector watermark into PDF save workflow
+  - [ ] Sub-task: Update `apply_watermark_to_pdf()` to use new vector function
+  - [ ] Sub-task: Preserve existing raster path for image files (JPG/PNG)
+  - [ ] Sub-task: Update `save_watermarked_pdf()` if needed
+
+- [ ] Task: Verify all tests pass (Green phase)
+
+- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+
+## Phase 4: Preview & Polish
+
+- [ ] Task: Evaluate preview rendering approach
+  - [ ] Sub-task: Determine if vector watermark can be shown in preview
+  - [ ] Sub-task: If not feasible, document that preview uses raster approximation
+
+- [ ] Task: Write tests for edge cases
+  - [ ] Sub-task: Test with encrypted/password-protected PDF (should fail gracefully)
+  - [ ] Sub-task: Test with very large PDF (10+ pages)
+  - [ ] Sub-task: Test with PDF containing only images (scanned document)
+
+- [ ] Task: Implement edge case handling
+
+- [ ] Task: Performance optimization
+  - [ ] Sub-task: Measure watermarking time for 10-page PDF
+  - [ ] Sub-task: Optimize if exceeds 5 second target
+
+- [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+
+## Phase 5: Final Validation
+
+- [ ] Task: Run full test suite with coverage report
+  - [ ] Sub-task: Ensure >80% coverage on new code
+  - [ ] Sub-task: Ensure all existing tests still pass
+
+- [ ] Task: Manual acceptance testing
+  - [ ] Sub-task: AC-1: Verify 400% zoom sharpness on real PDF
+  - [ ] Sub-task: AC-2: Verify text remains selectable
+  - [ ] Sub-task: AC-3: Verify all watermark controls work correctly
+  - [ ] Sub-task: AC-4: Verify file size constraint
+  - [ ] Sub-task: AC-5: Verify image watermarking unchanged
+
+- [ ] Task: Conductor - User Manual Verification 'Phase 5' (Protocol in workflow.md)
