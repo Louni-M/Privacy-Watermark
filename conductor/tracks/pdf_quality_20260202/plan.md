@@ -2,11 +2,11 @@
 
 ## Phase 1: Research & Foundation
 
-- [~] Task: Investigate PyMuPDF vector text/shape APIs for watermark rendering
-  - [ ] Sub-task: Study `page.insert_text()` with rotation parameters
-  - [ ] Sub-task: Study `page.draw_*()` shape methods as alternative
-  - [ ] Sub-task: Test opacity/transparency support in PyMuPDF text rendering
-  - [ ] Sub-task: Document findings and chosen approach
+- [x] Task: Investigate PyMuPDF vector text/shape APIs for watermark rendering [82feab7]
+  - [x] Sub-task: Study `page.insert_text()` with rotation parameters
+  - [x] Sub-task: Study `page.draw_*()` shape methods as alternative
+  - [x] Sub-task: Test opacity/transparency support in PyMuPDF text rendering
+  - [x] Sub-task: Document findings and chosen approach
 
 - [ ] Task: Create test PDF fixtures for quality validation
   - [ ] Sub-task: Create a multi-page test PDF with text, vectors, and images
