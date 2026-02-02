@@ -99,8 +99,9 @@ pip install pymupdf
 
 **Modules Utilisés** :
 - `fitz.open()` : Chargement du document
-- `page.get_pixmap()` : Rendu d'une page en image
-- `doc.save()` : Sauvegarde du document
+- `page.get_pixmap()` : Rendu d'une page en image (pour prévisualisation)
+- `page.insert_text()` : Insertion de filigrane vectoriel natif
+- `doc.save()` : Sauvegarde incrémentale ou complète du document
 
 ---
 
@@ -196,16 +197,18 @@ flet run main.py
 - **Pytest** : 8.1.1 (avec `pytest-cov`)
 
 #### Architecture & Patterns
-- **Approche Orientée Objet** : Utilisation d'une classe `PassportFiligraneApp` pour encapsuler l'état et l'UI, améliorant la testabilité.
-- **Gestion de l'état** : Attributs de classe (`self`) au lieu de variables locales `nonlocal`.
-- **Réactivité** : Debounce de 0.2s via `threading.Timer`.
-- **Traitement d'image** : Tiling diagonal partagé entre images et PDF via `apply_watermark_to_pil_image`.
-- **Mapping de couleurs** : Utilisation d'un dictionnaire centralisé pour les couleurs prédéfinies (Blanc, Noir, Gris).
+- **Approche Orientée Objet** : Utilisation d'une classe `PassportFiligraneApp` pour encapsuler l'état et l'UI.
+- **Filigranage Hybride** :
+  - **Raster** (Pillow) pour les images individuelles.
+  - **Vectoriel** (PyMuPDF) pour les PDF, préservant la sélection de texte et la qualité.
+- **Matrice de Rotation** : Utilisation de `fitz.Matrix` pour incliner le texte vectoriel (angle 135° pour lecture bas-gauche vers haut-droite).
+- **Performance** : Traitement vectoriel <0.3s pour 10 pages, optimisant l'usage mémoire par rapport à la rasterisation.
 
 #### Tests
-- **Unitaires** : `test_processing.py` (logique Pillow).
-- **Intégration UI** : `test_main.py` (Mocks Flet Page/FilePicker).
-- **Couverture** : ~54% total, >90% sur la partie `processing`.
+- **Unitaires** : `test_processing.py`, `test_vector_watermark.py`.
+- **Cas Limites** : `test_pdf_edge_cases.py` (PDF chiffrés, volumineux, images-only).
+- **Performance** : `test_performance.py` (benchmarking 10+ pages).
+- **Couverture** : >52% global (incluant scripts de recherche), >90% sur le coeur métier PDF/Image.
 
 ---
 

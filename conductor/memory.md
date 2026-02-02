@@ -30,3 +30,18 @@
 ### Issues Encountered
 - **Flet Callback Wrapping**: Les `EventHandler` de Flet ne sont pas toujours directement appelables en test. Un helper `call_handler` est nécessaire pour inspecter `.handler` ou `.func`.
 - **Indentation & Async**: Attention à l'indentation lors de l'utilisation de `Timer`, qui peut masquer des erreurs de logique si les callbacks accèdent à des variables modifiées prématurément.
+
+## 2026-02-02 Track: pdf_quality_20260202 (Qualité PDF & Vecteur)
+
+### Key Learnings
+- **Native Vector Text**: `page.insert_text()` est l'approche royale pour les PDF. Contrairement aux images, le texte ajouté n'augmente quasiment pas la taille du fichier et reste net à l'infini (infini zoom).
+- **Matrix Rotation**: L'argument `morph` de `insert_text` attend un tuple `(point, matrix)`. Pour une rotation simple, `fitz.Matrix(angle)` suffit.
+- **Coordinate Systems**: PyMuPDF utilise un système de coordonnées où (0,0) est en haut à gauche. Pour un tiling diagonal, il faut bien gérer les offsets pour couvrir toute la `page.rect`.
+
+### Patterns Discovered
+- **Temporary Double-Loading for Preview**: Pour prévisualiser un PDF sans modifier le document ouvert, créer un document temporaire `fitz.open()`, y insérer la page via `insert_pdf`, appliquer le filigrane, puis rendre en PixMap.
+- **Edge Case Coverage**: Tester spécifiquement les PDF "Images-only" (scans) et les PDF protégés (`doc.is_encrypted`) est crucial pour la robustesse.
+
+### Issues Encountered
+- **Rotation Direction**: Confusion initiale sur l'angle de rotation. L'angle 135° correspond à une lecture "montante" (bas-gauche vers haut-droite) dans le repère PDF.
+- **Password Protection**: `fitz.open()` réussit sur un PDF chiffré mais toute opération ultérieure échoue. Il faut vérifier `doc.is_encrypted` immédiatement après l'ouverture.
