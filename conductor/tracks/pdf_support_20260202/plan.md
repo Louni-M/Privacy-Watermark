@@ -69,7 +69,7 @@
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Intégration UI' (Protocol in workflow.md)
 
-## Phase 4: Export PDF
+## Phase 4: Export PDF [checkpoint: 36362d0]
 
 - [x] Task 4.1: Écrire les tests pour l'export PDF [a76fb24]
   - [x] Test: exporter un PDF filigrané au format PDF
@@ -77,24 +77,25 @@
   - [x] Test: vérifier la qualité des images exportées (90)
   - [x] Vérifier que les tests passent (Green Phase)
 
-- [~] Task 4.2: Implémenter l'export PDF vers PDF
+- [x] Task 4.2: Implémenter l'export PDF vers PDF [36362d0]
   - [x] Créer fonction `save_watermarked_pdf(doc, output_path)`
   - [x] Utiliser `doc.save()` de PyMuPDF
-  - [ ] Intégrer avec le FilePicker pour la sauvegarde
-  - [ ] Vérifier que les tests passent (Green Phase)
+  - [x] Intégrer avec le FilePicker pour la sauvegarde
+  - [x] Vérifier que les tests passent (Green Phase)
 
-- [~] Task 4.3: Implémenter l'export PDF vers Images
+- [x] Task 4.3: Implémenter l'export PDF vers Images [36362d0]
   - [x] Créer fonction `save_pdf_as_images(doc, output_dir, base_name)`
   - [x] Générer un fichier JPG par page (qualité 90)
   - [x] Nommage: `{base_name}_page_001.jpg`, etc.
-  - [ ] Intégrer avec le FilePicker pour la sauvegarde
-  - [ ] Vérifier que les tests passent (Green Phase)
+  - [x] Intégrer avec le FilePicker pour la sauvegarde
+  - [x] Vérifier que les tests passent (Green Phase)
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Export PDF' (Protocol in workflow.md)
 
 ## Phase 5: Gestion d'erreurs & Polish
+## Phase 5: Gestion d'erreurs & Polish [~]
 
-- [ ] Task 5.1: Implémenter les messages d'erreur SnackBar
+- [~] Task 5.1: Implémenter les messages d'erreur SnackBar
   - [ ] Message pour PDF protégé par mot de passe
   - [ ] Message pour PDF corrompu/illisible
   - [ ] Vérifier la cohérence avec les erreurs images existantes
