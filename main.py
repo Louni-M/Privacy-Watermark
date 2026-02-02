@@ -42,11 +42,11 @@ def get_font(size):
                 continue
     return ImageFont.load_default()
 
-def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="Blanc"):
+def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="Blanc", orientation="Ascendant (↗)"):
     """Applique un filigrane répété en diagonale sur l'image."""
     img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
     # Utilisation de la logique partagée de pdf_processing pour la cohérence
-    out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color=color)
+    out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color=color, orientation=orientation)
     output = io.BytesIO()
     out.convert("RGB").save(output, format="JPEG", quality=90)
     return output.getvalue()
@@ -123,6 +123,15 @@ class PassportFiligraneApp:
             value="Blanc", on_change=self.update_preview, disabled=True
         )
 
+        self.orientation_dropdown = ft.Dropdown(
+            label="Orientation", label_style=ft.TextStyle(color="#ffffff", size=14),
+            options=[
+                ft.dropdown.Option("Ascendant (↗)", "Ascendant (↗)"),
+                ft.dropdown.Option("Descendant (↘)", "Descendant (↘)"),
+            ],
+            value="Ascendant (↗)", on_change=self.update_preview, disabled=True
+        )
+
         self.export_format_dropdown = ft.Dropdown(
             label="Format d'export", label_style=ft.TextStyle(color="#ffffff", size=14),
             options=[ft.dropdown.Option("PDF", "PDF"), ft.dropdown.Option("Images (JPG)", "Images")],
@@ -179,6 +188,7 @@ class PassportFiligraneApp:
                     ft.Column(controls=[self.font_size_label, self.font_size_slider], spacing=0),
                     ft.Column(controls=[self.spacing_label, self.spacing_slider], spacing=0),
                     self.color_dropdown,
+                    self.orientation_dropdown,
                     ft.Divider(height=20, color="transparent"),
                     self.secure_mode_switch,
                     self.dpi_container,
@@ -229,6 +239,7 @@ class PassportFiligraneApp:
         self.font_size_slider.disabled = disabled
         self.spacing_slider.disabled = disabled
         self.color_dropdown.disabled = disabled
+        self.orientation_dropdown.disabled = disabled
         self.save_button.disabled = disabled or self.watermarked_image_bytes is None
         self.secure_mode_switch.disabled = disabled
         self.dpi_segmented_button.disabled = disabled
@@ -269,9 +280,10 @@ class PassportFiligraneApp:
                 font_size = int(self.font_size_slider.value)
                 spacing = int(self.spacing_slider.value)
                 color = self.color_dropdown.value
-                
+                orientation = self.orientation_dropdown.value
+
                 if self.current_file_type == "image":
-                    self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color)
+                    self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color, orientation=orientation)
                 elif self.current_file_type == "pdf" and self.pdf_doc:
                     # Utilisation du rendu vectoriel natif pour la prévisualisation (bien plus net et fidèle)
                     self.watermarked_image_bytes = generate_pdf_preview(
@@ -280,7 +292,8 @@ class PassportFiligraneApp:
                          opacity=opacity,
                          font_size=font_size,
                          spacing=spacing,
-                         color=color
+                         color=color,
+                         orientation=orientation
                     )
                 
                 self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
@@ -370,7 +383,8 @@ class PassportFiligraneApp:
                         font_size=int(self.font_size_slider.value),
                         spacing=int(self.spacing_slider.value),
                         color=self.color_dropdown.value,
-                        dpi=dpi
+                        dpi=dpi,
+                        orientation=self.orientation_dropdown.value
                     )
                 else:
                     # Classic vector mode
@@ -380,10 +394,11 @@ class PassportFiligraneApp:
                         opacity=self.opacity_slider.value,
                         font_size=int(self.font_size_slider.value),
                         spacing=int(self.spacing_slider.value),
-                        color=self.color_dropdown.value
+                        color=self.color_dropdown.value,
+                        orientation=self.orientation_dropdown.value
                     )
                     doc_to_save = self.pdf_doc
-                
+
                 save_watermarked_pdf(doc_to_save, e.path)
                 
             self.page.snack_bar = ft.SnackBar(
@@ -408,7 +423,8 @@ class PassportFiligraneApp:
                         font_size=int(self.font_size_slider.value),
                         spacing=int(self.spacing_slider.value),
                         color=self.color_dropdown.value,
-                        dpi=dpi
+                        dpi=dpi,
+                        orientation=self.orientation_dropdown.value
                     )
                 else:
                     # Classic vector mode
@@ -418,7 +434,8 @@ class PassportFiligraneApp:
                         opacity=self.opacity_slider.value,
                         font_size=int(self.font_size_slider.value),
                         spacing=int(self.spacing_slider.value),
-                        color=self.color_dropdown.value
+                        color=self.color_dropdown.value,
+                        orientation=self.orientation_dropdown.value
                     )
                     doc_to_save = self.pdf_doc
                 
