@@ -109,7 +109,7 @@ def main(page: ft.Page):
                     f.write(watermarked_image_bytes)
                 page.snack_bar = ft.SnackBar(
                     ft.Text(f"Image enregistrée avec succès : {os.path.basename(e.path)}"),
-                    bgcolor=ft.colors.SUCCESS
+                    bgcolor=ft.colors.GREEN
                 )
                 page.snack_bar.open = True
                 page.update()
