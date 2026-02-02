@@ -86,6 +86,78 @@ def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="
             
     return Image.alpha_composite(img, txt_layer)
 
+def apply_vector_watermark_to_pdf(doc, text, opacity, font_size, spacing, color):
+    """
+    Applique un filigrane vectoriel natif sur toutes les pages du document PDF.
+
+    Cette fonction utilise page.insert_text() de PyMuPDF pour ajouter des filigranes
+    vectoriels qui préservent la qualité du PDF original. Le texte reste net à tout
+    niveau de zoom et le contenu original reste sélectionnable.
+
+    Args:
+        doc (fitz.Document): Document PDF à filigraner
+        text (str): Texte du filigrane (ex: "COPIE")
+        opacity (int): Opacité en pourcentage (0-100)
+        font_size (int): Taille de la police en points (12-72)
+        spacing (int): Espacement entre les filigranes en pixels (50-300)
+        color (str): Couleur du filigrane ("Blanc", "Noir", "Gris")
+
+    Returns:
+        None: Modifie le document en place
+    """
+    # Mapping des couleurs (0.0-1.0 range pour PyMuPDF)
+    color_map = {
+        "Blanc": (1.0, 1.0, 1.0),
+        "Noir": (0.0, 0.0, 0.0),
+        "Gris": (0.5, 0.5, 0.5),
+    }
+    rgb = color_map.get(color, (1.0, 1.0, 1.0))
+
+    # Convertir opacité 0-100 en 0.0-1.0
+    fill_opacity = opacity / 100.0
+
+    # Angle de rotation (45° diagonal)
+    angle = 45
+
+    # Appliquer le filigrane à toutes les pages
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+
+        # Dimensions de la page
+        page_width = page.rect.width
+        page_height = page.rect.height
+
+        # Créer le motif de tiling diagonal
+        y = -spacing
+        row = 0
+
+        while y < page_height + spacing:
+            x = -spacing
+
+            # Décaler les rangées alternées
+            if row % 2 == 0:
+                x += spacing // 2
+
+            while x < page_width + spacing:
+                point = fitz.Point(x, y)
+
+                # Insérer le texte avec rotation et opacité
+                page.insert_text(
+                    point=point,
+                    text=text,
+                    fontsize=font_size,
+                    fontname="helv",
+                    color=rgb,
+                    morph=(point, fitz.Matrix(angle)),  # Rotation de 45°
+                    fill_opacity=fill_opacity,
+                    overlay=True  # Dessiner par-dessus le contenu existant
+                )
+
+                x += spacing
+
+            y += spacing
+            row += 1
+
 def apply_watermark_to_pdf(doc, watermark_params):
     """
     Applique un filigrane sur toutes les pages du document PDF.
