@@ -2,10 +2,10 @@
 
 ## Phase 1: Setup & Dépendances
 
-- [ ] Task 1.1: Ajouter PyMuPDF aux dépendances
-  - [ ] Mettre à jour `requirements.txt` avec `pymupdf>=1.24.0`
-  - [ ] Mettre à jour `tech-stack.md` avec la documentation PyMuPDF
-  - [ ] Vérifier l'installation avec `pip install -r requirements.txt`
+- [x] Task 1.1: Ajouter PyMuPDF aux dépendances [2e3df45]
+  - [x] Mettre à jour `requirements.txt` avec `pymupdf>=1.24.0`
+  - [x] Mettre à jour `tech-stack.md` avec la documentation PyMuPDF
+  - [x] Vérifier l'installation avec `pip install -r requirements.txt`
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup & Dépendances' (Protocol in workflow.md)
 
