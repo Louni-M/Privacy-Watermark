@@ -1,0 +1,3 @@
+([('Passport Filigrane',
+   '/Users/louni/Code/Passport-Filigrane/dist/Passport Filigrane',
+   'EXECUTABLE')],)
