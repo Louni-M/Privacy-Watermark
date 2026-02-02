@@ -38,11 +38,11 @@ def get_font(size):
                 continue
     return ImageFont.load_default()
 
-def apply_watermark(image_bytes, text, opacity, font_size, spacing):
+def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="Blanc"):
     """Applique un filigrane répété en diagonale sur l'image."""
     img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
     # Utilisation de la logique partagée de pdf_processing pour la cohérence
-    out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing)
+    out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color=color)
     output = io.BytesIO()
     out.convert("RGB").save(output, format="JPEG", quality=90)
     return output.getvalue()
@@ -109,6 +109,16 @@ class PassportFiligraneApp:
             active_color="#3b82f6", on_change=self.update_preview, disabled=True
         )
 
+        self.color_dropdown = ft.Dropdown(
+            label="Couleur du texte", label_style=ft.TextStyle(color="#ffffff", size=14),
+            options=[
+                ft.dropdown.Option("Blanc", "Blanc"),
+                ft.dropdown.Option("Noir", "Noir"),
+                ft.dropdown.Option("Gris", "Gris"),
+            ],
+            value="Blanc", on_change=self.update_preview, disabled=True
+        )
+
         self.export_format_dropdown = ft.Dropdown(
             label="Format d'export", label_style=ft.TextStyle(color="#ffffff", size=14),
             options=[ft.dropdown.Option("PDF", "PDF"), ft.dropdown.Option("Images (JPG)", "Images")],
@@ -133,6 +143,7 @@ class PassportFiligraneApp:
                     ft.Column(controls=[self.opacity_label, self.opacity_slider], spacing=0),
                     ft.Column(controls=[self.font_size_label, self.font_size_slider], spacing=0),
                     ft.Column(controls=[self.spacing_label, self.spacing_slider], spacing=0),
+                    self.color_dropdown,
                     ft.ElevatedButton(
                         "Sélectionner un fichier", icon=ft.icons.UPLOAD_FILE,
                         on_click=lambda _: self.file_picker.pick_files(
@@ -172,6 +183,7 @@ class PassportFiligraneApp:
         self.opacity_slider.disabled = disabled
         self.font_size_slider.disabled = disabled
         self.spacing_slider.disabled = disabled
+        self.color_dropdown.disabled = disabled
         self.save_button.disabled = disabled or self.watermarked_image_bytes is None
         
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
@@ -203,12 +215,13 @@ class PassportFiligraneApp:
                 opacity = self.opacity_slider.value
                 font_size = int(self.font_size_slider.value)
                 spacing = int(self.spacing_slider.value)
+                color = self.color_dropdown.value
                 
                 if self.current_file_type == "image":
-                    self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing)
+                    self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color)
                 elif self.current_file_type == "pdf" and self.pdf_doc:
                     first_page_img = pdf_page_to_image(self.pdf_doc, 0)
-                    watermarked_img = apply_watermark_to_pil_image(first_page_img, text, opacity, font_size, spacing)
+                    watermarked_img = apply_watermark_to_pil_image(first_page_img, text, opacity, font_size, spacing, color=color)
                     buffer = io.BytesIO()
                     watermarked_img.convert("RGB").save(buffer, format="JPEG", quality=90)
                     self.watermarked_image_bytes = buffer.getvalue()
@@ -280,7 +293,8 @@ class PassportFiligraneApp:
                     "text": self.watermark_text.value,
                     "opacity": self.opacity_slider.value,
                     "font_size": int(self.font_size_slider.value),
-                    "spacing": int(self.spacing_slider.value)
+                    "spacing": int(self.spacing_slider.value),
+                    "color": self.color_dropdown.value
                 }
                 apply_watermark_to_pdf(self.pdf_doc, params)
                 save_watermarked_pdf(self.pdf_doc, e.path)
@@ -301,7 +315,8 @@ class PassportFiligraneApp:
                     "text": self.watermark_text.value,
                     "opacity": self.opacity_slider.value,
                     "font_size": int(self.font_size_slider.value),
-                    "spacing": int(self.spacing_slider.value)
+                    "spacing": int(self.spacing_slider.value),
+                    "color": self.color_dropdown.value
                 }
                 apply_watermark_to_pdf(self.pdf_doc, params)
                 save_pdf_as_images(self.pdf_doc, e.path, "export")

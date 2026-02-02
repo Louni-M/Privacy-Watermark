@@ -46,14 +46,22 @@ def get_font(size):
                 continue
     return ImageFont.load_default()
 
-def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing):
+def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="Blanc"):
     """Applique un filigrane répété en diagonale sur une image PIL (RGBA)."""
-    txt_layer = Image.new("RGBA", img.size, (255, 255, 255, 0))
+    # Mapping des couleurs
+    color_map = {
+        "Blanc": (255, 255, 255),
+        "Noir": (0, 0, 0),
+        "Gris": (128, 128, 128),
+    }
+    rgb = color_map.get(color, (255, 255, 255))
+    
+    txt_layer = Image.new("RGBA", img.size, (rgb[0], rgb[1], rgb[2], 0))
     d = ImageDraw.Draw(txt_layer)
     
     font = get_font(font_size)
     alpha = int((opacity / 100) * 255)
-    fill_color = (255, 255, 255, alpha)
+    fill_color = (rgb[0], rgb[1], rgb[2], alpha)
     
     try:
         left, top, right, bottom = font.getbbox(text)
@@ -86,6 +94,7 @@ def apply_watermark_to_pdf(doc, watermark_params):
     opacity = watermark_params.get("opacity", 30)
     font_size = watermark_params.get("font_size", 36)
     spacing = watermark_params.get("spacing", 150)
+    color = watermark_params.get("color", "Blanc")
     
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
@@ -94,7 +103,7 @@ def apply_watermark_to_pdf(doc, watermark_params):
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
         
         # Appliquer le filigrane
-        watermarked_img = apply_watermark_to_pil_image(img.convert("RGBA"), text, opacity, font_size, spacing)
+        watermarked_img = apply_watermark_to_pil_image(img.convert("RGBA"), text, opacity, font_size, spacing, color=color)
         
         # Conversion en bytes pour ré-insertion dans le PDF
         img_byte_arr = io.BytesIO()
