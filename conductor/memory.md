@@ -59,3 +59,18 @@
 ### Issues Encountered
 - **Flet CLI implicit upgrade**: `flet pack` peut tenter de mettre à jour des composants. Il est crucial de figer l'environnement (`requirements.txt`) avant de packager.
 - **Ambiguous Arguments**: `flet pack` possède des arguments très proches (`--product-name` vs `--product`). Toujours vérifier l'aide (`--help`) du CLI.
+
+## 2026-02-02 Track: pdf_hybrid_20260202 (PDF Hybride & Sécurisé)
+
+### Key Learnings
+- **High-DPI Rasterization Cost**: La rasterisation à 600 DPI est gourmande en RAM et génère des fichiers PDF volumineux. Le réglage par défaut à 450 DPI est le meilleur compromis qualité/poids.
+- **Scrollable UI for Desktop**: Sur macOS, les fenêtres peuvent être redimensionnées. L'usage de `ft.Column(scroll=ft.ScrollMode.AUTO)` est indispensable pour éviter que les contrôles du bas (DPI, Save) ne disparaissent sur les petits écrans.
+- **Readability & Rotation**: L'angle 45° est bien plus naturel pour l'œil humain que les angles >90°, car il suit le mouvement ascendant de lecture.
+
+### Patterns Discovered
+- **Container-Level Visibility Toggle**: Pour éviter les conflits de visibilité (où un enfant est masqué malgré son parent affiché), il est préférable de grouper les contrôles conditionnels dans un `ft.Column` ou `ft.Container` dédié (`self.dpi_container`).
+- **File-Based Error Logging**: Dans une app packagée (`.app`), le terminal n'est pas visible. Écrire les exceptions dans un `error_log.txt` local est vital pour débugger les crashs chez l'utilisateur final.
+
+### Issues Encountered
+- **AttributeError on .parent**: Il ne faut pas se fier à `self.control.parent` pour modifier la visibilité, car Flet peut reconstruire l'arbre. Utiliser des références explicites stockées dans `self`.
+- **Packaging Icon Path**: `flet pack` échoue si le chemin de l'icône est incorrect sans donner de message d'erreur très clair avant le traceback.

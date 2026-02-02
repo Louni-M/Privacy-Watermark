@@ -4,7 +4,7 @@ import os
 import fitz
 
 # Constants for vector watermark
-WATERMARK_ROTATION_ANGLE = 135  # Diagonal rotation in degrees
+WATERMARK_ROTATION_ANGLE = 45  # Diagonal rotation in degrees (bottom-left to top-right)
 WATERMARK_COLOR_MAP = {
     "Blanc": (1.0, 1.0, 1.0),
     "Noir": (0.0, 0.0, 0.0),
@@ -84,7 +84,7 @@ def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="
     sd = ImageDraw.Draw(stamp)
     sd.text((padding//2, padding//2), text, font=font, fill=fill_color)
     
-    rotated_stamp = stamp.rotate(45, expand=True, resample=Image.Resampling.BICUBIC)
+    rotated_stamp = stamp.rotate(WATERMARK_ROTATION_ANGLE, expand=True, resample=Image.Resampling.BICUBIC)
     rw, rh = rotated_stamp.size
     
     for y in range(-rh, img.height + rh, spacing):
@@ -255,3 +255,50 @@ def generate_pdf_preview(doc, text, opacity, font_size, spacing, color):
     # Rendu en image (PNG)
     pix = page.get_pixmap(alpha=True)
     return pix.tobytes("png")
+
+def apply_secure_raster_watermark_to_pdf(doc, text, opacity, font_size, spacing, color, dpi=300):
+    """
+    Applique un filigrane sur un PDF en rendant chaque page comme une image (rasterisation).
+    Cela rend le filigrane indissociable du contenu original.
+    """
+    out_doc = fitz.open()
+    
+    # On définit une matrice pour le DPI
+    # get_pixmap utilise par défaut 72 DPI. Pour avoir le DPI souhaité, on scale par DPI / 72.
+    zoom = dpi / 72
+    mat = fitz.Matrix(zoom, zoom)
+    
+    for page in doc:
+        # 1. Rendre la page originale en image (PixMap) à haute résolution
+        pix = page.get_pixmap(matrix=mat, alpha=False)
+        
+        # 2. Convertir en image PIL
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        
+        # 3. Convertir en RGBA pour appliquer le filigrane (le tiling utilise alpha_composite)
+        img_rgba = img.convert("RGBA")
+        
+        # 4. Appliquer le filigrane (le tiling doit être adapté à la résolution élevée)
+        # On ajuste la taille de police et l'espacement proportionnellement au DPI
+        # pour garder le même aspect visuel relatif que sur la prévisualisation standard.
+        scale_factor = dpi / 72
+        adjusted_font_size = int(font_size * scale_factor)
+        adjusted_spacing = int(spacing * scale_factor)
+        
+        watermarked_img = apply_watermark_to_pil_image(
+            img_rgba, text, opacity, adjusted_font_size, adjusted_spacing, color=color
+        )
+        
+        # 5. Reconvertir en RGB pour l'insérer dans le nouveau PDF
+        final_img = watermarked_img.convert("RGB")
+        
+        # 6. Créer une nouvelle page dans le document de sortie avec les dimensions originales
+        new_page = out_doc.new_page(width=page.rect.width, height=page.rect.height)
+        
+        # 7. Insérer l'image dans la nouvelle page
+        img_buffer = io.BytesIO()
+        final_img.save(img_buffer, format="JPEG", quality=95) # Qualité maintenue à 95%
+        new_page.insert_image(new_page.rect, stream=img_buffer.getvalue())
+        
+    return out_doc
+

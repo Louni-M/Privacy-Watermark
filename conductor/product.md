@@ -55,9 +55,17 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
 - **Export Flexible** : Sauvegarde au format PDF (vectoriel) ou en séquence d'images JPG.
 - **Application Standalone** : Packaging en tant qu'application macOS native (`.app`) avec icône personnalisée pour un lancement sans terminal.
 - **Détails PDF** : Affichage du nombre de pages.
-- **Préréglages de filigrane** : Textes prédéfinis ("COPIE", "NE PAS DIFFUSER", "À L'USAGE EXCLUSIF DE [nom]")
-- **Traitement par lot (batch)** : Filigraner plusieurs images en une seule opération
 - **Historique** : Mémorisation des textes et paramètres récemment utilisés
+- **Packaging macOS** : Bundle `.app` autonome avec icône personnalisée.
+
+### v1.2 (Hybrid PDF Watermarking) - [x]
+- **Mode Hybride** : Choix entre le mode **Vectoriel** (haute qualité, texte sélectionnable) et le mode **Sécurisé** (rasterisation indélébile).
+- **Mode Sécurisé (Raster)** : "Brûle" le filigrane dans les pixels de chaque page, empêchant toute extraction ou suppression facile.
+- **Qualité Variable (DPI)** : Sélection entre **300**, **450** et **600 DPI** pour équilibrer le poids du fichier et la finesse du rendu.
+- **Optimisation UI** : Barre latérale défilable (scrollable) pour supporter tous les contrôles en mode fenêtre.
+- **Orientation Naturelle** : Filigrane incliné à **45°** (diagonale montant du bas gauche vers le haut droite) pour une meilleure lisibilité.
+- **Logging de Debug** : Système de log d'erreurs automatique (`error_log.txt`) pour faciliter le support du bundle `.app`.
+
 
 ## Stack Technique
 
@@ -97,11 +105,13 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
   2. Créer un calque transparent (RGBA)
   3. Appliquer un motif de tiling avec Pillow (`rotate` + `paste`)
   4. Fusionner les calques
-- **Pour les PDF (Vectoriel) :**
-  1. Ouvrir le document via PyMuPDF
-  2. Pour chaque page, calculer les positions de tiling
-  3. Insérer le texte via `page.insert_text()` avec une matrice `morph` pour la rotation
-  4. Appliquer l'opacité via `fill_opacity` sans rasteriser le contenu original
+    2. Pour chaque page, calculer les positions de tiling
+    3. Insérer le texte via `page.insert_text()` avec une matrice `morph` pour la rotation
+    4. Appliquer l'opacité via `fill_opacity` sans rasteriser le contenu original
+- **Pour le Mode Sécurisé (Raster PDF) :**
+  1. Rasteriser chaque page à haute résolution (300/450/600 DPI) via une matrice de zoom
+  2. Appliquer le filigrane sur l'image brute (Pillow)
+  3. Réinsérer l'image filigranée dans une nouvelle page PDF (Qualité JPEG 95%)
 
 ## Contraintes
 
