@@ -8,9 +8,9 @@
   - [x] Sub-task: Test opacity/transparency support in PyMuPDF text rendering
   - [x] Sub-task: Document findings and chosen approach
 
-- [ ] Task: Create test PDF fixtures for quality validation
-  - [ ] Sub-task: Create a multi-page test PDF with text, vectors, and images
-  - [ ] Sub-task: Create a high-resolution test PDF for zoom testing
+- [x] Task: Create test PDF fixtures for quality validation [45c8ea2]
+  - [x] Sub-task: Create a multi-page test PDF with text, vectors, and images
+  - [x] Sub-task: Create a high-resolution test PDF for zoom testing
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
