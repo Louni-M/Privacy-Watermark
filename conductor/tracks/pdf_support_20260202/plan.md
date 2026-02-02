@@ -95,19 +95,34 @@
 ## Phase 5: Gestion d'erreurs & Polish
 ## Phase 5: Gestion d'erreurs & Polish [~]
 
-- [~] Task 5.1: Implémenter les messages d'erreur SnackBar
-  - [ ] Message pour PDF protégé par mot de passe
-  - [ ] Message pour PDF corrompu/illisible
-  - [ ] Vérifier la cohérence avec les erreurs images existantes
+## Phase 5: Gestion d'erreurs & Polish [checkpoint: 2413a88]
 
-- [ ] Task 5.2: Tests d'intégration end-to-end
-  - [ ] Test: workflow complet image (régression)
-  - [ ] Test: workflow complet PDF vers PDF
-  - [ ] Test: workflow complet PDF vers Images
+- [x] Task 5.1: Implémenter les messages d'erreur SnackBar [2413a88]
+  - [x] Message pour PDF protégé par mot de passe
+  - [x] Message pour PDF corrompu/illisible
+  - [x] Vérifier la cohérence avec les erreurs images existantes
 
-- [ ] Task 5.3: Revue de code et refactoring
-  - [ ] Vérifier la couverture de tests (>80%)
-  - [ ] Nettoyer le code et ajouter les docstrings manquants
-  - [ ] Mettre à jour la documentation si nécessaire
+- [x] Phase 5: Polissage et Finalisation [2413a88]
+  - [x] Task 5.1: Error Handling (Implemented & Verified)
+  - [x] Task 5.2: E2E Integration Tests (Verified)
+  - [x] Task 5.3: Code Review & Refactoring (Completed)
+- [ ] Phase 6: Options de Style (Couleur)
+    - [ ] Task 6.1: Color Tests
+    - [ ] Task 6.2: Rendering Support
+    - [ ] Task 6.3: UI Integration
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Gestion d'erreurs & Polish' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Gestion d'erreurs & Polish' (Protocol in workflow.md)
+
+## Phase 6: Options de Style (Couleur)
+
+- [ ] Task 6.1: Écrire les tests pour la sélection de couleur
+  - [ ] Test: appliquer un filigrane blanc, noir et gris
+  - [ ] Vérifier que la couleur est correctement transmise au moteur de rendu
+
+- [ ] Task 6.2: Mettre à jour le moteur de rendu PDF/Image
+  - [ ] Adapter `apply_watermark_to_pil_image` pour accepter un paramètre `color`
+  - [ ] Gérer les options: "Blanc", "Noir", "Gris"
+
+- [ ] Task 6.3: Intégrer le sélecteur dans l'UI
+  - [ ] Ajouter un Dropdown ou des RadioButtons pour la couleur (Blanc par défaut)
+  - [ ] Mettre à jour `update_preview` pour prendre en compte la couleur
