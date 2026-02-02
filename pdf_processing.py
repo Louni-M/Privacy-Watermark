@@ -26,8 +26,10 @@ def pdf_page_to_image(doc, page_num):
     """
     Convertit une page PDF en image PIL pour la prévisualisation.
     """
-    # Placeholder for Task 2.4
-    pass
+    page = doc.load_page(page_num)
+    pix = page.get_pixmap(alpha=True)
+    img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
+    return img
 
 def apply_watermark_to_pdf(doc, watermark_params):
     """
