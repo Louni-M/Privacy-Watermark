@@ -37,7 +37,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md) [d2df448]
 
-## Phase 3: Integration & Migration
+## Phase 3: Integration & Migration [checkpoint: 036d171]
 
 - [x] Task: Write failing tests for PDF processing integration [5b302e4]
   - [x] Sub-task: Test that original PDF text remains selectable after watermarking
@@ -51,7 +51,7 @@
 
 - [x] Task: Verify all tests pass (Green phase) [8b15589]
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md) [036d171]
 
 ## Phase 4: Preview & Polish
 
