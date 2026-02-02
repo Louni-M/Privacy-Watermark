@@ -63,8 +63,18 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
 - **Mode Sécurisé (Raster)** : "Brûle" le filigrane dans les pixels de chaque page, empêchant toute extraction ou suppression facile.
 - **Qualité Variable (DPI)** : Sélection entre **300**, **450** et **600 DPI** pour équilibrer le poids du fichier et la finesse du rendu.
 - **Optimisation UI** : Barre latérale défilable (scrollable) pour supporter tous les contrôles en mode fenêtre.
-- **Orientation Naturelle** : Filigrane incliné à **45°** (diagonale montant du bas gauche vers le haut droite) pour une meilleure lisibilité.
 - **Logging de Debug** : Système de log d'erreurs automatique (`error_log.txt`) pour faciliter le support du bundle `.app`.
+
+### v1.3 (Orientation & Secure Mode Fixes) - [x]
+- **Orientation Configurable** : Choix de la direction du filigrane via dropdown :
+  - **Ascendant (↗)** : Texte montant de gauche à droite (angle +45°)
+  - **Descendant (↘)** : Texte descendant de gauche à droite (angle -45°)
+- **Correction Texte Coupé** : Résolution du bug où le bas des lettres était coupé en mode Sécurisé (prise en compte des offsets `getbbox()`).
+- **Audit de Sécurité** : Validation que le mode Sécurisé produit un PDF :
+  - 0 blocs texte (filigrane non extractible)
+  - 1 image JPEG fusionnée (contenu + filigrane indissociables)
+  - Résistant à `page.search_for()`, redaction, et manipulation PDF
+- **Cohérence Preview/Export** : L'orientation est appliquée uniformément sur la prévisualisation et tous les modes d'export.
 
 
 ## Stack Technique
