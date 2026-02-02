@@ -14,7 +14,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [46b95d4]
 
-## Phase 2: Core Vector Watermark Implementation (TDD)
+## Phase 2: Core Vector Watermark Implementation (TDD) [checkpoint: d2df448]
 
 - [x] Task: Write failing tests for vector watermark function [467c8b1]
   - [x] Sub-task: Test that watermark text is added to PDF page
@@ -35,7 +35,7 @@
 
 - [x] Task: Refactor for code clarity and performance [3af775e]
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md) [d2df448]
 
 ## Phase 3: Integration & Migration
 
