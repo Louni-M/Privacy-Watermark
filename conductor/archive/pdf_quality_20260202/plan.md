@@ -74,15 +74,15 @@
 
 ## Phase 5: Final Validation
 
-- [ ] Task: Run full test suite with coverage report
-  - [ ] Sub-task: Ensure >80% coverage on new code
-  - [ ] Sub-task: Ensure all existing tests still pass
+- [x] Task: Run full test suite with coverage report
+  - [x] Sub-task: Ensure >80% coverage on new code
+  - [x] Sub-task: Ensure all existing tests still pass
 
-- [ ] Task: Manual acceptance testing
-  - [ ] Sub-task: AC-1: Verify 400% zoom sharpness on real PDF
-  - [ ] Sub-task: AC-2: Verify text remains selectable
-  - [ ] Sub-task: AC-3: Verify all watermark controls work correctly
-  - [ ] Sub-task: AC-4: Verify file size constraint
-  - [ ] Sub-task: AC-5: Verify image watermarking unchanged
+- [x] Task: Manual acceptance testing
+  - [x] Sub-task: AC-1: Verify 400% zoom sharpness on real PDF
+  - [x] Sub-task: AC-2: Verify text remains selectable
+  - [x] Sub-task: AC-3: Verify all watermark controls work correctly
+  - [x] Sub-task: AC-4: Verify file size constraint
+  - [x] Sub-task: AC-5: Verify image watermarking unchanged
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 5' (Protocol in workflow.md)
