@@ -102,3 +102,27 @@ def apply_watermark_to_pdf(doc, watermark_params):
         
         # Insérer l'image filigranée par-dessus la page
         page.insert_image(page.rect, stream=img_byte_arr.getvalue())
+
+def save_watermarked_pdf(doc, output_path):
+    """
+    Sauvegarde le document PDF modifié.
+    """
+    doc.save(output_path)
+
+def save_pdf_as_images(doc, output_dir, base_name):
+    """
+    Sauvegarde chaque page du PDF en tant qu'image JPG individuelle.
+    """
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        
+    for i in range(len(doc)):
+        page = doc.load_page(i)
+        pix = page.get_pixmap()
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        
+        # On peut réutiliser la pixmap directement si on ne veut pas refiligraner
+        # Mais ici on suppose que apply_watermark_to_pdf a déjà été appelé sur doc.
+        # Si on veut garantir la qualité 90, on passe par PIL.
+        output_path = os.path.join(output_dir, f"{base_name}_page_{i+1:03d}.jpg")
+        img.save(output_path, "JPEG", quality=90)

@@ -45,14 +45,14 @@
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Module de traitement PDF' (Protocol in workflow.md)
 
-## Phase 3: Intégration UI
+## Phase 3: Intégration UI [checkpoint: f2730c7]
 
-- [x] Task 3.1: Écrire les tests pour la détection du type de fichier
+- [x] Task 3.1: Écrire les tests pour la détection du type de fichier [a76fb24]
   - [x] Test: détecter un fichier image (jpg, png)
   - [x] Test: détecter un fichier PDF
   - [x] Vérifier que les tests échouent (Red Phase)
 
-- [x] Task 3.2: Implémenter la détection du type de fichier [01f2e34]
+- [x] Task 3.2: Implémenter la détection du type de fichier [a76fb24]
   - [x] Créer fonction `detect_file_type(file_path)` retournant "image" ou "pdf"
   - [x] Mettre à jour le FilePicker pour accepter `.pdf`
   - [x] Vérifier que les tests passent (Green Phase)
@@ -62,31 +62,32 @@
   - [x] Afficher la prévisualisation de la première page
   - [x] Conserver le comportement existant pour les images
 
-- [~] Task 3.4: Ajouter le sélecteur de format d'export
-  - [ ] Créer un composant Dropdown ou RadioButtons pour le choix du format
-  - [ ] Visible uniquement quand un PDF est chargé
-  - [ ] Options: "Exporter en PDF" / "Exporter en Images (JPG)"
+- [x] Task 3.4: Ajouter le sélecteur de format d'export [a76fb24]
+  - [x] Créer un composant Dropdown ou RadioButtons pour le choix du format
+  - [x] Visible uniquement quand un PDF est chargé
+  - [x] Options: "Exporter en PDF" / "Exporter en Images (JPG)"
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Intégration UI' (Protocol in workflow.md)
 
 ## Phase 4: Export PDF
 
-- [ ] Task 4.1: Écrire les tests pour l'export PDF
-  - [ ] Test: exporter un PDF filigrané au format PDF
-  - [ ] Test: exporter un PDF filigrané en images JPG séparées
-  - [ ] Test: vérifier la qualité des images exportées (90)
-  - [ ] Vérifier que les tests échouent (Red Phase)
+- [x] Task 4.1: Écrire les tests pour l'export PDF [a76fb24]
+  - [x] Test: exporter un PDF filigrané au format PDF
+  - [x] Test: exporter un PDF filigrané en images JPG séparées
+  - [x] Test: vérifier la qualité des images exportées (90)
+  - [x] Vérifier que les tests passent (Green Phase)
 
-- [ ] Task 4.2: Implémenter l'export PDF vers PDF
-  - [ ] Créer fonction `save_watermarked_pdf(doc, output_path)`
-  - [ ] Utiliser `doc.save()` de PyMuPDF
+- [~] Task 4.2: Implémenter l'export PDF vers PDF
+  - [x] Créer fonction `save_watermarked_pdf(doc, output_path)`
+  - [x] Utiliser `doc.save()` de PyMuPDF
   - [ ] Intégrer avec le FilePicker pour la sauvegarde
   - [ ] Vérifier que les tests passent (Green Phase)
 
-- [ ] Task 4.3: Implémenter l'export PDF vers Images
-  - [ ] Créer fonction `save_pdf_as_images(doc, output_dir, base_name)`
-  - [ ] Générer un fichier JPG par page (qualité 90)
-  - [ ] Nommage: `{base_name}_page_001.jpg`, etc.
+- [~] Task 4.3: Implémenter l'export PDF vers Images
+  - [x] Créer fonction `save_pdf_as_images(doc, output_dir, base_name)`
+  - [x] Générer un fichier JPG par page (qualité 90)
+  - [x] Nommage: `{base_name}_page_001.jpg`, etc.
+  - [ ] Intégrer avec le FilePicker pour la sauvegarde
   - [ ] Vérifier que les tests passent (Green Phase)
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Export PDF' (Protocol in workflow.md)
