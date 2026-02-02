@@ -31,9 +31,9 @@
   - [x] Sub-task: Implement color mapping (White, Black, Gray to RGB)
   - [x] Sub-task: Ensure watermark is added as overlay layer
 
-- [ ] Task: Verify all tests pass (Green phase)
+- [x] Task: Verify all tests pass (Green phase) [318cfeb]
 
-- [ ] Task: Refactor for code clarity and performance
+- [x] Task: Refactor for code clarity and performance [3af775e]
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
