@@ -3,6 +3,14 @@ import io
 import os
 import fitz
 
+# Constants for vector watermark
+WATERMARK_ROTATION_ANGLE = 45  # Diagonal rotation in degrees
+WATERMARK_COLOR_MAP = {
+    "Blanc": (1.0, 1.0, 1.0),
+    "Noir": (0.0, 0.0, 0.0),
+    "Gris": (0.5, 0.5, 0.5),
+}
+
 def load_pdf(file_path):
     """
     Charge un fichier PDF et retourne le document et le nombre de pages.
@@ -104,20 +112,31 @@ def apply_vector_watermark_to_pdf(doc, text, opacity, font_size, spacing, color)
 
     Returns:
         None: Modifie le document en place
+
+    Example:
+        >>> doc = fitz.open("document.pdf")
+        >>> apply_vector_watermark_to_pdf(
+        ...     doc=doc,
+        ...     text="CONFIDENTIEL",
+        ...     opacity=30,
+        ...     font_size=36,
+        ...     spacing=150,
+        ...     color="Blanc"
+        ... )
+        >>> doc.save("document_watermarked.pdf")
+
+    Notes:
+        - Le filigrane est appliqué à toutes les pages du document
+        - L'angle de rotation est fixé à 45° (diagonal)
+        - Le filigrane est ajouté en couche overlay (par-dessus le contenu)
+        - La qualité du PDF original est préservée (pas de rasterisation)
+        - Le texte original reste sélectionnable après filigranage
     """
-    # Mapping des couleurs (0.0-1.0 range pour PyMuPDF)
-    color_map = {
-        "Blanc": (1.0, 1.0, 1.0),
-        "Noir": (0.0, 0.0, 0.0),
-        "Gris": (0.5, 0.5, 0.5),
-    }
-    rgb = color_map.get(color, (1.0, 1.0, 1.0))
+    # Mapping de la couleur vers RGB (0.0-1.0 range pour PyMuPDF)
+    rgb = WATERMARK_COLOR_MAP.get(color, (1.0, 1.0, 1.0))
 
-    # Convertir opacité 0-100 en 0.0-1.0
+    # Convertir opacité 0-100 en 0.0-1.0 (range PyMuPDF)
     fill_opacity = opacity / 100.0
-
-    # Angle de rotation (45° diagonal)
-    angle = 45
 
     # Appliquer le filigrane à toutes les pages
     for page_num in range(len(doc)):
@@ -148,7 +167,7 @@ def apply_vector_watermark_to_pdf(doc, text, opacity, font_size, spacing, color)
                     fontsize=font_size,
                     fontname="helv",
                     color=rgb,
-                    morph=(point, fitz.Matrix(angle)),  # Rotation de 45°
+                    morph=(point, fitz.Matrix(WATERMARK_ROTATION_ANGLE)),
                     fill_opacity=fill_opacity,
                     overlay=True  # Dessiner par-dessus le contenu existant
                 )
