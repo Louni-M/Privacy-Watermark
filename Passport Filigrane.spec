@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('pdf_processing.py', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
