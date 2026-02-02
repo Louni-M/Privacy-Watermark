@@ -62,7 +62,8 @@ def test_file_picker_setup():
             break
             
     assert file_picker is not None, "FilePicker should be added to page overlay"
-    assert file_picker.file_type == ft.FilePickerFileType.IMAGE, "FilePicker should be configured for images"
+    assert file_picker.file_type == ft.FilePickerFileType.CUSTOM, "FilePicker should be configured for custom extensions"
+    assert "pdf" in file_picker.allowed_extensions
     
     # Verify selection button existence
     # We expect a Row as the main layout container containing two main panels
@@ -84,7 +85,7 @@ def test_file_picker_setup():
     assert button is not None, "Selection button should exist in controls panel"
     
     # Check text in positional arg or attribute
-    assert button.text == "Sélectionner une image"
+    assert button.text == "Sélectionner un fichier"
 
 def test_generate_preview_resizing():
     from PIL import Image

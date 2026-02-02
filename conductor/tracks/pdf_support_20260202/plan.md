@@ -9,7 +9,7 @@
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup & Dépendances' (Protocol in workflow.md)
 
-## Phase 2: Module de traitement PDF (Core)
+## Phase 2: Module de traitement PDF (Core) [checkpoint: 7214131]
 
 - [x] Task 2.1: Écrire les tests pour le chargement PDF
   - [x] Test: charger un PDF valide et obtenir le nombre de pages
@@ -47,22 +47,22 @@
 
 ## Phase 3: Intégration UI
 
-- [ ] Task 3.1: Écrire les tests pour la détection du type de fichier
-  - [ ] Test: détecter un fichier image (jpg, png)
-  - [ ] Test: détecter un fichier PDF
-  - [ ] Vérifier que les tests échouent (Red Phase)
+- [x] Task 3.1: Écrire les tests pour la détection du type de fichier
+  - [x] Test: détecter un fichier image (jpg, png)
+  - [x] Test: détecter un fichier PDF
+  - [x] Vérifier que les tests échouent (Red Phase)
 
-- [ ] Task 3.2: Implémenter la détection du type de fichier
-  - [ ] Créer fonction `detect_file_type(file_path)` retournant "image" ou "pdf"
-  - [ ] Mettre à jour le FilePicker pour accepter `.pdf`
-  - [ ] Vérifier que les tests passent (Green Phase)
+- [x] Task 3.2: Implémenter la détection du type de fichier [01f2e34]
+  - [x] Créer fonction `detect_file_type(file_path)` retournant "image" ou "pdf"
+  - [x] Mettre à jour le FilePicker pour accepter `.pdf`
+  - [x] Vérifier que les tests passent (Green Phase)
 
-- [ ] Task 3.3: Adapter l'UI pour afficher les informations PDF
-  - [ ] Afficher "PDF (X pages)" quand un PDF est chargé
-  - [ ] Afficher la prévisualisation de la première page
-  - [ ] Conserver le comportement existant pour les images
+- [x] Task 3.3: Adapter l'UI pour afficher les informations PDF [a76fb24]
+  - [x] Afficher "PDF (X pages)" quand un PDF est chargé
+  - [x] Afficher la prévisualisation de la première page
+  - [x] Conserver le comportement existant pour les images
 
-- [ ] Task 3.4: Ajouter le sélecteur de format d'export
+- [~] Task 3.4: Ajouter le sélecteur de format d'export
   - [ ] Créer un composant Dropdown ou RadioButtons pour le choix du format
   - [ ] Visible uniquement quand un PDF est chargé
   - [ ] Options: "Exporter en PDF" / "Exporter en Images (JPG)"
