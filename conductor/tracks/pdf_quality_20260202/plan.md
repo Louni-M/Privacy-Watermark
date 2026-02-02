@@ -44,12 +44,12 @@
   - [x] Sub-task: Test that original PDF quality is preserved (no rasterization)
   - [x] Sub-task: Test file size remains within 110% of original
 
-- [ ] Task: Integrate vector watermark into PDF save workflow
-  - [ ] Sub-task: Update `apply_watermark_to_pdf()` to use new vector function
-  - [ ] Sub-task: Preserve existing raster path for image files (JPG/PNG)
-  - [ ] Sub-task: Update `save_watermarked_pdf()` if needed
+- [x] Task: Integrate vector watermark into PDF save workflow [8b15589]
+  - [x] Sub-task: Update `apply_watermark_to_pdf()` to use new vector function
+  - [x] Sub-task: Preserve existing raster path for image files (JPG/PNG)
+  - [x] Sub-task: Update `save_watermarked_pdf()` if needed
 
-- [ ] Task: Verify all tests pass (Green phase)
+- [x] Task: Verify all tests pass (Green phase) [8b15589]
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
