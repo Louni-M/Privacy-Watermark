@@ -1,7 +1,7 @@
 import pytest
 import os
 import fitz
-from pdf_processing import load_pdf, pdf_page_to_image, apply_watermark_to_pdf
+from pdf_processing import load_pdf, pdf_page_to_image, apply_watermark_to_pdf, generate_pdf_preview
 from PIL import Image
 import io
 
@@ -55,4 +55,25 @@ def test_apply_watermark_to_pdf(sample_pdf):
     
     # They should be different if watermark was applied
     assert img_after.tobytes() != img_before.tobytes()
+    doc.close()
+
+def test_generate_pdf_preview(sample_pdf):
+    doc, _ = load_pdf(sample_pdf)
+    preview_bytes = generate_pdf_preview(
+        doc=doc,
+        text="PREVIEW",
+        opacity=50,
+        font_size=50,
+        spacing=100,
+        color="Noir"
+    )
+    
+    assert isinstance(preview_bytes, bytes)
+    assert len(preview_bytes) > 0
+    
+    # Verify it is a valid image
+    img = Image.open(io.BytesIO(preview_bytes))
+    assert img.format == "PNG"
+    assert img.width > 0
+    assert img.height > 0
     doc.close()

@@ -11,7 +11,8 @@ from pdf_processing import (
     apply_vector_watermark_to_pdf,  # Vector watermark (new, quality-preserving)
     save_watermarked_pdf,
     save_pdf_as_images,
-    apply_watermark_to_pil_image
+    apply_watermark_to_pil_image,
+    generate_pdf_preview
 )
 
 def generate_preview(image_bytes_io):
@@ -221,11 +222,15 @@ class PassportFiligraneApp:
                 if self.current_file_type == "image":
                     self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color)
                 elif self.current_file_type == "pdf" and self.pdf_doc:
-                    first_page_img = pdf_page_to_image(self.pdf_doc, 0)
-                    watermarked_img = apply_watermark_to_pil_image(first_page_img, text, opacity, font_size, spacing, color=color)
-                    buffer = io.BytesIO()
-                    watermarked_img.convert("RGB").save(buffer, format="JPEG", quality=90)
-                    self.watermarked_image_bytes = buffer.getvalue()
+                    # Utilisation du rendu vectoriel natif pour la prévisualisation (bien plus net et fidèle)
+                    self.watermarked_image_bytes = generate_pdf_preview(
+                         doc=self.pdf_doc,
+                         text=text,
+                         opacity=opacity,
+                         font_size=font_size,
+                         spacing=spacing,
+                         color=color
+                    )
                 
                 self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
                 self.preview_image.visible = True
