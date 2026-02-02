@@ -86,6 +86,10 @@
 | Espacement | Spacing |
 | Enregistrer | Sauvegarder/Save |
 | Sélectionner | Choisir/Pick |
+| Orientation | Direction/Angle |
+| Ascendant (↗) | Montant/45° |
+| Descendant (↘) | Descendant/-45° |
+| Mode Sécurisé | Mode Raster/Secure |
 
 ---
 
