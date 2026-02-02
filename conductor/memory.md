@@ -15,3 +15,18 @@
 ### Issues Encountered
 - **AttributeError: module 'flet_core.colors' has no attribute 'SUCCESS'**: `SUCCESS` n'existe pas dans toutes les versions de Flet, préférer `ft.colors.GREEN`.
 - **TypeError: 'EventHandler' object is not callable**: Flet enveloppe parfois les callbacks. Il faut accéder à `.handler` ou gérer le type si on les appelle manuellement en test.
+
+## 2026-02-02 Track: pdf_support_20260202 (Support PDF)
+
+### Key Learnings
+- **PDF Core Management**: PyMuPDF (`fitz`) est extrêmement rapide pour le rendu, mais nécessite une gestion fine des PixMaps pour éviter les fuites de mémoire lors du traitement de gros fichiers.
+- **Multi-Format Export**: Séparer la logique de sauvegarde (`save_watermarked_pdf` vs `save_pdf_as_images`) permet une meilleure flexibilité UI sans alourdir le code principal.
+- **Debounce Efficiency**: Le passage à une structure de classe a simplifié la gestion du `Timer` pour le debounce, évitant les conflits de variables globales.
+
+### Patterns Discovered
+- **Shared Rendering Pattern**: `apply_watermark_to_pil_image` sert de pont unique entre le moteur Pillow (image) et Fitz (PDF page-by-page), garantissant un rendu visuel identique sur tous les supports.
+- **Class-Based UI Wrapper**: Encapsuler l'app Flet dans une classe (`PassportFiligraneApp`) facilite l'accès aux états (`self.pdf_doc`) sans passer par des `nonlocal`.
+
+### Issues Encountered
+- **Flet Callback Wrapping**: Les `EventHandler` de Flet ne sont pas toujours directement appelables en test. Un helper `call_handler` est nécessaire pour inspecter `.handler` ou `.func`.
+- **Indentation & Async**: Attention à l'indentation lors de l'utilisation de `Timer`, qui peut masquer des erreurs de logique si les callbacks accèdent à des variables modifiées prématurément.

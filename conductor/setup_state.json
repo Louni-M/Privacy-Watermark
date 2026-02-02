@@ -1,1 +1,13 @@
-{"last_successful_step": "3.3_initial_track_generated"}
+{
+  "completed_tracks": [
+    {
+      "track_id": "pdf_support_20260202",
+      "name": "Support PDF pour Passport Filigrane",
+      "completed_date": "2026-02-02",
+      "final_checkpoint": "22b43ae",
+      "phases_completed": 6,
+      "tasks_completed": 20
+    }
+  ],
+  "last_updated": "2026-02-02T15:52:00Z"
+}

@@ -102,27 +102,23 @@
   - [x] Message pour PDF corrompu/illisible
   - [x] Vérifier la cohérence avec les erreurs images existantes
 
-- [x] Phase 5: Polissage et Finalisation [2413a88]
-  - [x] Task 5.1: Error Handling (Implemented & Verified)
-  - [x] Task 5.2: E2E Integration Tests (Verified)
-  - [x] Task 5.3: Code Review & Refactoring (Completed)
-- [ ] Phase 6: Options de Style (Couleur)
-    - [ ] Task 6.1: Color Tests
-    - [ ] Task 6.2: Rendering Support
-    - [ ] Task 6.3: UI Integration
+- [x] Phase 6: Options de Style (Couleur) [checkpoint: 22b43ae]
+    - [x] Task 6.1: Color Tests (Implemented & Verified)
+    - [x] Task 6.2: Rendering Support (Implemented & Verified)
+    - [x] Task 6.3: UI Integration (Implemented)
 
 - [x] Task: Conductor - User Manual Verification 'Phase 5: Gestion d'erreurs & Polish' (Protocol in workflow.md)
 
-## Phase 6: Options de Style (Couleur)
+## Phase 6: Options de Style (Couleur) [checkpoint: 22b43ae]
 
-- [ ] Task 6.1: Écrire les tests pour la sélection de couleur
-  - [ ] Test: appliquer un filigrane blanc, noir et gris
-  - [ ] Vérifier que la couleur est correctement transmise au moteur de rendu
+- [x] Task 6.1: Écrire les tests pour la sélection de couleur [22b43ae]
+  - [x] Test: appliquer un filigrane blanc, noir et gris
+  - [x] Vérifier que la couleur est correctement transmise au moteur de rendu
 
-- [ ] Task 6.2: Mettre à jour le moteur de rendu PDF/Image
-  - [ ] Adapter `apply_watermark_to_pil_image` pour accepter un paramètre `color`
-  - [ ] Gérer les options: "Blanc", "Noir", "Gris"
+- [x] Task 6.2: Mettre à jour le moteur de rendu PDF/Image [22b43ae]
+  - [x] Adapter `apply_watermark_to_pil_image` pour accepter un paramètre `color`
+  - [x] Gérer les options: "Blanc", "Noir", "Gris"
 
-- [ ] Task 6.3: Intégrer le sélecteur dans l'UI
-  - [ ] Ajouter un Dropdown ou des RadioButtons pour la couleur (Blanc par défaut)
-  - [ ] Mettre à jour `update_preview` pour prendre en compte la couleur
+- [x] Task 6.3: Intégrer le sélecteur dans l'UI [22b43ae]
+  - [x] Ajouter un Dropdown pour la couleur (Blanc par défaut)
+  - [x] Mettre à jour `update_preview` pour prendre en compte la couleur
