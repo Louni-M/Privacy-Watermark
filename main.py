@@ -5,10 +5,11 @@ import base64
 import os
 import threading
 from pdf_processing import (
-    load_pdf, 
-    pdf_page_to_image, 
-    apply_watermark_to_pdf, 
-    save_watermarked_pdf, 
+    load_pdf,
+    pdf_page_to_image,
+    apply_watermark_to_pdf,  # Raster watermark (for backward compatibility)
+    apply_vector_watermark_to_pdf,  # Vector watermark (new, quality-preserving)
+    save_watermarked_pdf,
     save_pdf_as_images,
     apply_watermark_to_pil_image
 )
@@ -289,14 +290,15 @@ class PassportFiligraneApp:
                 with open(e.path, "wb") as f:
                     f.write(self.watermarked_image_bytes)
             elif self.current_file_type == "pdf" and self.pdf_doc:
-                params = {
-                    "text": self.watermark_text.value,
-                    "opacity": self.opacity_slider.value,
-                    "font_size": int(self.font_size_slider.value),
-                    "spacing": int(self.spacing_slider.value),
-                    "color": self.color_dropdown.value
-                }
-                apply_watermark_to_pdf(self.pdf_doc, params)
+                # Use vector watermark for PDF (preserves quality)
+                apply_vector_watermark_to_pdf(
+                    doc=self.pdf_doc,
+                    text=self.watermark_text.value,
+                    opacity=self.opacity_slider.value,
+                    font_size=int(self.font_size_slider.value),
+                    spacing=int(self.spacing_slider.value),
+                    color=self.color_dropdown.value
+                )
                 save_watermarked_pdf(self.pdf_doc, e.path)
                 
             self.page.snack_bar = ft.SnackBar(
@@ -311,14 +313,15 @@ class PassportFiligraneApp:
     def on_dir_result(self, e: ft.FilePickerResultEvent):
         if e.path and self.current_file_type == "pdf" and self.pdf_doc:
             try:
-                params = {
-                    "text": self.watermark_text.value,
-                    "opacity": self.opacity_slider.value,
-                    "font_size": int(self.font_size_slider.value),
-                    "spacing": int(self.spacing_slider.value),
-                    "color": self.color_dropdown.value
-                }
-                apply_watermark_to_pdf(self.pdf_doc, params)
+                # Use vector watermark for PDF (preserves quality)
+                apply_vector_watermark_to_pdf(
+                    doc=self.pdf_doc,
+                    text=self.watermark_text.value,
+                    opacity=self.opacity_slider.value,
+                    font_size=int(self.font_size_slider.value),
+                    spacing=int(self.spacing_slider.value),
+                    color=self.color_dropdown.value
+                )
                 save_pdf_as_images(self.pdf_doc, e.path, "export")
                 self.page.snack_bar = ft.SnackBar(
                     ft.Text(f"Images exportées dans : {os.path.basename(e.path)}"),
