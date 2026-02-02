@@ -11,37 +11,37 @@
 
 ## Phase 2: Module de traitement PDF (Core)
 
-- [ ] Task 2.1: Écrire les tests pour le chargement PDF
-  - [ ] Test: charger un PDF valide et obtenir le nombre de pages
-  - [ ] Test: charger un PDF protégé retourne une erreur appropriée
-  - [ ] Test: charger un PDF corrompu retourne une erreur appropriée
-  - [ ] Vérifier que les tests échouent (Red Phase)
+- [x] Task 2.1: Écrire les tests pour le chargement PDF
+  - [x] Test: charger un PDF valide et obtenir le nombre de pages
+  - [x] Test: charger un PDF protégé retourne une erreur appropriée
+  - [x] Test: charger un PDF corrompu retourne une erreur appropriée
+  - [x] Vérifier que les tests échouent (Red Phase)
 
-- [ ] Task 2.2: Implémenter le chargement PDF
-  - [ ] Créer fonction `load_pdf(file_path)` retournant un objet document et le nombre de pages
-  - [ ] Gérer les exceptions pour PDF protégés (`fitz.PasswordError`)
-  - [ ] Gérer les exceptions pour PDF corrompus
-  - [ ] Vérifier que les tests passent (Green Phase)
+- [x] Task 2.2: Implémenter le chargement PDF [5057be5]
+  - [x] Créer fonction `load_pdf(file_path)` retournant un objet document et le nombre de pages
+  - [x] Gérer les exceptions pour PDF protégés (`fitz.PasswordError`)
+  - [x] Gérer les exceptions pour PDF corrompus
+  - [x] Vérifier que les tests passent (Green Phase)
 
-- [ ] Task 2.3: Écrire les tests pour le rendu de page en image
-  - [ ] Test: convertir la première page d'un PDF en image PIL
-  - [ ] Test: vérifier les dimensions de l'image générée
-  - [ ] Vérifier que les tests échouent (Red Phase)
+- [x] Task 2.3: Écrire les tests pour le rendu de page en image
+  - [x] Test: convertir la première page d'un PDF en image PIL
+  - [x] Test: vérifier les dimensions de l'image générée
+  - [x] Vérifier que les tests échouent (Red Phase)
 
-- [ ] Task 2.4: Implémenter le rendu de page en image
-  - [ ] Créer fonction `pdf_page_to_image(doc, page_num)` retournant une image PIL
-  - [ ] Utiliser `page.get_pixmap()` de PyMuPDF
-  - [ ] Vérifier que les tests passent (Green Phase)
+- [x] Task 2.4: Implémenter le rendu de page en image [10e9015]
+  - [x] Créer fonction `pdf_page_to_image(doc, page_num)` retournant une image PIL
+  - [x] Utiliser `page.get_pixmap()` de PyMuPDF
+  - [x] Vérifier que les tests passent (Green Phase)
 
-- [ ] Task 2.5: Écrire les tests pour l'application du filigrane sur PDF
-  - [ ] Test: appliquer un filigrane sur toutes les pages d'un PDF
-  - [ ] Test: vérifier que le filigrane est visible sur chaque page
-  - [ ] Vérifier que les tests échouent (Red Phase)
+- [x] Task 2.5: Écrire les tests pour l'application du filigrane sur PDF
+  - [x] Test: appliquer un filigrane sur toutes les pages d'un PDF
+  - [x] Test: vérifier que le filigrane est visible sur chaque page
+  - [x] Vérifier que les tests échouent (Red Phase)
 
-- [ ] Task 2.6: Implémenter l'application du filigrane sur PDF
-  - [ ] Créer fonction `apply_watermark_to_pdf(doc, watermark_params)`
-  - [ ] Réutiliser la logique de filigrane existante pour chaque page
-  - [ ] Vérifier que les tests passent (Green Phase)
+- [x] Task 2.6: Implémenter l'application du filigrane sur PDF [144a04d]
+  - [x] Créer fonction `apply_watermark_to_pdf(doc, watermark_params)`
+  - [x] Réutiliser la logique de filigrane existante pour chaque page
+  - [x] Vérifier que les tests passent (Green Phase)
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Module de traitement PDF' (Protocol in workflow.md)
 
