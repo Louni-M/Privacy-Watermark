@@ -4,7 +4,7 @@ import os
 import fitz
 
 # Constants for vector watermark
-WATERMARK_ROTATION_ANGLE = 45  # Diagonal rotation in degrees
+WATERMARK_ROTATION_ANGLE = 135  # Diagonal rotation in degrees
 WATERMARK_COLOR_MAP = {
     "Blanc": (1.0, 1.0, 1.0),
     "Noir": (0.0, 0.0, 0.0),
@@ -141,41 +141,52 @@ def apply_vector_watermark_to_pdf(doc, text, opacity, font_size, spacing, color)
     # Appliquer le filigrane à toutes les pages
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
+        apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color)
 
-        # Dimensions de la page
-        page_width = page.rect.width
-        page_height = page.rect.height
+def apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color):
+    """
+    Applique le filigrane vectoriel sur une seule page.
+    """
+    # Mapping de la couleur vers RGB (0.0-1.0 range pour PyMuPDF)
+    rgb = WATERMARK_COLOR_MAP.get(color, (1.0, 1.0, 1.0))
 
-        # Créer le motif de tiling diagonal
-        y = -spacing
-        row = 0
+    # Convertir opacité 0-100 en 0.0-1.0 (range PyMuPDF)
+    fill_opacity = opacity / 100.0
 
-        while y < page_height + spacing:
-            x = -spacing
+    # Dimensions de la page
+    page_width = page.rect.width
+    page_height = page.rect.height
 
-            # Décaler les rangées alternées
-            if row % 2 == 0:
-                x += spacing // 2
+    # Créer le motif de tiling diagonal
+    y = -spacing
+    row = 0
 
-            while x < page_width + spacing:
-                point = fitz.Point(x, y)
+    while y < page_height + spacing:
+        x = -spacing
 
-                # Insérer le texte avec rotation et opacité
-                page.insert_text(
-                    point=point,
-                    text=text,
-                    fontsize=font_size,
-                    fontname="helv",
-                    color=rgb,
-                    morph=(point, fitz.Matrix(WATERMARK_ROTATION_ANGLE)),
-                    fill_opacity=fill_opacity,
-                    overlay=True  # Dessiner par-dessus le contenu existant
-                )
+        # Décaler les rangées alternées
+        if row % 2 == 0:
+            x += spacing // 2
 
-                x += spacing
+        while x < page_width + spacing:
+            point = fitz.Point(x, y)
 
-            y += spacing
-            row += 1
+            # Insérer le texte avec rotation et opacité
+            page.insert_text(
+                point=point,
+                text=text,
+                fontsize=font_size,
+                fontname="helv",
+                color=rgb,
+                morph=(point, fitz.Matrix(WATERMARK_ROTATION_ANGLE)),
+                fill_opacity=fill_opacity,
+                overlay=True  # Dessiner par-dessus le contenu existant
+            )
+
+            x += spacing
+
+        y += spacing
+        row += 1
 
 def apply_watermark_to_pdf(doc, watermark_params):
     """
@@ -226,3 +237,21 @@ def save_pdf_as_images(doc, output_dir, base_name):
         # Si on veut garantir la qualité 90, on passe par PIL.
         output_path = os.path.join(output_dir, f"{base_name}_page_{i+1:03d}.jpg")
         img.save(output_path, "JPEG", quality=90)
+
+def generate_pdf_preview(doc, text, opacity, font_size, spacing, color):
+    """
+    Génère un aperçu de la première page avec le filigrane vectoriel.
+    Ne modifie pas le document original.
+    Retourne les bytes de l'image (PNG).
+    """
+    # Créer un document temporaire avec seulement la première page
+    temp_doc = fitz.open()
+    temp_doc.insert_pdf(doc, from_page=0, to_page=0)
+    page = temp_doc.load_page(0)
+    
+    # Appliquer le filigrane
+    apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color)
+    
+    # Rendu en image (PNG)
+    pix = page.get_pixmap(alpha=True)
+    return pix.tobytes("png")
