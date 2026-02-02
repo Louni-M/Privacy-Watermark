@@ -1,6 +1,6 @@
 # Plan: Support PDF pour Passport Filigrane
 
-## Phase 1: Setup & Dépendances
+## Phase 1: Setup & Dépendances [checkpoint: 754e076]
 
 - [x] Task 1.1: Ajouter PyMuPDF aux dépendances [2e3df45]
   - [x] Mettre à jour `requirements.txt` avec `pymupdf>=1.24.0`
