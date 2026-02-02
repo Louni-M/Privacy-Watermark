@@ -203,3 +203,57 @@ def test_realtime_update_event_binding():
     assert text_field.on_change is not None, "TextField on_change should be bound"
     for s in sliders:
         assert s.on_change is not None, f"Slider {s.label} on_change should be bound"
+
+def test_save_button_setup():
+    # Setup
+    mock_page = MagicMock(spec=ft.Page)
+    mock_page.controls = []
+    
+    # Execute
+    main(mock_page)
+    
+    # Find main layout Row
+    main_layout = None
+    for call in mock_page.add.call_args_list:
+        ctrl = call.args[0]
+        if isinstance(ctrl, ft.Row):
+            main_layout = ctrl
+            break
+            
+    assert main_layout is not None
+    left_panel = main_layout.controls[0]
+    controls_column = left_panel.content
+    
+    # Find Save Button
+    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Enregistrer" in c.text), None)
+    
+    assert save_button is not None, "Save button should exist"
+    assert save_button.disabled is True, "Save button should be disabled initially"
+
+def test_save_dialog_trigger():
+    # Setup
+    mock_page = MagicMock(spec=ft.Page)
+    mock_page.controls = []
+    mock_page.overlay = []
+    
+    # Execute
+    main(mock_page)
+    
+    # Find Save Button
+    main_layout = next((call.args[0] for call in mock_page.add.call_args_list if isinstance(call.args[0], ft.Row)), None)
+    controls_column = main_layout.controls[0].content
+    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Enregistrer" in c.text), None)
+    
+    # Find Save FilePicker
+    # We expect TWO FilePickers: one for picking, one for saving
+    file_pickers = [item for item in mock_page.overlay if isinstance(item, ft.FilePicker)]
+    assert len(file_pickers) >= 2, "Should have pick and save FilePickers"
+    
+    save_picker = file_pickers[1]
+    save_picker.save_file = MagicMock()
+    
+    # Execute click
+    save_button.on_click(None)
+    
+    # Verify save_file was called
+    assert save_picker.save_file.called, "save_file() should be called when Save button is clicked"
