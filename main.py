@@ -99,10 +99,30 @@ def main(page: ft.Page):
 
     # État de l'application
     original_image_bytes = None
+    watermarked_image_bytes = None
     update_timer = None
 
+    def on_save_result(e: ft.FilePickerResultEvent):
+        if e.path:
+            try:
+                with open(e.path, "wb") as f:
+                    f.write(watermarked_image_bytes)
+                page.snack_bar = ft.SnackBar(
+                    ft.Text(f"Image enregistrée avec succès : {os.path.basename(e.path)}"),
+                    bgcolor=ft.colors.SUCCESS
+                )
+                page.snack_bar.open = True
+                page.update()
+            except Exception as ex:
+                page.snack_bar = ft.SnackBar(
+                    ft.Text(f"Erreur lors de l'enregistrement : {ex}"),
+                    bgcolor=ft.colors.ERROR
+                )
+                page.snack_bar.open = True
+                page.update()
+
     def update_preview(e=None):
-        nonlocal original_image_bytes, update_timer
+        nonlocal original_image_bytes, watermarked_image_bytes, update_timer
         
         # Mise à jour immédiate des labels (pour la réactivité UI)
         try:
@@ -120,6 +140,7 @@ def main(page: ft.Page):
             update_timer.cancel()
             
         def do_update():
+            nonlocal watermarked_image_bytes
             try:
                 # Récupération des valeurs des contrôles
                 text = watermark_text.value
@@ -128,11 +149,15 @@ def main(page: ft.Page):
                 spacing = int(spacing_slider.value)
                 
                 # Application du filigrane
-                watermarked_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
+                watermarked_image_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
                 
                 # Mise à jour de la prévisualisation
-                preview_image.src_base64 = base64.b64encode(watermarked_bytes).decode("utf-8")
+                preview_image.src_base64 = base64.b64encode(watermarked_image_bytes).decode("utf-8")
                 preview_image.update()
+                
+                # Activer le bouton de sauvegarde
+                save_button.disabled = False
+                save_button.update()
                 page.update()
             except Exception as ex:
                 page.snack_bar = ft.SnackBar(ft.Text(f"Erreur de mise à jour : {ex}"), bgcolor=ft.colors.ERROR)
@@ -175,10 +200,14 @@ def main(page: ft.Page):
         else:
             print("Selection cancelled")
 
-    # FilePicker pour la sélection d'image
+    # FilePickers
     file_picker = ft.FilePicker(on_result=on_file_result)
     file_picker.file_type = ft.FilePickerFileType.IMAGE
+    
+    save_file_picker = ft.FilePicker(on_result=on_save_result)
+    
     page.overlay.append(file_picker)
+    page.overlay.append(save_file_picker)
 
     # Références aux contrôles pour update_preview
     watermark_text = ft.TextField(
@@ -208,6 +237,18 @@ def main(page: ft.Page):
         active_color="#3b82f6", on_change=update_preview
     )
 
+    save_button = ft.ElevatedButton(
+        "Enregistrer l'image",
+        icon=ft.icons.SAVE,
+        on_click=lambda _: save_file_picker.save_file(
+            file_name="image_filigree.jpg",
+            allowed_extensions=["jpg", "jpeg", "png"]
+        ),
+        bgcolor=ft.colors.GREEN_700,
+        color="#ffffff",
+        disabled=True,
+    )
+
     # Panneau de contrôles (gauche)
     controls_panel = ft.Container(
         content=ft.Column(
@@ -227,6 +268,7 @@ def main(page: ft.Page):
                     bgcolor="#3b82f6",
                     color="#ffffff",
                 ),
+                save_button,
             ],
             spacing=12,
         ),
