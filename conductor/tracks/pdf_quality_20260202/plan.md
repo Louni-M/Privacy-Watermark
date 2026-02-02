@@ -39,10 +39,10 @@
 
 ## Phase 3: Integration & Migration
 
-- [ ] Task: Write failing tests for PDF processing integration
-  - [ ] Sub-task: Test that original PDF text remains selectable after watermarking
-  - [ ] Sub-task: Test that original PDF quality is preserved (no rasterization)
-  - [ ] Sub-task: Test file size remains within 110% of original
+- [x] Task: Write failing tests for PDF processing integration [5b302e4]
+  - [x] Sub-task: Test that original PDF text remains selectable after watermarking
+  - [x] Sub-task: Test that original PDF quality is preserved (no rasterization)
+  - [x] Sub-task: Test file size remains within 110% of original
 
 - [ ] Task: Integrate vector watermark into PDF save workflow
   - [ ] Sub-task: Update `apply_watermark_to_pdf()` to use new vector function
