@@ -196,10 +196,11 @@ flet run main.py
 - **Pytest** : 8.1.1 (avec `pytest-cov`)
 
 #### Architecture & Patterns
-- **Fichier unique** : `main.py` concentre la logique UI et métier (contrainte respectée).
-- **Gestion de l'état** : Variables locales `nonlocal` dans `main()`.
+- **Approche Orientée Objet** : Utilisation d'une classe `PassportFiligraneApp` pour encapsuler l'état et l'UI, améliorant la testabilité.
+- **Gestion de l'état** : Attributs de classe (`self`) au lieu de variables locales `nonlocal`.
 - **Réactivité** : Debounce de 0.2s via `threading.Timer`.
-- **Traitement d'image** : Tiling diagonal via `Image.rotate` et `Image.alpha_composite`.
+- **Traitement d'image** : Tiling diagonal partagé entre images et PDF via `apply_watermark_to_pil_image`.
+- **Mapping de couleurs** : Utilisation d'un dictionnaire centralisé pour les couleurs prédéfinies (Blanc, Noir, Gris).
 
 #### Tests
 - **Unitaires** : `test_processing.py` (logique Pillow).
@@ -208,5 +209,5 @@ flet run main.py
 
 ---
 
-- **Entrée** : JPG, JPEG, PNG
-- **Sortie** : JPEG (qualité 90)
+- **Entrée** : JPG, JPEG, PNG, PDF
+- **Sortie** : JPEG (qualité 90), PDF (mergé avec filigrane)
