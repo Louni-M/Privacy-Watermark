@@ -16,13 +16,13 @@
 
 ## Phase 2: Core Vector Watermark Implementation (TDD)
 
-- [ ] Task: Write failing tests for vector watermark function
-  - [ ] Sub-task: Test that watermark text is added to PDF page
-  - [ ] Sub-task: Test that watermark respects opacity parameter
-  - [ ] Sub-task: Test that watermark respects font size parameter
-  - [ ] Sub-task: Test that watermark respects spacing parameter
-  - [ ] Sub-task: Test that watermark respects color parameter (White, Black, Gray)
-  - [ ] Sub-task: Test diagonal tiling pattern (45° rotation)
+- [x] Task: Write failing tests for vector watermark function [467c8b1]
+  - [x] Sub-task: Test that watermark text is added to PDF page
+  - [x] Sub-task: Test that watermark respects opacity parameter
+  - [x] Sub-task: Test that watermark respects font size parameter
+  - [x] Sub-task: Test that watermark respects spacing parameter
+  - [x] Sub-task: Test that watermark respects color parameter (White, Black, Gray)
+  - [x] Sub-task: Test diagonal tiling pattern (45° rotation)
 
 - [ ] Task: Implement `apply_vector_watermark_to_pdf()` function
   - [ ] Sub-task: Create function signature matching existing parameters
