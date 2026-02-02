@@ -4,7 +4,7 @@ import io
 import base64
 import os
 import threading
-from pdf_processing import load_pdf, pdf_page_to_image, apply_watermark_to_pdf  # New import
+from pdf_processing import load_pdf, pdf_page_to_image, apply_watermark_to_pdf, save_watermarked_pdf, save_pdf_as_images  # Updated
 
 def generate_preview(image_bytes_io):
     """Génère un thumbnail de l'image (max 800px) pour la prévisualisation."""
@@ -144,6 +144,11 @@ def main(page: ft.Page):
         font_size_slider.disabled = disabled
         spacing_slider.disabled = disabled
         save_button.disabled = disabled or watermarked_image_bytes is None
+        # Update save button text based on mode
+        if current_file_type == "pdf" and export_format_dropdown.value == "Images":
+            save_button.text = "Exporter en images"
+        else:
+            save_button.text = "Enregistrer le fichier"
         page.update()
 
     def update_preview(e=None):
@@ -159,6 +164,11 @@ def main(page: ft.Page):
         if current_file_type is None:
             return
             
+        # Update save button text in real-time if dropdown changes
+        if current_file_type == "pdf" and export_format_dropdown.value == "Images":
+            save_button.text = "Exporter en images"
+        else:
+            save_button.text = "Enregistrer le fichier"
         if update_timer:
             update_timer.cancel()
             
@@ -266,19 +276,72 @@ def main(page: ft.Page):
             print("Selection cancelled")
 
     def on_save_result(e: ft.FilePickerResultEvent):
-        """Gère le résultat du dialogue de sauvegarde."""
-        if e.path and watermarked_image_bytes:
+        """Gère le résultat du dialogue de sauvegarde de fichier."""
+        if e.path:
             try:
-                with open(e.path, "wb") as f:
-                    f.write(watermarked_image_bytes)
+                if current_file_type == "image":
+                    with open(e.path, "wb") as f:
+                        f.write(watermarked_image_bytes)
+                elif current_file_type == "pdf" and pdf_doc:
+                    # Pour l'export PDF complet, on applique le filigrane sur toutes les pages
+                    # Attention : appliquer le filigrane modifie l'objet pdf_doc
+                    apply_watermark_to_pdf(
+                        pdf_doc, 
+                        {
+                            "text": watermark_text.value,
+                            "opacity": opacity_slider.value,
+                            "font_size": int(font_size_slider.value),
+                            "spacing": int(spacing_slider.value)
+                        }
+                    )
+                    save_watermarked_pdf(pdf_doc, e.path)
+                    
                 page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Image enregistrée : {os.path.basename(e.path)}"),
+                    ft.Text(f"Fichier enregistré : {os.path.basename(e.path)}"),
                     bgcolor=ft.colors.GREEN
                 )
                 page.snack_bar.open = True
                 page.update()
             except Exception as ex:
-                show_error(f"Erreur lors de l'enregistrement : {ex}")
+                show_error(f"Erreur lors de la sauvegarde : {ex}")
+
+    def on_dir_result(e: ft.FilePickerResultEvent):
+        """Gère le résultat de la sélection de dossier (pour export images)."""
+        if e.path and current_file_type == "pdf" and pdf_doc:
+            try:
+                # Appliquer le filigrane sur toutes les pages avant export
+                apply_watermark_to_pdf(
+                    pdf_doc, 
+                    {
+                        "text": watermark_text.value,
+                        "opacity": opacity_slider.value,
+                        "font_size": int(font_size_slider.value),
+                        "spacing": int(spacing_slider.value)
+                    }
+                )
+                base_name = "export"
+                save_pdf_as_images(pdf_doc, e.path, base_name)
+                
+                page.snack_bar = ft.SnackBar(
+                    ft.Text(f"Images exportées dans : {os.path.basename(e.path)}"),
+                    bgcolor=ft.colors.GREEN
+                )
+                page.snack_bar.open = True
+                page.update()
+            except Exception as ex:
+                show_error(f"Erreur lors de l'export images : {ex}")
+
+    def on_save_button_click(e):
+        """Déclenche le bon FilePicker selon le mode d'export."""
+        if current_file_type == "pdf" and export_format_dropdown.value == "Images":
+            save_dir_picker.get_directory_path()
+        else:
+            default_ext = "jpg" if current_file_type == "image" else "pdf"
+            allowed = ["jpg", "jpeg", "png"] if current_file_type == "image" else ["pdf"]
+            save_file_picker.save_file(
+                file_name=f"export_filigree.{default_ext}",
+                allowed_extensions=allowed
+            )
 
     # FilePickers
     file_picker = ft.FilePicker(on_result=on_file_result)
@@ -286,9 +349,9 @@ def main(page: ft.Page):
     file_picker.allowed_extensions = ["jpg", "jpeg", "png", "pdf"]
     
     save_file_picker = ft.FilePicker(on_result=on_save_result)
+    save_dir_picker = ft.FilePicker(on_result=on_dir_result)
     
-    page.overlay.append(file_picker)
-    page.overlay.append(save_file_picker)
+    page.overlay.extend([file_picker, save_file_picker, save_dir_picker])
 
     # Références aux contrôles pour update_preview
     watermark_text = ft.TextField(
@@ -320,12 +383,9 @@ def main(page: ft.Page):
     )
 
     save_button = ft.ElevatedButton(
-        "Enregistrer l'image",
+        "Enregistrer le fichier",
         icon=ft.icons.SAVE,
-        on_click=lambda _: save_file_picker.save_file(
-            file_name="image_filigree.jpg",
-            allowed_extensions=["jpg", "jpeg", "png"]
-        ),
+        on_click=on_save_button_click,
         bgcolor=ft.colors.GREEN_700,
         color="#ffffff",
         disabled=True,
