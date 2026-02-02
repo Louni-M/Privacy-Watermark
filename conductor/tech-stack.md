@@ -7,6 +7,7 @@
 | Langage | Python | 3.10+ |
 | UI Framework | Flet | Latest |
 | Traitement d'image | Pillow (PIL) | Latest |
+| Traitement PDF | PyMuPDF (fitz) | Latest |
 | Gestion des dépendances | pip | Standard |
 
 ---
@@ -81,6 +82,28 @@ pip install pillow
 
 ---
 
+### PyMuPDF (fitz)
+
+**Rôle** : Lecture, rendu et écriture de fichiers PDF
+
+**Justification** :
+- Haute performance pour le rendu de pages PDF
+- Permet la modification de PDF existants (incremental save)
+- Supporte la conversion de pages en images (PixMap) pour la prévisualisation
+- API intuitive et complète
+
+**Installation** :
+```bash
+pip install pymupdf
+```
+
+**Modules Utilisés** :
+- `fitz.open()` : Chargement du document
+- `page.get_pixmap()` : Rendu d'une page en image
+- `doc.save()` : Sauvegarde du document
+
+---
+
 ## Polices de Caractères
 
 **Stratégie** : Utilisation des polices système
@@ -136,6 +159,7 @@ pip install -r requirements.txt
 ```
 flet>=0.21.0
 pillow>=10.0.0
+pymupdf>=1.24.0
 ```
 
 ---
