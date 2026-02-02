@@ -1,0 +1,8 @@
+print("Phase 3 Verification:")
+print("1. Run the app: flet run main.py")
+print("2. Select a PDF file.")
+print("3. Verify that 'PDF (X pages)' is displayed.")
+print("4. Verify that the 'Format d'export' dropdown appears.")
+print("5. Verify that the preview displays the watermarked first page.")
+print("6. Select an Image file.")
+print("7. Verify that the 'Format d'export' dropdown disappears.")

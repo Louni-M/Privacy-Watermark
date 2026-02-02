@@ -109,6 +109,9 @@ def main(page: ft.Page):
     # --- État de l'application ---
     original_image_bytes = None
     watermarked_image_bytes = None
+    pdf_doc = None
+    current_file_type = None
+    num_pages = 0
     update_timer = None
 
     # --- Composants UI ---
@@ -118,6 +121,20 @@ def main(page: ft.Page):
         src_base64="",
         fit="contain",
         visible=False,
+    )
+
+    file_info_text = ft.Text("", size=12, color="#aaaaaa", italic=True, visible=False)
+    
+    export_format_dropdown = ft.Dropdown(
+        label="Format d'export",
+        label_style=ft.TextStyle(color="#ffffff", size=14),
+        options=[
+            ft.dropdown.Option("PDF", "PDF"),
+            ft.dropdown.Option("Images (JPG)", "Images"),
+        ],
+        value="PDF",
+        visible=False,
+        on_change=lambda _: page.update()
     )
 
     def set_controls_disabled(disabled: bool):
@@ -131,7 +148,7 @@ def main(page: ft.Page):
 
     def update_preview(e=None):
         """Déclenche la mise à jour du filigrane avec un debounce."""
-        nonlocal original_image_bytes, watermarked_image_bytes, update_timer
+        nonlocal original_image_bytes, watermarked_image_bytes, update_timer, pdf_doc, current_file_type
         
         # Mise à jour immédiate des labels (pour la réactivité UI)
         opacity_label.value = f"Opacité ({int(opacity_slider.value)}%)"
@@ -139,7 +156,7 @@ def main(page: ft.Page):
         spacing_label.value = f"Espacement ({int(spacing_slider.value)} px)"
         page.update()
 
-        if original_image_bytes is None:
+        if current_file_type is None:
             return
             
         if update_timer:
@@ -154,8 +171,23 @@ def main(page: ft.Page):
                 font_size = int(font_size_slider.value)
                 spacing = int(spacing_slider.value)
                 
-                # Application du filigrane
-                watermarked_image_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
+                if current_file_type == "image":
+                    # Application du filigrane sur image
+                    watermarked_image_bytes = apply_watermark(original_image_bytes, text, opacity, font_size, spacing)
+                elif current_file_type == "pdf" and pdf_doc:
+                    # Pour la prévisualisation PDF, on ne filigrane que la première page
+                    from pdf_processing import apply_watermark_to_pil_image
+                    
+                    # On convertit la première page en image
+                    first_page_img = pdf_page_to_image(pdf_doc, 0)
+                    
+                    # On y applique le filigrane
+                    watermarked_img = apply_watermark_to_pil_image(first_page_img, text, opacity, font_size, spacing)
+                    
+                    # On convertit en bytes pour l'affichage
+                    buffer = io.BytesIO()
+                    watermarked_img.convert("RGB").save(buffer, format="JPEG", quality=90)
+                    watermarked_image_bytes = buffer.getvalue()
                 
                 # Mise à jour de la prévisualisation
                 preview_image.src_base64 = base64.b64encode(watermarked_image_bytes).decode("utf-8")
@@ -179,24 +211,49 @@ def main(page: ft.Page):
 
     def on_file_result(e: ft.FilePickerResultEvent):
         """Gère le résultat de la sélection de fichier."""
-        nonlocal original_image_bytes
+        nonlocal original_image_bytes, pdf_doc, current_file_type, num_pages
         if e.files:
             file_path = e.files[0].path
             if not file_path:
                 return
                 
             try:
-                with open(file_path, "rb") as f:
-                    content = f.read()
+                # Détection du type de fichier
+                current_file_type = detect_file_type(file_path)
                 
-                # Vérification Pillow
-                try:
-                    Image.open(io.BytesIO(content)).verify()
-                except Exception:
-                    show_error("Le fichier n'est pas une image valide.")
+                if current_file_type == "image":
+                    with open(file_path, "rb") as f:
+                        content = f.read()
+                    
+                    # Vérification Pillow
+                    try:
+                        Image.open(io.BytesIO(content)).verify()
+                    except Exception:
+                        show_error("Le fichier n'est pas une image valide.")
+                        return
+                    
+                    original_image_bytes = content
+                    pdf_doc = None
+                    file_info_text.value = "Image chargée"
+                    export_format_dropdown.visible = False
+                    
+                elif current_file_type == "pdf":
+                    # Chargement via pdf_processing
+                    try:
+                        pdf_doc, num_pages = load_pdf(file_path)
+                    except Exception as ex:
+                        show_error(str(ex))
+                        return
+                    
+                    original_image_bytes = None
+                    file_info_text.value = f"PDF chargé ({num_pages} pages)"
+                    export_format_dropdown.visible = True
+                
+                else:
+                    show_error("Type de fichier non supporté.")
                     return
                 
-                original_image_bytes = content
+                file_info_text.visible = True
                 set_controls_disabled(False)
                 update_preview()
                 preview_image.visible = True
@@ -284,8 +341,8 @@ def main(page: ft.Page):
                 ft.Column(controls=[font_size_label, font_size_slider], spacing=0),
                 ft.Column(controls=[spacing_label, spacing_slider], spacing=0),
                 ft.ElevatedButton(
-                    "Sélectionner une image",
-                    icon=ft.icons.IMAGE,
+                    "Sélectionner un fichier",
+                    icon=ft.icons.UPLOAD_FILE,
                     on_click=lambda _: file_picker.pick_files(
                         allow_multiple=False,
                         allowed_extensions=["jpg", "jpeg", "png", "pdf"]
@@ -293,6 +350,8 @@ def main(page: ft.Page):
                     bgcolor="#3b82f6",
                     color="#ffffff",
                 ),
+                file_info_text,
+                export_format_dropdown,
                 save_button,
             ],
             spacing=12,
