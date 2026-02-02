@@ -45,3 +45,17 @@
 ### Issues Encountered
 - **Rotation Direction**: Confusion initiale sur l'angle de rotation. L'angle 135° correspond à une lecture "montante" (bas-gauche vers haut-droite) dans le repère PDF.
 - **Password Protection**: `fitz.open()` réussit sur un PDF chiffré mais toute opération ultérieure échoue. Il faut vérifier `doc.is_encrypted` immédiatement après l'ouverture.
+
+## 2026-02-02 Track: macos_packaging_20260202 (Packaging macOS)
+
+### Key Learnings
+- **Flet Versioning Strategy**: Ne jamais laisser `pip install flet` sans version fixe lors du packaging. La version 0.80.5 (beta/edge) a cassé l'API `FilePicker` (`on_result` argument). Revenir à **0.21.2** garantit la stabilité du bundle.
+- **macOS Icon Workflow**: Le passage de PNG à ICNS nécessite un dossier `.iconset` avec des tailles spécifiques (16x16 à 512x512, versions @2x incluses) et l'usage de `iconutil -c icns`.
+- **Onefile vs Onedir**: PyInstaller en mode `--onefile` sur macOS avec bundle `.app` est techniquement possible mais déprécié. Cependant, pour une app simple comme celle-ci, cela reste efficace.
+
+### Patterns Discovered
+- **SIPS PNG format enforcement**: Pour que `iconutil` accepte les images générées par `sips`, il faut forcer `-s format png` car `sips` peut parfois produire des fichiers mal identifiés par `iconutil`.
+
+### Issues Encountered
+- **Flet CLI implicit upgrade**: `flet pack` peut tenter de mettre à jour des composants. Il est crucial de figer l'environnement (`requirements.txt`) avant de packager.
+- **Ambiguous Arguments**: `flet pack` possède des arguments très proches (`--product-name` vs `--product`). Toujours vérifier l'aide (`--help`) du CLI.

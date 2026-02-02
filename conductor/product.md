@@ -53,6 +53,7 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
 - **Gestion des Cas Limites** : Détection et gestion propre des PDF protégés par mot de passe.
 - **Options de Couleur** : Choix de la couleur du texte (Blanc, Noir, Gris).
 - **Export Flexible** : Sauvegarde au format PDF (vectoriel) ou en séquence d'images JPG.
+- **Application Standalone** : Packaging en tant qu'application macOS native (`.app`) avec icône personnalisée pour un lancement sans terminal.
 - **Détails PDF** : Affichage du nombre de pages.
 - **Préréglages de filigrane** : Textes prédéfinis ("COPIE", "NE PAS DIFFUSER", "À L'USAGE EXCLUSIF DE [nom]")
 - **Traitement par lot (batch)** : Filigraner plusieurs images en une seule opération

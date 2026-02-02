@@ -4,7 +4,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [x] Track: MacOS App Packaging & Icon
-*Link: [./conductor/tracks/macos_packaging_20260202/](./conductor/tracks/macos_packaging_20260202/)*
-
 ---
