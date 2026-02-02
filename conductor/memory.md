@@ -74,3 +74,19 @@
 ### Issues Encountered
 - **AttributeError on .parent**: Il ne faut pas se fier à `self.control.parent` pour modifier la visibilité, car Flet peut reconstruire l'arbre. Utiliser des références explicites stockées dans `self`.
 - **Packaging Icon Path**: `flet pack` échoue si le chemin de l'icône est incorrect sans donner de message d'erreur très clair avant le traceback.
+
+## 2026-02-02 Track: secure_mode_audit_20260202 (Audit Sécurité & Orientation)
+
+### Key Learnings
+- **Font BBox Offsets**: `font.getbbox()` retourne `(left, top, right, bottom)` où `top` peut être non-nul. Ne pas en tenir compte lors du dessin cause un décalage du texte (bas coupé).
+- **PIL vs PyMuPDF Rotation**: Les deux utilisent une rotation anti-horaire avec angles positifs, mais les systèmes de coordonnées diffèrent. +45° = texte montant (↗), -45° = texte descendant (↘).
+- **macOS Live Text**: La sélection de texte visible dans Preview sur macOS est due à l'OCR intégré (Live Text), pas à une couche texte dans le PDF. L'OCR peut lire mais ne peut pas supprimer le filigrane.
+- **Raster Security**: En mode Sécurisé, le PDF contient 0 blocs texte et 1 bloc image JPEG. Le filigrane est impossible à extraire ou supprimer sans dégradation visible.
+
+### Patterns Discovered
+- **Orientation Map Pattern**: Utiliser un dictionnaire `WATERMARK_ORIENTATION_MAP = {"Ascendant (↗)": 45, "Descendant (↘)": -45}` permet d'exposer des labels utilisateur-friendly tout en gardant la logique technique séparée.
+- **BBox-Aware Text Drawing**: Pour dessiner du texte sans coupure, calculer la position avec `(padding//2 - left, padding//2 - top)` où `left, top` viennent de `getbbox()`.
+
+### Issues Encountered
+- **Text Cutoff in Raster Mode**: Le texte était coupé en bas car `getbbox()` retourne un `top` offset (ex: 14px) non pris en compte lors du dessin à `(padding//2, padding//2)`.
+- **Preview vs Export Consistency**: Assurer que l'orientation est passée à toutes les fonctions (preview, save PDF, save images, secure mode) pour éviter les incohérences visuelles.
