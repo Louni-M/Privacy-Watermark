@@ -217,9 +217,10 @@ flet run main.py
 - **Approche Orientée Objet** : Utilisation d'une classe `PassportFiligraneApp` pour encapsuler l'état et l'UI.
 - **Filigranage Hybride** :
   - **Raster** (Pillow) pour les images individuelles.
-  - **Vectoriel** (PyMuPDF) pour les PDF, préservant la sélection de texte et la qualité.
-- **Matrice de Rotation** : Utilisation de `fitz.Matrix` pour incliner le texte vectoriel (angle 135° pour lecture bas-gauche vers haut-droite).
-- **Performance** : Traitement vectoriel <0.3s pour 10 pages, optimisant l'usage mémoire par rapport à la rasterisation.
+  - **Vectoriel** (PyMuPDF) pour les PDF standards, préservant la sélection de texte.
+  - **Sécurisé (Rasterized PDF)** : Conversion des pages PDF en images haute résolution (jusqu'à 600 DPI) avant application du filigrane pour une sécurité maximale.
+- **Matrice de Rotation** : Utilisation de `fitz.Matrix` et rotation PIL synchronisées à **45°** pour une lecture naturelle montant du bas-gauche vers le haut-droite.
+- **Performance** : Traitement vectoriel instantané, traitement sécurisé optimisé via `PixMap` Fitz et compression JPEG 95% pour un ratio poids/qualité optimal.
 
 #### Tests
 - **Unitaires** : `test_processing.py`, `test_vector_watermark.py`.
