@@ -8,6 +8,7 @@
 | UI Framework | Flet | Latest |
 | Traitement d'image | Pillow (PIL) | Latest |
 | Traitement PDF | PyMuPDF (fitz) | Latest |
+| Packaging | Flet CLI / PyInstaller | 6.18.0 |
 | Gestion des dépendances | pip | Standard |
 
 ---
@@ -102,6 +103,22 @@ pip install pymupdf
 - `page.get_pixmap()` : Rendu d'une page en image (pour prévisualisation)
 - `page.insert_text()` : Insertion de filigrane vectoriel natif
 - `doc.save()` : Sauvegarde incrémentale ou complète du document
+
+---
+
+### Packaging & Distribution (macOS)
+
+**Rôle** : Création d'un bundle autonome `.app`
+
+**Outils** :
+- **Flet CLI** (`flet pack`) : Simplifie le packaging en invoquant PyInstaller avec des préréglages Flet.
+- **PyInstaller** : Moteur de bundling sous-jacent.
+- **sips & iconutil** : Utilitaires macOS pour la conversion de l'icône PNG en `.icns`.
+
+**Configuration** :
+- Utilisation de `--icon assets/app_icon.icns` pour l'identité visuelle.
+- Mode `--noconsole` pour masquer le terminal au lancement.
+- Version stable recommandée : **Flet 0.21.2** (évite les régressions API de la version 0.80+).
 
 ---
 

@@ -15,7 +15,15 @@
       "final_checkpoint": "600e155",
       "phases_completed": 5,
       "tasks_completed": 15
+    },
+    {
+      "track_id": "macos_packaging_20260202",
+      "name": "MacOS App Packaging & Icon",
+      "completed_date": "2026-02-02",
+      "final_checkpoint": "439ed61",
+      "phases_completed": 4,
+      "tasks_completed": 12
     }
   ],
-  "last_updated": "2026-02-02T16:16:59Z"
+  "last_updated": "2026-02-02T17:35:00Z"
 }
