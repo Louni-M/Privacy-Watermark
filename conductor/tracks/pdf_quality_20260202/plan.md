@@ -24,12 +24,12 @@
   - [x] Sub-task: Test that watermark respects color parameter (White, Black, Gray)
   - [x] Sub-task: Test diagonal tiling pattern (45° rotation)
 
-- [ ] Task: Implement `apply_vector_watermark_to_pdf()` function
-  - [ ] Sub-task: Create function signature matching existing parameters
-  - [ ] Sub-task: Implement diagonal text placement algorithm using PyMuPDF
-  - [ ] Sub-task: Implement opacity mapping to PDF transparency
-  - [ ] Sub-task: Implement color mapping (White, Black, Gray to RGB)
-  - [ ] Sub-task: Ensure watermark is added as overlay layer
+- [x] Task: Implement `apply_vector_watermark_to_pdf()` function [318cfeb]
+  - [x] Sub-task: Create function signature matching existing parameters
+  - [x] Sub-task: Implement diagonal text placement algorithm using PyMuPDF
+  - [x] Sub-task: Implement opacity mapping to PDF transparency
+  - [x] Sub-task: Implement color mapping (White, Black, Gray to RGB)
+  - [x] Sub-task: Ensure watermark is added as overlay layer
 
 - [ ] Task: Verify all tests pass (Green phase)
 
