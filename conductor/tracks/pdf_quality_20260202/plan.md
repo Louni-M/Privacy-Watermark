@@ -1,6 +1,6 @@
 # Plan: PDF Quality Preservation with Native Vector Watermark
 
-## Phase 1: Research & Foundation
+## Phase 1: Research & Foundation [checkpoint: 46b95d4]
 
 - [x] Task: Investigate PyMuPDF vector text/shape APIs for watermark rendering [82feab7]
   - [x] Sub-task: Study `page.insert_text()` with rotation parameters
@@ -12,7 +12,7 @@
   - [x] Sub-task: Create a multi-page test PDF with text, vectors, and images
   - [x] Sub-task: Create a high-resolution test PDF for zoom testing
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [46b95d4]
 
 ## Phase 2: Core Vector Watermark Implementation (TDD)
 
