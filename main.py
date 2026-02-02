@@ -85,11 +85,22 @@ def apply_watermark(image_bytes, text, opacity, font_size, spacing):
     return output.getvalue()
 
 def main(page: ft.Page):
+    """
+    Point d'entrée principal de l'application Flet.
+    Gère le layout, les événements et l'état de l'interface.
+    """
     page.title = "Passport Filigrane"
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 0
     page.bgcolor = "#1a1a1a"
 
+    # --- État de l'application ---
+    original_image_bytes = None
+    watermarked_image_bytes = None
+    update_timer = None
+
+    # --- Composants UI ---
+    
     # Zone d'image pour la prévisualisation
     preview_image = ft.Image(
         src_base64="",
@@ -97,41 +108,24 @@ def main(page: ft.Page):
         visible=False,
     )
 
-    # État de l'application
-    original_image_bytes = None
-    watermarked_image_bytes = None
-    update_timer = None
-
-    def on_save_result(e: ft.FilePickerResultEvent):
-        if e.path:
-            try:
-                with open(e.path, "wb") as f:
-                    f.write(watermarked_image_bytes)
-                page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Image enregistrée avec succès : {os.path.basename(e.path)}"),
-                    bgcolor=ft.colors.GREEN
-                )
-                page.snack_bar.open = True
-                page.update()
-            except Exception as ex:
-                page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Erreur lors de l'enregistrement : {ex}"),
-                    bgcolor=ft.colors.ERROR
-                )
-                page.snack_bar.open = True
-                page.update()
+    def set_controls_disabled(disabled: bool):
+        """Active ou désactive tous les contrôles de filigrane."""
+        watermark_text.disabled = disabled
+        opacity_slider.disabled = disabled
+        font_size_slider.disabled = disabled
+        spacing_slider.disabled = disabled
+        save_button.disabled = disabled or watermarked_image_bytes is None
+        page.update()
 
     def update_preview(e=None):
+        """Déclenche la mise à jour du filigrane avec un debounce."""
         nonlocal original_image_bytes, watermarked_image_bytes, update_timer
         
         # Mise à jour immédiate des labels (pour la réactivité UI)
-        try:
-            opacity_label.value = f"Opacité ({int(opacity_slider.value)}%)"
-            font_size_label.value = f"Taille de police ({int(font_size_slider.value)} px)"
-            spacing_label.value = f"Espacement ({int(spacing_slider.value)} px)"
-            page.update()
-        except NameError:
-            pass # Les contrôles ne sont pas encore tous créés à l'initialisation
+        opacity_label.value = f"Opacité ({int(opacity_slider.value)}%)"
+        font_size_label.value = f"Taille de police ({int(font_size_slider.value)} px)"
+        spacing_label.value = f"Espacement ({int(spacing_slider.value)} px)"
+        page.update()
 
         if original_image_bytes is None:
             return
@@ -158,17 +152,21 @@ def main(page: ft.Page):
                 # Activer le bouton de sauvegarde
                 save_button.disabled = False
                 save_button.update()
-                page.update()
             except Exception as ex:
-                page.snack_bar = ft.SnackBar(ft.Text(f"Erreur de mise à jour : {ex}"), bgcolor=ft.colors.ERROR)
-                page.snack_bar.open = True
-                page.update()
+                show_error(f"Erreur de mise à jour : {ex}")
 
-        # Debounce de 200ms pour éviter de surcharger le CPU
+        # Debounce de 200ms
         update_timer = threading.Timer(0.2, do_update)
         update_timer.start()
 
+    def show_error(message: str):
+        """Affiche un message d'erreur via SnackBar."""
+        page.snack_bar = ft.SnackBar(ft.Text(message), bgcolor=ft.colors.ERROR)
+        page.snack_bar.open = True
+        page.update()
+
     def on_file_result(e: ft.FilePickerResultEvent):
+        """Gère le résultat de la sélection de fichier."""
         nonlocal original_image_bytes
         if e.files:
             file_path = e.files[0].path
@@ -177,28 +175,41 @@ def main(page: ft.Page):
                 
             try:
                 with open(file_path, "rb") as f:
-                    original_image_bytes = f.read()
+                    content = f.read()
                 
-                # Première passe de prévisualisation (avec valeurs par défaut)
+                # Vérification Pillow
+                try:
+                    Image.open(io.BytesIO(content)).verify()
+                except Exception:
+                    show_error("Le fichier n'est pas une image valide.")
+                    return
+                
+                original_image_bytes = content
+                set_controls_disabled(False)
                 update_preview()
                 preview_image.visible = True
                 page.update()
             except PermissionError:
+                show_error("Permission refusée lors de l'ouverture du fichier.")
+            except Exception as ex:
+                show_error(f"Erreur lors du chargement : {ex}")
+        else:
+            print("Selection cancelled")
+
+    def on_save_result(e: ft.FilePickerResultEvent):
+        """Gère le résultat du dialogue de sauvegarde."""
+        if e.path and watermarked_image_bytes:
+            try:
+                with open(e.path, "wb") as f:
+                    f.write(watermarked_image_bytes)
                 page.snack_bar = ft.SnackBar(
-                    ft.Text("Erreur de permission : Impossible d'accéder au fichier (vérifiez les accès macOS ou essayez un dossier local)"),
-                    bgcolor=ft.colors.ERROR
+                    ft.Text(f"Image enregistrée : {os.path.basename(e.path)}"),
+                    bgcolor=ft.colors.GREEN
                 )
                 page.snack_bar.open = True
                 page.update()
             except Exception as ex:
-                page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Erreur lors du chargement de l'image : {ex}"),
-                    bgcolor=ft.colors.ERROR
-                )
-                page.snack_bar.open = True
-                page.update()
-        else:
-            print("Selection cancelled")
+                show_error(f"Erreur lors de l'enregistrement : {ex}")
 
     # FilePickers
     file_picker = ft.FilePicker(on_result=on_file_result)
@@ -217,24 +228,25 @@ def main(page: ft.Page):
         border_color="#3b82f6",
         focused_border_color="#60a5fa",
         on_change=update_preview,
+        disabled=True,
     )
     
     opacity_label = ft.Text("Opacité (30%)", size=14, color="#ffffff")
     opacity_slider = ft.Slider(
         min=0, max=100, value=30, divisions=100, label="{value}%",
-        active_color="#3b82f6", on_change=update_preview
+        active_color="#3b82f6", on_change=update_preview, disabled=True
     )
     
     font_size_label = ft.Text("Taille de police (36 px)", size=14, color="#ffffff")
     font_size_slider = ft.Slider(
         min=12, max=72, value=36, divisions=60, label="{value}px",
-        active_color="#3b82f6", on_change=update_preview
+        active_color="#3b82f6", on_change=update_preview, disabled=True
     )
     
     spacing_label = ft.Text("Espacement (150 px)", size=14, color="#ffffff")
     spacing_slider = ft.Slider(
         min=50, max=300, value=150, divisions=250, label="{value}px",
-        active_color="#3b82f6", on_change=update_preview
+        active_color="#3b82f6", on_change=update_preview, disabled=True
     )
 
     save_button = ft.ElevatedButton(
