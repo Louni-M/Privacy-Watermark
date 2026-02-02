@@ -55,16 +55,16 @@
 
 ## Phase 4: Preview & Polish
 
-- [ ] Task: Evaluate preview rendering approach
-  - [ ] Sub-task: Determine if vector watermark can be shown in preview
-  - [ ] Sub-task: If not feasible, document that preview uses raster approximation
+- [x] Task: Evaluate preview rendering approach
+  - [x] Sub-task: Determine if vector watermark can be shown in preview
+  - [x] Sub-task: If not feasible, document that preview uses raster approximation
 
-- [ ] Task: Write tests for edge cases
-  - [ ] Sub-task: Test with encrypted/password-protected PDF (should fail gracefully)
-  - [ ] Sub-task: Test with very large PDF (10+ pages)
-  - [ ] Sub-task: Test with PDF containing only images (scanned document)
+- [x] Task: Write tests for edge cases
+  - [x] Sub-task: Test with encrypted/password-protected PDF (should fail gracefully)
+  - [x] Sub-task: Test with very large PDF (10+ pages)
+  - [x] Sub-task: Test with PDF containing only images (scanned document)
 
-- [ ] Task: Implement edge case handling
+- [x] Task: Implement edge case handling
 
 - [ ] Task: Performance optimization
   - [ ] Sub-task: Measure watermarking time for 10-page PDF
