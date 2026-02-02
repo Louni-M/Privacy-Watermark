@@ -4,6 +4,7 @@ import io
 import base64
 import os
 import threading
+from pdf_processing import load_pdf, pdf_page_to_image, apply_watermark_to_pdf  # New import
 
 def generate_preview(image_bytes_io):
     """Génère un thumbnail de l'image (max 800px) pour la prévisualisation."""
@@ -83,6 +84,17 @@ def apply_watermark(image_bytes, text, opacity, font_size, spacing):
     # On reconvertit en RGB pour la sortie si l'original était RGB (optionnel)
     out.convert("RGB").save(output, format="JPEG", quality=90)
     return output.getvalue()
+
+def detect_file_type(file_path):
+    """
+    Détermine si le fichier est une image ou un PDF en fonction de son extension.
+    """
+    ext = os.path.splitext(file_path)[1].lower()
+    if ext in ['.jpg', '.jpeg', '.png']:
+        return "image"
+    elif ext == '.pdf':
+        return "pdf"
+    return "unknown"
 
 def main(page: ft.Page):
     """
@@ -213,7 +225,8 @@ def main(page: ft.Page):
 
     # FilePickers
     file_picker = ft.FilePicker(on_result=on_file_result)
-    file_picker.file_type = ft.FilePickerFileType.IMAGE
+    file_picker.file_type = ft.FilePickerFileType.CUSTOM
+    file_picker.allowed_extensions = ["jpg", "jpeg", "png", "pdf"]
     
     save_file_picker = ft.FilePicker(on_result=on_save_result)
     
@@ -275,7 +288,7 @@ def main(page: ft.Page):
                     icon=ft.icons.IMAGE,
                     on_click=lambda _: file_picker.pick_files(
                         allow_multiple=False,
-                        allowed_extensions=["jpg", "jpeg", "png"]
+                        allowed_extensions=["jpg", "jpeg", "png", "pdf"]
                     ),
                     bgcolor="#3b82f6",
                     color="#ffffff",
