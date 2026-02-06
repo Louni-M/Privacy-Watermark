@@ -1,6 +1,6 @@
 # Privacy Watermarking App on macOS
 
-A macOS application for watermarking identity documents and protecting your privacy.
+A macOS application for watermarking documents and maintaining control over your important files (e.g. passport, ID sent for an online application)
 
 ## Features
 
