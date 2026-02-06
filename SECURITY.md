@@ -1,6 +1,6 @@
 # Security Policy 
 
-This document describes the security measures implemented in Passport Filigrane,
+This document describes the security measures implemented,
 known limitations, and guidelines for users.
 
 ## Table of Contents
