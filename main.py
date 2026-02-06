@@ -75,13 +75,20 @@ def strip_image_metadata(img):
     clean.putdata(list(img.getdata()))
     return clean
 
-def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="White", orientation="Ascending (↗)"):
+def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="White", orientation="Ascending (↗)", output_format="JPEG"):
     """Apply a repeated diagonal watermark on the image."""
     img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
     out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color=color, orientation=orientation)
-    out_rgb = strip_image_metadata(out.convert("RGB"))
+    
     output = io.BytesIO()
-    out_rgb.save(output, format="JPEG", quality=90)
+    if output_format.upper() == "PNG":
+        # PNG supports RGBA, but we'll convert to RGB for consistency with current JPEG behavior if desired,
+        # or keep RGBA for lossless transparency. Given current behavior converts to RGB for JPEG:
+        out_rgb = strip_image_metadata(out.convert("RGB"))
+        out_rgb.save(output, format="PNG")
+    else:
+        out_rgb = strip_image_metadata(out.convert("RGB"))
+        out_rgb.save(output, format="JPEG", quality=90)
     return output.getvalue()
 
 def detect_file_type(file_path):
@@ -387,7 +394,13 @@ class PassportFiligraneApp:
                     file_type = self.current_file_type
 
                     if file_type == "image" and self.original_image_bytes:
-                        self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color, orientation=orientation)
+                        # Preview remains JPEG for speed? Or uses selected format? 
+                        # Let's use the selected format for accuracy if it's not too slow.
+                        fmt = self.export_format_dropdown.value if self.export_format_dropdown.value in ["JPG", "PNG"] else "JPG"
+                        self.watermarked_image_bytes = apply_watermark(
+                            self.original_image_bytes, text, opacity, font_size, spacing, 
+                            color=color, orientation=orientation, output_format=fmt
+                        )
                     elif file_type == "pdf" and self.pdf_doc:
                         self.watermarked_image_bytes = generate_pdf_preview(
                              doc=self.pdf_doc,
@@ -568,7 +581,9 @@ class PassportFiligraneApp:
                     )
                     doc_to_save = self.pdf_doc
 
-                save_pdf_as_images(doc_to_save, e.path, "export")
+                fmt = self.export_format_dropdown.value
+                img_fmt = "PNG" if "PNG" in fmt else "JPEG"
+                save_pdf_as_images(doc_to_save, e.path, "export", img_format=img_fmt)
                 self.page.snack_bar = ft.SnackBar(
                     ft.Text(f"Images exported to: {os.path.basename(e.path)}"),
                     bgcolor=ft.colors.GREEN
@@ -579,15 +594,31 @@ class PassportFiligraneApp:
                 self.show_error(f"Error while exporting images: {ex}")
 
     def on_save_button_click(self, e):
-        if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
-            self.save_dir_picker.get_directory_path()
-        else:
-            default_ext = "jpg" if self.current_file_type == "image" else "pdf"
-            allowed = ["jpg", "jpeg", "png"] if self.current_file_type == "image" else ["pdf"]
-            self.save_file_picker.save_file(
-                file_name=f"export_filigree.{default_ext}",
-                allowed_extensions=allowed
-            )
+        fmt = self.export_format_dropdown.value
+        if self.current_file_type == "pdf":
+            if fmt == "Images (JPG)" or fmt == "Images (PNG)":
+                self.save_dir_picker.get_directory_path()
+            else:
+                self.save_file_picker.save_file(
+                    file_name="export_filigree.pdf",
+                    allowed_extensions=["pdf"]
+                )
+        elif self.current_file_type == "image":
+            if fmt == "PNG":
+                self.save_file_picker.save_file(
+                    file_name="export_filigree.png",
+                    allowed_extensions=["png"]
+                )
+            elif fmt == "PDF":
+                self.save_file_picker.save_file(
+                    file_name="export_filigree.pdf",
+                    allowed_extensions=["pdf"]
+                )
+            else: # Default JPG
+                self.save_file_picker.save_file(
+                    file_name="export_filigree.jpg",
+                    allowed_extensions=["jpg", "jpeg"]
+                )
 
 def main(page: ft.Page):
     PassportFiligraneApp(page)

@@ -229,9 +229,9 @@ def save_watermarked_pdf(doc, output_path):
     """
     doc.save(output_path)
 
-def save_pdf_as_images(doc, output_dir, base_name):
+def save_pdf_as_images(doc, output_dir, base_name, img_format="JPEG"):
     """
-    Save each page of the PDF as an individual JPG image.
+    Save each page of the PDF as an individual image (JPG or PNG).
     Output images are created from raw pixel data (no EXIF metadata).
     """
     if not os.path.exists(output_dir):
@@ -242,8 +242,14 @@ def save_pdf_as_images(doc, output_dir, base_name):
         pix = page.get_pixmap()
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 
-        output_path = os.path.join(output_dir, f"{base_name}_page_{i+1:03d}.jpg")
-        img.save(output_path, "JPEG", quality=90)
+        ext = "png" if img_format.upper() == "PNG" else "jpg"
+        pil_fmt = "PNG" if img_format.upper() == "PNG" else "JPEG"
+        output_path = os.path.join(output_dir, f"{base_name}_page_{i+1:03d}.{ext}")
+        
+        if pil_fmt == "JPEG":
+            img.save(output_path, pil_fmt, quality=90)
+        else:
+            img.save(output_path, pil_fmt)
 
 def generate_pdf_preview(doc, text, opacity, font_size, spacing, color, orientation="Ascending (↗)"):
     """
