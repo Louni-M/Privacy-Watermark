@@ -18,26 +18,26 @@
 
 ## Phase 2: PNG Export Support [~]
 
-- [~] Task: Write tests for PNG export from image files
-  - [ ] Sub-task: Test that selecting PNG format produces valid PNG output with watermark
-  - [ ] Sub-task: Test that PNG output has metadata stripped
-  - [ ] Sub-task: Test that save dialog uses correct extension and allowed_extensions for PNG
+- [x] Task: Write tests for PNG export from image files [71814f2]
+  - [x] Sub-task: Test that selecting PNG format produces valid PNG output with watermark
+  - [x] Sub-task: Test that PNG output has metadata stripped
+  - [x] Sub-task: Test that save dialog uses correct extension and allowed_extensions for PNG
 
-- [ ] Task: Implement PNG export for image files in `main.py` and processing code
-  - [ ] Sub-task: Add PNG watermark generation function (or modify `apply_watermark` to support format parameter)
-  - [ ] Sub-task: Update `on_save_button_click()` to handle PNG format selection
-  - [ ] Sub-task: Update `on_save_result()` to write PNG output when selected
+- [x] Task: Implement PNG export for image files in `main.py` and processing code [71814f2]
+  - [x] Sub-task: Add PNG watermark generation function (or modify `apply_watermark` to support format parameter)
+  - [x] Sub-task: Update `on_save_button_click()` to handle PNG format selection
+  - [x] Sub-task: Update `on_save_result()` to write PNG output when selected
 
-- [ ] Task: Write tests for PNG export from PDF pages
-  - [ ] Sub-task: Test that selecting "Images (PNG)" exports each page as PNG
-  - [ ] Sub-task: Test that PNG files follow naming convention `export_page_001.png`
+- [x] Task: Write tests for PNG export from PDF pages [71814f2]
+  - [x] Sub-task: Test that selecting "Images (PNG)" exports each page as PNG
+  - [x] Sub-task: Test that PNG files follow naming convention `export_page_001.png`
 
-- [ ] Task: Implement PNG export for PDF pages in `pdf_processing.py`
-  - [ ] Sub-task: Add format parameter to `save_pdf_as_images()` to support PNG output
-  - [ ] Sub-task: Update `on_save_button_click()` to use directory picker for Images (PNG)
-  - [ ] Sub-task: Update `on_dir_result()` to pass format parameter when saving PDF as images
+- [x] Task: Implement PNG export for PDF pages in `pdf_processing.py` [71814f2]
+  - [x] Sub-task: Add format parameter to `save_pdf_as_images()` to support PNG output
+  - [x] Sub-task: Update `on_save_button_click()` to use directory picker for Images (PNG)
+  - [x] Sub-task: Update `on_dir_result()` to pass format parameter when saving PDF as images
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
 ## Phase 3: Image-to-PDF Conversion [ ]
 
