@@ -5,21 +5,12 @@ known limitations, and guidelines for users.
 
 ## Table of Contents
 
-1. [Reporting Vulnerabilities](#reporting-vulnerabilities)
-2. [Dependency Security](#dependency-security)
-3. [Input Validation](#input-validation)
-4. [File Handling & Privacy](#file-handling--privacy)
-5. [Error Logging](#error-logging)
-6. [Thread Safety](#thread-safety)
-7. [Watermark Security Model](#watermark-security-model)
-
----
-
-## Reporting Vulnerabilities
-
-If you discover a security vulnerability, please report it privately via GitHub
-Issues with the label `security`. Do not disclose vulnerabilities publicly until
-a fix has been released.
+1. [Dependency Security](#dependency-security)
+2. [Input Validation](#input-validation)
+3. [File Handling & Privacy](#file-handling--privacy)
+4. [Error Logging](#error-logging)
+5. [Thread Safety](#thread-safety)
+6. [Watermark Security Model](#watermark-security-model)
 
 ---
 
