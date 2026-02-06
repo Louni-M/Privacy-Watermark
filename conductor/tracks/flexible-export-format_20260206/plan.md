@@ -16,7 +16,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
-## Phase 2: PNG Export Support [checkpoint: 669595e]
+## Phase 2: PNG Export Support [checkpoint: c46ea6c]
 
 - [x] Task: Write tests for PNG export from image files [71814f2]
   - [x] Sub-task: Test that selecting PNG format produces valid PNG output with watermark
@@ -37,21 +37,21 @@
   - [x] Sub-task: Update `on_save_button_click()` to use directory picker for Images (PNG)
   - [x] Sub-task: Update `on_dir_result()` to pass format parameter when saving PDF as images
 
-- [~] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
-## Phase 3: Image-to-PDF Conversion [ ]
+## Phase 3: Image-to-PDF Conversion [~]
 
-- [ ] Task: Write tests for image-to-PDF conversion
-  - [ ] Sub-task: Test that a watermarked image is correctly embedded into a single-page PDF
-  - [ ] Sub-task: Test that PDF page dimensions match original image dimensions (in points)
-  - [ ] Sub-task: Test that save dialog uses correct extension and allowed_extensions for PDF
+- [x] Task: Write tests for image-to-PDF conversion [89bd0e2]
+  - [x] Sub-task: Test that a watermarked image is correctly embedded into a single-page PDF
+  - [x] Sub-task: Test that PDF page dimensions match original image dimensions (in points)
+  - [x] Sub-task: Test that save dialog uses correct extension and allowed_extensions for PDF
 
-- [ ] Task: Implement image-to-PDF conversion
-  - [ ] Sub-task: Create `save_image_as_pdf()` function in `pdf_processing.py`
-  - [ ] Sub-task: Update `on_save_button_click()` to handle PDF format for image files
-  - [ ] Sub-task: Update `on_save_result()` to call `save_image_as_pdf()` when image→PDF is selected
+- [x] Task: Implement image-to-PDF conversion [89bd0e2]
+  - [x] Sub-task: Create `save_image_as_pdf()` function in `pdf_processing.py`
+  - [x] Sub-task: Update `on_save_button_click()` to handle PDF format for image files
+  - [x] Sub-task: Update `on_save_result()` to call `save_image_as_pdf()` when image→PDF is selected
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
 ## Phase 4: Save Dialog Adaptation & Integration Testing [ ]
 
