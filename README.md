@@ -12,6 +12,10 @@ A macOS application for watermarking identity documents and protecting your priv
 - **Secure Mode**: high-definition rasterization (300/450/600 DPI) making the watermark impossible to remove
 - **Real-time preview**: instant preview of changes
 
+## Application UI Demonstration 
+
+https://github.com/user-attachments/assets/15e39e6a-2b2e-4cb9-b6ea-c865e61e36b5
+
 ## Secure Mode (Raster) Demonstration
 
 **Secure Mode** converts each PDF page into a high-resolution image before applying the watermark. This makes the watermark inseparable from the content and prevents any attempt at removal or text extraction.
