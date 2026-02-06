@@ -619,6 +619,11 @@ class PassportFiligraneApp:
                     file_name="export_filigree.jpg",
                     allowed_extensions=["jpg", "jpeg"]
                 )
+        else: # Fallback for None file type
+            self.save_file_picker.save_file(
+                file_name="export_filigree.pdf",
+                allowed_extensions=["pdf"]
+            )
 
 def main(page: ft.Page):
     PassportFiligraneApp(page)
