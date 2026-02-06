@@ -76,6 +76,12 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
   - Résistant à `page.search_for()`, redaction, et manipulation PDF
 - **Cohérence Preview/Export** : L'orientation est appliquée uniformément sur la prévisualisation et tous les modes d'export.
 
+### v1.4 (Flexible Export Selection) - [x]
+- **Sélecteur de Format Dynamique** : Le dropdown d'export s'adapte automatiquement au type de fichier chargé.
+- **Support PNG Complet** : Export d'images et de pages PDF au format PNG (lossless).
+- **Conversion Image → PDF** : Possibilité d'exporter une image filigranée directement dans un document PDF de taille adaptée.
+- **UI Clarifiée** : Banners de succès détaillant le nom du fichier réel et le nombre de pages exportées.
+
 
 ## Stack Technique
 
@@ -122,6 +128,10 @@ Passport Filigrane est une application macOS locale permettant de filigraner des
   1. Rasteriser chaque page à haute résolution (300/450/600 DPI) via une matrice de zoom
   2. Appliquer le filigrane sur l'image brute (Pillow)
   3. Réinsérer l'image filigranée dans une nouvelle page PDF (Qualité JPEG 95%)
+- **Pour la Conversion Image → PDF :**
+  1. Appliquer le filigrane sur l'image (Pillow)
+  2. Créer un nouveau PDF (Fitz) avec une page aux dimensions exactes de l'image (72 DPI)
+  3. Insérer l'image filigranée en stream direct sans recompression
 
 ## Contraintes
 

@@ -90,3 +90,18 @@
 ### Issues Encountered
 - **Text Cutoff in Raster Mode**: Le texte était coupé en bas car `getbbox()` retourne un `top` offset (ex: 14px) non pris en compte lors du dessin à `(padding//2, padding//2)`.
 - **Preview vs Export Consistency**: Assurer que l'orientation est passée à toutes les fonctions (preview, save PDF, save images, secure mode) pour éviter les incohérences visuelles.
+
+## 2026-02-06 Track: flexible-export-format_20260206 (Flexible Export Format Selection)
+
+### Key Learnings
+- **Dynamic Options in Flet**: Modifier la liste `options` d'un `Dropdown` nécessite de réinitialiser `.value` à une valeur valide présente dans la nouvelle liste pour éviter les erreurs visuelles.
+- **Coordinate Conversion**: PyMuPDF utilise des points (1/72 pouce). Pour qu'une image Pillow de 1000px de large tienne exactement dans une page PDF, la page doit être créée avec une largeur de 1000 "points" (si on considère l'image à 72 DPI).
+- **User Feedback Clarity**: Dans les exports multi-fichiers (PDF vers images), il est crucial de nommer au moins un fichier réel dans la SnackBar de succès pour rassurer l'utilisateur sur le pattern de nommage utilisé.
+
+### Patterns Discovered
+- **Success Pattern Decorator**: Construire le message de succès dynamiquement (`'filename_page_001.png' and X more`) améliore grandement la perception de fiabilité de l'outil.
+- **Interaction Matrix Testing**: Créer des tests d'intégration qui parcourent explicitement toutes les combinaisons `(Input Type, Selected Format)` assure qu'aucune régression n'est introduite dans le routage des pickers.
+
+### Issues Encountered
+- **Snackbar Vagueness**: Initialement, le message "Images exported to..." était trop générique. L'utilisateur a explicitement demandé l'inclusion du nom de fichier réel avec le suffixe de page.
+- **FilePicker Extension Sync**: Flet ne met pas à jour dynamiquement les `allowed_extensions` d'un `FilePicker` déjà ouvert. Il faut s'assurer que les paramètres sont calculés au moment de l'appel à `pick_files()` ou `save_file()`.
