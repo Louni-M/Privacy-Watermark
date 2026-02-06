@@ -16,7 +16,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
-## Phase 2: PNG Export Support [checkpoint: 337c7bd]
+## Phase 2: PNG Export Support [checkpoint: 4b1aea6]
 
 - [x] Task: Write tests for PNG export from image files [71814f2]
   - [x] Sub-task: Test that selecting PNG format produces valid PNG output with watermark
