@@ -1,6 +1,6 @@
 # Plan: Flexible Export Format Selection
 
-## Phase 1: Dynamic Export Format Dropdown [~]
+## Phase 1: Dynamic Export Format Dropdown [checkpoint: dd8399a]
 
 - [x] Task: Write tests for dynamic dropdown options based on file type [34ccea0]
   - [x] Sub-task: Test that uploading an image sets dropdown options to JPG, PNG, PDF with JPG as default
@@ -16,9 +16,9 @@
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
-## Phase 2: PNG Export Support [ ]
+## Phase 2: PNG Export Support [~]
 
-- [ ] Task: Write tests for PNG export from image files
+- [~] Task: Write tests for PNG export from image files
   - [ ] Sub-task: Test that selecting PNG format produces valid PNG output with watermark
   - [ ] Sub-task: Test that PNG output has metadata stripped
   - [ ] Sub-task: Test that save dialog uses correct extension and allowed_extensions for PNG
