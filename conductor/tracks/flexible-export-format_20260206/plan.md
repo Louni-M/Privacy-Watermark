@@ -39,7 +39,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
-## Phase 3: Image-to-PDF Conversion [~]
+## Phase 3: Image-to-PDF Conversion [checkpoint: cce0570]
 
 - [x] Task: Write tests for image-to-PDF conversion [89bd0e2]
   - [x] Sub-task: Test that a watermarked image is correctly embedded into a single-page PDF
@@ -51,11 +51,11 @@
   - [x] Sub-task: Update `on_save_button_click()` to handle PDF format for image files
   - [x] Sub-task: Update `on_save_result()` to call `save_image_as_pdf()` when image→PDF is selected
 
-- [~] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
-## Phase 4: Save Dialog Adaptation & Integration Testing [ ]
+## Phase 4: Save Dialog Adaptation & Integration Testing [~]
 
-- [ ] Task: Write integration tests for save dialog behavior
+- [~] Task: Write integration tests for save dialog behavior
   - [ ] Sub-task: Test that save dialog defaults match selected format for all combinations (image→JPG, image→PNG, image→PDF, PDF→PDF, PDF→Images JPG, PDF→Images PNG)
   - [ ] Sub-task: Test that existing export flows remain unaffected (backward compatibility)
 
