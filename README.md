@@ -1,4 +1,4 @@
-# Passport Filigrane
+# Privacy Watermarking App on macOS
 
 A macOS application for watermarking identity documents and protecting your privacy.
 
