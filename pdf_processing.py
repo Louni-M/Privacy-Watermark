@@ -229,6 +229,26 @@ def save_watermarked_pdf(doc, output_path):
     """
     doc.save(output_path)
 
+def save_image_as_pdf(image_bytes, output_path):
+    """
+    Convert a watermarked image (bytes) to a single-page PDF.
+    The PDF page size will match the image dimensions in points (72 DPI).
+    """
+    img = Image.open(io.BytesIO(image_bytes))
+    width, height = img.size
+    
+    # Calculate dimensions in points (1 pixel = 1 point at 72 DPI)
+    # PyMuPDF uses points for page dimensions.
+    pdf_doc = fitz.open()
+    page = pdf_doc.new_page(width=width, height=height)
+    
+    # Insert image into the page
+    # Since we use image_bytes directly, we don't need to save to a temp file
+    page.insert_image(page.rect, stream=image_bytes)
+    
+    pdf_doc.save(output_path)
+    pdf_doc.close()
+
 def save_pdf_as_images(doc, output_dir, base_name, img_format="JPEG"):
     """
     Save each page of the PDF as an individual image (JPG or PNG).
