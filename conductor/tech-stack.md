@@ -231,4 +231,14 @@ flet run main.py
 ---
 
 - **Entrée** : JPG, JPEG, PNG, PDF
-- **Sortie** : JPEG (qualité 90), PDF (mergé avec filigrane)
+### v1.4 (Flexible Export Selection) - [x]
+
+#### Architecture & Patterns
+- **Context-Aware UI** : Mise à jour dynamique des options du `FilePicker` et du `Dropdown` basée sur le `MIME type` détecté.
+- **Cross-Format conversion** : Extension du module `pdf_processing` pour supporter l'injection d'images Pillow directement dans des documents PyMuPDF.
+- **Dimension Mapping** : Gestion de la conversion Pixels (Pillow) ↔ Points (PDF) pour garantir que l'export PDF "fit" parfaitement l'image source à 72 DPI.
+
+#### Tests
+- **Intégration** : `test_integration_export.py` simulant la matrice complète des exports possibles (Image→PNG/PDF, PDF→PNG).
+- **Format-Specific** : `test_png_export.py`, `test_image_to_pdf.py`.
+- **Couverture** : Maintien d'une couverture >90% sur la logique de conversion et de routage d'export.

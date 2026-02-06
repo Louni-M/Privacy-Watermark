@@ -53,15 +53,15 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
-## Phase 4: Save Dialog Adaptation & Integration Testing [~]
+## Phase 4: Save Dialog Adaptation & Integration Testing [checkpoint: 12a43b5]
 
-- [~] Task: Write integration tests for save dialog behavior
-  - [ ] Sub-task: Test that save dialog defaults match selected format for all combinations (image→JPG, image→PNG, image→PDF, PDF→PDF, PDF→Images JPG, PDF→Images PNG)
-  - [ ] Sub-task: Test that existing export flows remain unaffected (backward compatibility)
+- [x] Task: Write integration tests for save dialog behavior [f58cd4c]
+  - [x] Sub-task: Test that save dialog defaults match selected format for all combinations (image→JPG, image→PNG, image→PDF, PDF→PDF, PDF→Images JPG, PDF→Images PNG)
+  - [x] Sub-task: Test that existing export flows remain unaffected (backward compatibility)
 
-- [ ] Task: Verify and fix save dialog adaptation across all export paths
-  - [ ] Sub-task: Audit `on_save_button_click()` for correct `file_name`, `allowed_extensions`, and picker type per format
-  - [ ] Sub-task: Fix any inconsistencies found during audit
-  - [ ] Sub-task: Verify default format selections (JPG for images, PDF for PDFs)
+- [x] Task: Verify and fix save dialog adaptation across all export paths [12a43b5]
+  - [x] Sub-task: Audit `on_save_button_click()` for correct `file_name`, `allowed_extensions`, and picker type per format
+  - [x] Sub-task: Fix any inconsistencies found during audit
+  - [x] Sub-task: Verify default format selections (JPG for images, PDF for PDFs)
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
