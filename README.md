@@ -24,11 +24,12 @@ Le **Mode Sécurisé** transforme chaque page du PDF en une image haute résolut
 
 ## Installation
 
-### Depuis les releases
+### Depuis les releases (Recommandé)
 
-1. Télécharger `Passport Filigrane.app` depuis les [Releases](../../releases)
-2. Glisser dans le dossier Applications
-3. Lancer l'application
+1. Télécharger `Passport-Filigrane.zip` (ou le dossier compressé) depuis les [Releases](https://github.com/Louni-M/Passport-Filigrane/releases)
+2. Extraire l'archive
+3. Glisser `Passport Filigrane.app` dans votre dossier **Applications**
+4. Lancer l'application (Note : Au premier lancement, un clic droit > Ouvrir peut être nécessaire car l'app n'est pas encore signée par un certificat développeur Apple).
 
 ### Depuis les sources
 
@@ -37,6 +38,10 @@ Le **Mode Sécurisé** transforme chaque page du PDF en une image haute résolut
 git clone https://github.com/Louni-M/Passport-Filigrane.git
 cd Passport-Filigrane
 
+# Créer un environnement virtuel
+python3 -m venv venv
+source venv/bin/activate
+
 # Installer les dépendances
 pip install -r requirements.txt
 
@@ -44,60 +49,31 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### Build de l'application
+### Build de l'application (Développeurs)
 
 ```bash
-pip install pyinstaller
+# Le build utilise le mode onedir pour une performance optimale
 pyinstaller "Passport Filigrane.spec" --clean
 ```
 
-L'application sera générée dans `dist/`.
-
-## Utilisation
-
-1. **Sélectionner un fichier** (image ou PDF)
-2. **Configurer le filigrane** :
-   - Texte (ex: "COPIE", "SPECIMEN")
-   - Opacité (0-100%)
-   - Taille de police (12-72px)
-   - Espacement (50-300px)
-   - Couleur (Blanc, Noir, Gris)
-   - Orientation (Ascendant ↗ / Descendant ↘)
-3. **Activer le Mode Sécurisé** (optionnel) pour les documents sensibles
-4. **Enregistrer** le fichier filigrané
-
-## Mode Sécurisé vs Mode Vectoriel
-
-| Critère | Vectoriel | Sécurisé (Raster) |
-|---------|-----------|-------------------|
-| Qualité | Parfaite | Très bonne |
-| Texte sélectionnable | Oui | Non |
-| Filigrane supprimable | Oui | **Non** |
-| Taille fichier | ~100% | ~300-1000% |
-| Cas d'usage | Usage interne | Documents publics |
-
-## Stack technique
-
-- **Python 3.x**
-- **Flet** - Interface utilisateur
-- **Pillow** - Traitement d'images
-- **PyMuPDF** - Manipulation PDF
+L'application est générée dans `dist/Passport Filigrane.app`.
 
 ## Structure du projet
 
 ```
 Passport-Filigrane/
-├── main.py              # Application principale (UI)
-├── pdf_processing.py    # Logique de filigranage
-├── assets/              # Icône de l'application
-├── conductor/           # Documentation interne
-└── dist/                # Build macOS
+├── main.py              # Application principale (UI Flet)
+├── pdf_processing.py    # Moteur de filigranage (PyMuPDF/Pillow)
+├── assets/              # Ressources (Icônes)
+├── tests/               # Tests unitaires et d'intégration
+├── SECURITY.md          # Politique de sécurité et hygiène Git
+└── Passport Filigrane.spec # Configuration du build PyInstaller
 ```
 
 ## Licence
 
-Projet personnel - Usage libre pour des fins non commerciales.
+Projet personnel - Usage libre pour des fins personnelles et non commerciales.
 
 ## Auteur
 
-Projet étudiant - 2026
+Louni Merk - 2026
