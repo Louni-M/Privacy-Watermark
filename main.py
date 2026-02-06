@@ -11,7 +11,7 @@ from pdf_processing import (
     load_pdf,
     pdf_page_to_image,
     apply_watermark_to_pdf,  # Raster watermark (for backward compatibility)
-    apply_vector_watermark_to_pdf,  # Vector watermark (new, quality-preserving)
+    apply_vector_watermark_to_pdf,  # Vector watermark (quality-preserving)
     save_watermarked_pdf,
     save_pdf_as_images,
     apply_watermark_to_pil_image,
@@ -45,7 +45,7 @@ def sanitize_path_for_log(message: str) -> str:
 
 
 def generate_preview(image_bytes_io):
-    """Genere un thumbnail de l'image (max 800px) pour la previsualisation."""
+    """Generate a thumbnail of the image (max 800px) for preview."""
     img = Image.open(image_bytes_io)
     max_size = 800
     if img.width > max_size or img.height > max_size:
@@ -55,7 +55,7 @@ def generate_preview(image_bytes_io):
     return img_byte_arr.getvalue()
 
 def get_font(size):
-    """Essaye de charger une police systeme, sinon retourne la police par defaut."""
+    """Try to load a system font, otherwise return the default font."""
     font_paths = [
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
@@ -75,10 +75,9 @@ def strip_image_metadata(img):
     clean.putdata(list(img.getdata()))
     return clean
 
-def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="Blanc", orientation="Ascendant (↗)"):
-    """Applique un filigrane repete en diagonale sur l'image."""
+def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="White", orientation="Ascending (↗)"):
+    """Apply a repeated diagonal watermark on the image."""
     img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
-    # Utilisation de la logique partagee de pdf_processing pour la coherence
     out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color=color, orientation=orientation)
     out_rgb = strip_image_metadata(out.convert("RGB"))
     output = io.BytesIO()
@@ -86,7 +85,7 @@ def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="Blanc
     return output.getvalue()
 
 def detect_file_type(file_path):
-    """Determine si le fichier est une image ou un PDF."""
+    """Determine whether the file is an image or a PDF."""
     ext = os.path.splitext(file_path)[1].lower()
     if ext in ['.jpg', '.jpeg', '.png']:
         return "image"
@@ -100,16 +99,16 @@ def validate_file_size(file_path):
     if size > MAX_FILE_SIZE_BYTES:
         size_mb = size / (1024 * 1024)
         raise ValueError(
-            f"Fichier trop volumineux ({size_mb:.1f} Mo). "
-            f"La limite est de {MAX_FILE_SIZE_BYTES // (1024 * 1024)} Mo."
+            f"File too large ({size_mb:.1f} MB). "
+            f"Maximum allowed size is {MAX_FILE_SIZE_BYTES // (1024 * 1024)} MB."
         )
 
 def validate_image_dimensions(img):
     """Check that an image's dimensions are within safe limits."""
     if img.width > MAX_IMAGE_DIMENSION or img.height > MAX_IMAGE_DIMENSION:
         raise ValueError(
-            f"Image trop grande ({img.width}x{img.height} px). "
-            f"La limite est de {MAX_IMAGE_DIMENSION}x{MAX_IMAGE_DIMENSION} px."
+            f"Image too large ({img.width}x{img.height} px). "
+            f"Maximum allowed is {MAX_IMAGE_DIMENSION}x{MAX_IMAGE_DIMENSION} px."
         )
 
 
@@ -144,63 +143,63 @@ class PassportFiligraneApp:
 
         # Controls
         self.watermark_text = ft.TextField(
-            label="Texte du filigrane", value="COPIE", color="#ffffff",
+            label="Watermark text", value="COPY", color="#ffffff",
             border_color="#3b82f6", focused_border_color="#60a5fa",
             on_change=self.update_preview, disabled=True,
         )
 
-        self.opacity_label = ft.Text("Opacite (30%)", size=14, color="#ffffff")
+        self.opacity_label = ft.Text("Opacity (30%)", size=14, color="#ffffff")
         self.opacity_slider = ft.Slider(
             min=0, max=100, value=30, divisions=100, label="{value}%",
             active_color="#3b82f6", on_change=self.update_preview, disabled=True
         )
 
-        self.font_size_label = ft.Text("Taille de police (36 px)", size=14, color="#ffffff")
+        self.font_size_label = ft.Text("Font size (36 px)", size=14, color="#ffffff")
         self.font_size_slider = ft.Slider(
             min=12, max=72, value=36, divisions=60, label="{value}px",
             active_color="#3b82f6", on_change=self.update_preview, disabled=True
         )
 
-        self.spacing_label = ft.Text("Espacement (150 px)", size=14, color="#ffffff")
+        self.spacing_label = ft.Text("Spacing (150 px)", size=14, color="#ffffff")
         self.spacing_slider = ft.Slider(
             min=50, max=300, value=150, divisions=250, label="{value}px",
             active_color="#3b82f6", on_change=self.update_preview, disabled=True
         )
 
         self.color_dropdown = ft.Dropdown(
-            label="Couleur du texte", label_style=ft.TextStyle(color="#ffffff", size=14),
+            label="Text color", label_style=ft.TextStyle(color="#ffffff", size=14),
             options=[
-                ft.dropdown.Option("Blanc", "Blanc"),
-                ft.dropdown.Option("Noir", "Noir"),
-                ft.dropdown.Option("Gris", "Gris"),
+                ft.dropdown.Option("White", "White"),
+                ft.dropdown.Option("Black", "Black"),
+                ft.dropdown.Option("Gray", "Gray"),
             ],
-            value="Blanc", on_change=self.update_preview, disabled=True
+            value="White", on_change=self.update_preview, disabled=True
         )
 
         self.orientation_dropdown = ft.Dropdown(
             label="Orientation", label_style=ft.TextStyle(color="#ffffff", size=14),
             options=[
-                ft.dropdown.Option("Ascendant (↗)", "Ascendant (↗)"),
-                ft.dropdown.Option("Descendant (↘)", "Descendant (↘)"),
+                ft.dropdown.Option("Ascending (↗)", "Ascending (↗)"),
+                ft.dropdown.Option("Descending (↘)", "Descending (↘)"),
             ],
-            value="Ascendant (↗)", on_change=self.update_preview, disabled=True
+            value="Ascending (↗)", on_change=self.update_preview, disabled=True
         )
 
         self.export_format_dropdown = ft.Dropdown(
-            label="Format d'export", label_style=ft.TextStyle(color="#ffffff", size=14),
+            label="Export format", label_style=ft.TextStyle(color="#ffffff", size=14),
             options=[ft.dropdown.Option("PDF", "PDF"), ft.dropdown.Option("Images (JPG)", "Images")],
             value="PDF", visible=False, on_change=lambda _: self.page.update()
         )
 
         self.save_button = ft.ElevatedButton(
-            "Enregistrer le fichier", icon=ft.icons.SAVE,
+            "Save file", icon=ft.icons.SAVE,
             on_click=self.on_save_button_click, bgcolor=ft.colors.GREEN_700,
             color="#ffffff", disabled=True,
         )
 
-        # Mode Securise & DPI selection
+        # Secure Mode & DPI selection
         self.secure_mode_switch = ft.Switch(
-            label="Mode Securise (Raster)",
+            label="Secure Mode (Raster)",
             value=False,
             active_color="#3b82f6",
             on_change=self.on_secure_mode_change,
@@ -210,8 +209,8 @@ class PassportFiligraneApp:
 
         self.vector_mode_warning = ft.Container(
             content=ft.Text(
-                "Mode vectoriel : le filigrane peut etre supprime avec un editeur PDF. "
-                "Activez le Mode Securise pour les documents sensibles.",
+                "Vector mode: the watermark can be removed with a PDF editor. "
+                "Enable Secure Mode for sensitive documents.",
                 size=11,
                 color="#ff9800",
                 italic=True,
@@ -234,7 +233,7 @@ class PassportFiligraneApp:
 
         self.dpi_container = ft.Column(
             controls=[
-                ft.Text("Qualite (DPI)", size=12, color="#aaaaaa"),
+                ft.Text("Quality (DPI)", size=12, color="#aaaaaa"),
                 self.dpi_segmented_button
             ],
             spacing=5,
@@ -248,7 +247,7 @@ class PassportFiligraneApp:
         controls_panel = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("Controles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                    ft.Text("Controls", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
                     self.watermark_text,
                     ft.Column(controls=[self.opacity_label, self.opacity_slider], spacing=0),
                     ft.Column(controls=[self.font_size_label, self.font_size_slider], spacing=0),
@@ -261,7 +260,7 @@ class PassportFiligraneApp:
                     self.dpi_container,
                     ft.Divider(height=20, color="transparent"),
                     ft.ElevatedButton(
-                        "Selectionner un fichier", icon=ft.icons.UPLOAD_FILE,
+                        "Select a file", icon=ft.icons.UPLOAD_FILE,
                         on_click=lambda _: self.file_picker.pick_files(
                             allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
                         ),
@@ -280,7 +279,7 @@ class PassportFiligraneApp:
         preview_panel = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("Previsualisation", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                    ft.Text("Preview", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
                     ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
                 ],
                 spacing=12,
@@ -318,9 +317,9 @@ class PassportFiligraneApp:
         self.dpi_segmented_button.disabled = disabled
 
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
-            self.save_button.text = "Exporter en images"
+            self.save_button.text = "Export as images"
         else:
-            self.save_button.text = "Enregistrer le fichier"
+            self.save_button.text = "Save file"
         self.page.update()
 
     def _update_vector_warning_visibility(self):
@@ -337,14 +336,14 @@ class PassportFiligraneApp:
         self.page.update()
 
     def update_preview(self, e=None):
-        self.opacity_label.value = f"Opacite ({int(self.opacity_slider.value)}%)"
-        self.font_size_label.value = f"Taille de police ({int(self.font_size_slider.value)} px)"
-        self.spacing_label.value = f"Espacement ({int(self.spacing_slider.value)} px)"
+        self.opacity_label.value = f"Opacity ({int(self.opacity_slider.value)}%)"
+        self.font_size_label.value = f"Font size ({int(self.font_size_slider.value)} px)"
+        self.spacing_label.value = f"Spacing ({int(self.spacing_slider.value)} px)"
 
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
-            self.save_button.text = "Exporter en images"
+            self.save_button.text = "Export as images"
         else:
-            self.save_button.text = "Enregistrer le fichier"
+            self.save_button.text = "Save file"
         self.page.update()
 
         if self.current_file_type is None:
@@ -383,7 +382,7 @@ class PassportFiligraneApp:
                         self.save_button.disabled = False
                         self.page.update()
                 except Exception as ex:
-                    self.show_error(f"Erreur de mise a jour : {ex}")
+                    self.show_error(f"Preview update error: {ex}")
 
         self.update_timer = threading.Timer(0.2, do_update)
         self.update_timer.start()
@@ -412,11 +411,11 @@ class PassportFiligraneApp:
                     img = Image.open(io.BytesIO(content))
                     validate_image_dimensions(img)
                 except Exception:
-                    self.show_error("Impossible de lire ce fichier image.")
+                    self.show_error("Unable to read this image file.")
                     return
                 self.original_image_bytes = content
                 self.pdf_doc = None
-                self.file_info_text.value = "Image chargee"
+                self.file_info_text.value = "Image loaded"
                 self.export_format_dropdown.visible = False
                 self.secure_mode_switch.visible = False
                 self.vector_mode_warning.visible = False
@@ -428,8 +427,8 @@ class PassportFiligraneApp:
 
                 if self.num_pages > MAX_PDF_PAGES:
                     self.show_error(
-                        f"PDF trop volumineux ({self.num_pages} pages). "
-                        f"La limite est de {MAX_PDF_PAGES} pages."
+                        f"PDF too large ({self.num_pages} pages). "
+                        f"Maximum allowed is {MAX_PDF_PAGES} pages."
                     )
                     self.pdf_doc = None
                     self.current_file_type = None
@@ -441,7 +440,7 @@ class PassportFiligraneApp:
                 self.secure_mode_switch.visible = True
                 self._update_vector_warning_visibility()
                 self.dpi_container.visible = self.secure_mode_switch.value
-                self.file_info_text.value = f"PDF charge : {self.num_pages} page(s)"
+                self.file_info_text.value = f"PDF loaded: {self.num_pages} page(s)"
             else:
                 self.current_file_type = None
                 self.pdf_doc = None
@@ -449,7 +448,7 @@ class PassportFiligraneApp:
                 self.secure_mode_switch.visible = False
                 self.vector_mode_warning.visible = False
                 self.dpi_container.visible = False
-                self.show_error("Format de fichier non supporte.")
+                self.show_error("Unsupported file format.")
                 self.set_controls_disabled(True)
                 self.page.update()
                 return
@@ -511,13 +510,13 @@ class PassportFiligraneApp:
                 save_watermarked_pdf(doc_to_save, e.path)
 
             self.page.snack_bar = ft.SnackBar(
-                ft.Text(f"Fichier enregistre : {os.path.basename(e.path)}"),
+                ft.Text(f"File saved: {os.path.basename(e.path)}"),
                 bgcolor=ft.colors.GREEN
             )
             self.page.snack_bar.open = True
             self.page.update()
         except Exception as ex:
-            self.show_error(f"Erreur lors de la sauvegarde : {ex}")
+            self.show_error(f"Error while saving: {ex}")
 
     def on_dir_result(self, e: ft.FilePickerResultEvent):
         if e.path and self.current_file_type == "pdf" and self.pdf_doc:
@@ -550,13 +549,13 @@ class PassportFiligraneApp:
 
                 save_pdf_as_images(doc_to_save, e.path, "export")
                 self.page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Images exportees dans : {os.path.basename(e.path)}"),
+                    ft.Text(f"Images exported to: {os.path.basename(e.path)}"),
                     bgcolor=ft.colors.GREEN
                 )
                 self.page.snack_bar.open = True
                 self.page.update()
             except Exception as ex:
-                self.show_error(f"Erreur lors de l'export images : {ex}")
+                self.show_error(f"Error while exporting images: {ex}")
 
     def on_save_button_click(self, e):
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":

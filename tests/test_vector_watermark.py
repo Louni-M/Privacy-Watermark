@@ -57,7 +57,7 @@ def test_vector_watermark_text_added_to_page(test_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Verify watermark was added (page content should be modified)
@@ -89,7 +89,7 @@ def test_vector_watermark_respects_opacity(test_pdf):
         opacity=30,  # 30% = 0.3 in PyMuPDF
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
 
     # Get the page content to verify opacity was set
@@ -118,7 +118,7 @@ def test_vector_watermark_respects_font_size(test_pdf):
         opacity=50,
         font_size=font_size,
         spacing=200,
-        color="Noir"
+        color="Black"
     )
 
     # Verify watermark was applied with specified font size
@@ -147,7 +147,7 @@ def test_vector_watermark_respects_spacing(test_pdf):
         opacity=50,
         font_size=36,
         spacing=100,  # Tight spacing
-        color="Noir"
+        color="Black"
     )
 
     apply_vector_watermark_to_pdf(
@@ -156,7 +156,7 @@ def test_vector_watermark_respects_spacing(test_pdf):
         opacity=50,
         font_size=36,
         spacing=300,  # Wide spacing
-        color="Noir"
+        color="Black"
     )
 
     # Different spacing should result in different content
@@ -183,7 +183,7 @@ def test_vector_watermark_respects_color_white(test_pdf):
         opacity=50,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     page = doc[0]
@@ -209,7 +209,7 @@ def test_vector_watermark_respects_color_black(test_pdf):
         opacity=50,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
 
     page = doc[0]
@@ -232,7 +232,7 @@ def test_vector_watermark_respects_color_gray(test_pdf):
         opacity=50,
         font_size=36,
         spacing=150,
-        color="Gris"
+        color="Gray"
     )
 
     page = doc[0]
@@ -255,7 +255,7 @@ def test_vector_watermark_diagonal_tiling_pattern(test_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     page = doc[0]
@@ -285,7 +285,7 @@ def test_vector_watermark_multipage(multipage_pdf):
         opacity=40,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
 
     # Verify all pages have watermark
@@ -314,7 +314,7 @@ def test_vector_watermark_preserves_original_text_selectability(test_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Verify original text is still extractable (selectable)
@@ -336,7 +336,7 @@ def test_vector_watermark_overlay_layer(test_pdf):
         opacity=50,
         font_size=48,
         spacing=200,
-        color="Noir"
+        color="Black"
     )
 
     # The watermark should be in the content stream
@@ -366,7 +366,7 @@ def test_vector_watermark_file_size_reasonable(test_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Save to temp file
@@ -400,7 +400,7 @@ def test_vector_watermark_with_default_parameters(test_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Basic verification

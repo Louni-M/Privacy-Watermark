@@ -18,7 +18,7 @@ def test_performance_10_pages(tmp_path):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
     end_time = time.time()
     duration = end_time - start_time
