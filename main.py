@@ -322,6 +322,29 @@ class PassportFiligraneApp:
             self.save_button.text = "Save file"
         self.page.update()
 
+    def update_export_options(self, file_type):
+        """Update export dropdown options based on file type."""
+        if file_type == "image":
+            self.export_format_dropdown.options = [
+                ft.dropdown.Option("JPG", "JPG"),
+                ft.dropdown.Option("PNG", "PNG"),
+                ft.dropdown.Option("PDF", "PDF"),
+            ]
+            self.export_format_dropdown.value = "JPG"
+            self.export_format_dropdown.visible = True
+        elif file_type == "pdf":
+            self.export_format_dropdown.options = [
+                ft.dropdown.Option("PDF", "PDF"),
+                ft.dropdown.Option("Images (JPG)", "Images (JPG)"),
+                ft.dropdown.Option("Images (PNG)", "Images (PNG)"),
+            ]
+            self.export_format_dropdown.value = "PDF"
+            self.export_format_dropdown.visible = True
+        else:
+            self.export_format_dropdown.visible = False
+        
+        self.page.update()
+
     def _update_vector_warning_visibility(self):
         """Show warning when PDF is loaded in vector (non-secure) mode."""
         is_pdf = self.current_file_type == "pdf"
@@ -416,7 +439,7 @@ class PassportFiligraneApp:
                 self.original_image_bytes = content
                 self.pdf_doc = None
                 self.file_info_text.value = "Image loaded"
-                self.export_format_dropdown.visible = False
+                self.update_export_options("image")
                 self.secure_mode_switch.visible = False
                 self.vector_mode_warning.visible = False
                 self.dpi_container.visible = False
@@ -436,15 +459,13 @@ class PassportFiligraneApp:
                     self.page.update()
                     return
 
-                self.export_format_dropdown.visible = True
-                self.secure_mode_switch.visible = True
-                self._update_vector_warning_visibility()
                 self.dpi_container.visible = self.secure_mode_switch.value
                 self.file_info_text.value = f"PDF loaded: {self.num_pages} page(s)"
+                self.update_export_options("pdf")
             else:
                 self.current_file_type = None
                 self.pdf_doc = None
-                self.export_format_dropdown.visible = False
+                self.update_export_options("unknown")
                 self.secure_mode_switch.visible = False
                 self.vector_mode_warning.visible = False
                 self.dpi_container.visible = False
@@ -465,7 +486,7 @@ class PassportFiligraneApp:
         except Exception as ex:
             self.current_file_type = None
             self.pdf_doc = None
-            self.export_format_dropdown.visible = False
+            self.update_export_options("unknown")
             self.secure_mode_switch.visible = False
             self.vector_mode_warning.visible = False
             self.dpi_container.visible = False
