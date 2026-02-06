@@ -589,7 +589,7 @@ class PassportFiligraneApp:
                 base_name = os.path.splitext(self.current_filename)[0] if self.current_filename else "export"
                 save_pdf_as_images(doc_to_save, e.path, base_name, img_format=img_fmt)
                 self.page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Images exported to: {os.path.basename(e.path)}"),
+                    ft.Text(f"'{base_name}' exported to: {os.path.basename(e.path)}"),
                     bgcolor=ft.colors.GREEN
                 )
                 self.page.snack_bar.open = True
