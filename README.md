@@ -6,7 +6,9 @@ A macOS application for watermarking identity documents and protecting your priv
 
 - **Customizable watermark**: text, opacity, size, spacing, color
 - **Configurable orientation**: ascending (↗) or descending (↘)
-- **PDF & Image support**: JPG, PNG, multi-page PDF
+- **Dynamic Export Formats**:
+  - **From Images (JPG/PNG)**: Export as **JPG**, **PNG** (lossless), or **PDF** (single-page).
+  - **From PDFs**: Export as **PDF** (Vector or Secure), **Images (JPG)**, or **Images (PNG)**.
 - **Secure Mode**: high-definition rasterization (300/450/600 DPI) making the watermark impossible to remove
 - **Real-time preview**: instant preview of changes
 
