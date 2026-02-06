@@ -14,11 +14,14 @@ A macOS application for watermarking identity documents and protecting your priv
 
 ## Application UI Demonstration 
 
+
 https://github.com/user-attachments/assets/15e39e6a-2b2e-4cb9-b6ea-c865e61e36b5
 
-## Secure Mode (Raster) Demonstration
+
+## Secure Mode (Raster) for PDF Files
 
 **Secure Mode** converts each PDF page into a high-resolution image before applying the watermark. This makes the watermark inseparable from the content and prevents any attempt at removal or text extraction.
+
 
 | Vector Mode (Standard) | Secure Mode (Raster) |
 |:-------------------------:|:----------------------:|
@@ -27,6 +30,7 @@ https://github.com/user-attachments/assets/15e39e6a-2b2e-4cb9-b6ea-c865e61e36b5
 | **Removal**: Possible with PDF editing tools. | **Removal**: Impossible without visibly damaging the image. |
 | **Text search**: The watermark is technically detectable. | **Text search**: The watermark is invisible to algorithms (0 text found). |
 | **File size**: Very light. | **File size**: Larger (300+ DPI). |
+
 
 ## Installation
 
