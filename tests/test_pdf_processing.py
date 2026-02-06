@@ -16,12 +16,12 @@ def test_load_pdf_valid(sample_pdf):
 def test_load_pdf_protected(protected_pdf):
     with pytest.raises(Exception) as excinfo:
         load_pdf(protected_pdf)
-    assert "protégé" in str(excinfo.value).lower()
+    assert "password-protected" in str(excinfo.value).lower()
 
 def test_load_pdf_corrupt(corrupt_pdf):
     with pytest.raises(Exception) as excinfo:
         load_pdf(corrupt_pdf)
-    assert "impossible" in str(excinfo.value).lower() or "valide" in str(excinfo.value).lower()
+    assert "unable" in str(excinfo.value).lower()
 
 def test_pdf_page_to_image(sample_pdf):
     doc, _ = load_pdf(sample_pdf)
@@ -65,7 +65,7 @@ def test_generate_pdf_preview(sample_pdf):
         opacity=50,
         font_size=50,
         spacing=100,
-        color="Noir"
+        color="Black"
     )
     
     assert isinstance(preview_bytes, bytes)

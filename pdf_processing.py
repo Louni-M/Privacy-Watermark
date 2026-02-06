@@ -5,41 +5,41 @@ import fitz
 
 # Constants for vector watermark
 WATERMARK_COLOR_MAP = {
-    "Blanc": (1.0, 1.0, 1.0),
-    "Noir": (0.0, 0.0, 0.0),
-    "Gris": (0.5, 0.5, 0.5),
+    "White": (1.0, 1.0, 1.0),
+    "Black": (0.0, 0.0, 0.0),
+    "Gray": (0.5, 0.5, 0.5),
 }
 
 # Orientation options: angle in degrees
 # Ascending (↗): text goes from bottom-left to top-right
 # Descending (↘): text goes from top-left to bottom-right
 WATERMARK_ORIENTATION_MAP = {
-    "Ascendant (↗)": 45,    # Counter-clockwise rotation
-    "Descendant (↘)": -45,  # Clockwise rotation
+    "Ascending (↗)": 45,    # Counter-clockwise rotation
+    "Descending (↘)": -45,  # Clockwise rotation
 }
 
 def load_pdf(file_path):
     """
-    Charge un fichier PDF et retourne le document et le nombre de pages.
-    Lève une exception si le PDF est protégé ou invalide.
+    Load a PDF file and return the document and the number of pages.
+    Raises an exception if the PDF is protected or invalid.
     """
     try:
         doc = fitz.open(file_path)
         if doc.is_encrypted:
-             raise Exception("Ce PDF est protégé par mot de passe et ne peut pas être ouvert.")
+             raise Exception("This PDF is password-protected and cannot be opened.")
         if doc.page_count == 0:
-             raise Exception("Impossible de lire ce fichier PDF (aucune page).")
+             raise Exception("Unable to read this PDF file (no pages).")
         return doc, doc.page_count
     except fitz.FileDataError:
-        raise Exception("Impossible de lire ce fichier PDF.")
+        raise Exception("Unable to read this PDF file.")
     except Exception as e:
-        if "protégé" in str(e):
+        if "password-protected" in str(e):
             raise e
-        raise Exception(f"Erreur lors du chargement du PDF : {e}")
+        raise Exception(f"Error loading PDF: {e}")
 
 def pdf_page_to_image(doc, page_num):
     """
-    Convertit une page PDF en image PIL pour la prévisualisation.
+    Convert a PDF page to a PIL image for preview.
     """
     page = doc.load_page(page_num)
     pix = page.get_pixmap(alpha=True)
@@ -47,7 +47,7 @@ def pdf_page_to_image(doc, page_num):
     return img
 
 def get_font(size):
-    """Essaye de charger une police système, sinon retourne la police par défaut."""
+    """Try to load a system font, otherwise return the default font."""
     font_paths = [
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
@@ -61,23 +61,22 @@ def get_font(size):
                 continue
     return ImageFont.load_default()
 
-def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="Blanc", orientation="Ascendant (↗)"):
-    """Applique un filigrane répété en diagonale sur une image PIL (RGBA).
+def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="White", orientation="Ascending (↗)"):
+    """Apply a repeated diagonal watermark on a PIL image (RGBA).
 
     Args:
-        img: Image PIL en mode RGBA
-        text: Texte du filigrane
-        opacity: Opacité en pourcentage (0-100)
-        font_size: Taille de la police en pixels
-        spacing: Espacement entre les filigranes en pixels
-        color: Couleur du texte ("Blanc", "Noir", "Gris")
-        orientation: Direction du filigrane ("Ascendant (↗)" ou "Descendant (↘)")
+        img: PIL Image in RGBA mode
+        text: Watermark text
+        opacity: Opacity as a percentage (0-100)
+        font_size: Font size in pixels
+        spacing: Spacing between watermarks in pixels
+        color: Text color ("White", "Black", "Gray")
+        orientation: Watermark direction ("Ascending (↗)" or "Descending (↘)")
     """
-    # Mapping des couleurs
     color_map = {
-        "Blanc": (255, 255, 255),
-        "Noir": (0, 0, 0),
-        "Gris": (128, 128, 128),
+        "White": (255, 255, 255),
+        "Black": (0, 0, 0),
+        "Gray": (128, 128, 128),
     }
     rgb = color_map.get(color, (255, 255, 255))
 
@@ -120,92 +119,69 @@ def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="
 
     return Image.alpha_composite(img, txt_layer)
 
-def apply_vector_watermark_to_pdf(doc, text, opacity, font_size, spacing, color, orientation="Ascendant (↗)"):
+def apply_vector_watermark_to_pdf(doc, text, opacity, font_size, spacing, color, orientation="Ascending (↗)"):
     """
-    Applique un filigrane vectoriel natif sur toutes les pages du document PDF.
+    Apply a native vector watermark on all pages of the PDF document.
 
-    Cette fonction utilise page.insert_text() de PyMuPDF pour ajouter des filigranes
-    vectoriels qui préservent la qualité du PDF original. Le texte reste net à tout
-    niveau de zoom et le contenu original reste sélectionnable.
+    Uses page.insert_text() from PyMuPDF to add vector watermarks that preserve
+    the quality of the original PDF. Text remains sharp at any zoom level and
+    the original content stays selectable.
 
     Args:
-        doc (fitz.Document): Document PDF à filigraner
-        text (str): Texte du filigrane (ex: "COPIE")
-        opacity (int): Opacité en pourcentage (0-100)
-        font_size (int): Taille de la police en points (12-72)
-        spacing (int): Espacement entre les filigranes en pixels (50-300)
-        color (str): Couleur du filigrane ("Blanc", "Noir", "Gris")
-        orientation (str): Direction du filigrane ("Ascendant (↗)" ou "Descendant (↘)")
+        doc (fitz.Document): PDF document to watermark
+        text (str): Watermark text (e.g. "COPY")
+        opacity (int): Opacity as a percentage (0-100)
+        font_size (int): Font size in points (12-72)
+        spacing (int): Spacing between watermarks in pixels (50-300)
+        color (str): Watermark color ("White", "Black", "Gray")
+        orientation (str): Watermark direction ("Ascending (↗)" or "Descending (↘)")
 
     Returns:
-        None: Modifie le document en place
-
-    Example:
-        >>> doc = fitz.open("document.pdf")
-        >>> apply_vector_watermark_to_pdf(
-        ...     doc=doc,
-        ...     text="CONFIDENTIEL",
-        ...     opacity=30,
-        ...     font_size=36,
-        ...     spacing=150,
-        ...     color="Blanc",
-        ...     orientation="Ascendant (↗)"
-        ... )
-        >>> doc.save("document_watermarked.pdf")
-
-    Notes:
-        - Le filigrane est appliqué à toutes les pages du document
-        - L'angle de rotation dépend de l'orientation choisie (45° ou -45°)
-        - Le filigrane est ajouté en couche overlay (par-dessus le contenu)
-        - La qualité du PDF original est préservée (pas de rasterisation)
-        - Le texte original reste sélectionnable après filigranage
+        None: Modifies the document in place
     """
-    # Appliquer le filigrane à toutes les pages
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
         apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color, orientation)
 
-def apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color, orientation="Ascendant (↗)"):
+def apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color, orientation="Ascending (↗)"):
     """
-    Applique le filigrane vectoriel sur une seule page.
+    Apply a vector watermark on a single page.
 
     Args:
-        page: Page PyMuPDF
-        text: Texte du filigrane
-        opacity: Opacité en pourcentage (0-100)
-        font_size: Taille de la police en points
-        spacing: Espacement entre les filigranes en pixels
-        color: Couleur du filigrane ("Blanc", "Noir", "Gris")
-        orientation: Direction du filigrane ("Ascendant (↗)" ou "Descendant (↘)")
+        page: PyMuPDF page
+        text: Watermark text
+        opacity: Opacity as a percentage (0-100)
+        font_size: Font size in points
+        spacing: Spacing between watermarks in pixels
+        color: Watermark color ("White", "Black", "Gray")
+        orientation: Watermark direction ("Ascending (↗)" or "Descending (↘)")
     """
-    # Mapping de la couleur vers RGB (0.0-1.0 range pour PyMuPDF)
     rgb = WATERMARK_COLOR_MAP.get(color, (1.0, 1.0, 1.0))
 
-    # Convertir opacité 0-100 en 0.0-1.0 (range PyMuPDF)
+    # Convert opacity 0-100 to 0.0-1.0 (PyMuPDF range)
     fill_opacity = opacity / 100.0
 
     # Get rotation angle from orientation
     rotation_angle = WATERMARK_ORIENTATION_MAP.get(orientation, 45)
 
-    # Dimensions de la page
     page_width = page.rect.width
     page_height = page.rect.height
 
-    # Créer le motif de tiling diagonal
+    # Create diagonal tiling pattern
     y = -spacing
     row = 0
 
     while y < page_height + spacing:
         x = -spacing
 
-        # Décaler les rangées alternées
+        # Offset alternating rows
         if row % 2 == 0:
             x += spacing // 2
 
         while x < page_width + spacing:
             point = fitz.Point(x, y)
 
-            # Insérer le texte avec rotation et opacité
+            # Insert text with rotation and opacity
             page.insert_text(
                 point=point,
                 text=text,
@@ -214,7 +190,7 @@ def apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, colo
                 color=rgb,
                 morph=(point, fitz.Matrix(rotation_angle)),
                 fill_opacity=fill_opacity,
-                overlay=True  # Dessiner par-dessus le contenu existant
+                overlay=True  # Draw on top of existing content
             )
 
             x += spacing
@@ -224,39 +200,38 @@ def apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, colo
 
 def apply_watermark_to_pdf(doc, watermark_params):
     """
-    Applique un filigrane sur toutes les pages du document PDF.
+    Apply a watermark on all pages of the PDF document.
     """
-    text = watermark_params.get("text", "COPIE")
+    text = watermark_params.get("text", "COPY")
     opacity = watermark_params.get("opacity", 30)
     font_size = watermark_params.get("font_size", 36)
     spacing = watermark_params.get("spacing", 150)
-    color = watermark_params.get("color", "Blanc")
-    
+    color = watermark_params.get("color", "White")
+
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
-        # On obtient la pixmap de la page
         pix = page.get_pixmap()
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-        
-        # Appliquer le filigrane
+
+        # Apply watermark
         watermarked_img = apply_watermark_to_pil_image(img.convert("RGBA"), text, opacity, font_size, spacing, color=color)
-        
-        # Conversion en bytes pour ré-insertion dans le PDF
+
+        # Convert to bytes for re-insertion into the PDF
         img_byte_arr = io.BytesIO()
         watermarked_img.convert("RGB").save(img_byte_arr, format='JPEG', quality=90)
-        
-        # Insérer l'image filigranée par-dessus la page
+
+        # Insert watermarked image on top of the page
         page.insert_image(page.rect, stream=img_byte_arr.getvalue())
 
 def save_watermarked_pdf(doc, output_path):
     """
-    Sauvegarde le document PDF modifié.
+    Save the modified PDF document.
     """
     doc.save(output_path)
 
 def save_pdf_as_images(doc, output_dir, base_name):
     """
-    Sauvegarde chaque page du PDF en tant qu'image JPG individuelle.
+    Save each page of the PDF as an individual JPG image.
     Output images are created from raw pixel data (no EXIF metadata).
     """
     if not os.path.exists(output_dir):
@@ -270,68 +245,68 @@ def save_pdf_as_images(doc, output_dir, base_name):
         output_path = os.path.join(output_dir, f"{base_name}_page_{i+1:03d}.jpg")
         img.save(output_path, "JPEG", quality=90)
 
-def generate_pdf_preview(doc, text, opacity, font_size, spacing, color, orientation="Ascendant (↗)"):
+def generate_pdf_preview(doc, text, opacity, font_size, spacing, color, orientation="Ascending (↗)"):
     """
-    Génère un aperçu de la première page avec le filigrane vectoriel.
-    Ne modifie pas le document original.
-    Retourne les bytes de l'image (PNG).
+    Generate a preview of the first page with the vector watermark.
+    Does not modify the original document.
+    Returns the image bytes (PNG).
 
     Args:
-        doc: Document PyMuPDF
-        text: Texte du filigrane
-        opacity: Opacité en pourcentage (0-100)
-        font_size: Taille de la police en points
-        spacing: Espacement entre les filigranes en pixels
-        color: Couleur du filigrane ("Blanc", "Noir", "Gris")
-        orientation: Direction du filigrane ("Ascendant (↗)" ou "Descendant (↘)")
+        doc: PyMuPDF document
+        text: Watermark text
+        opacity: Opacity as a percentage (0-100)
+        font_size: Font size in points
+        spacing: Spacing between watermarks in pixels
+        color: Watermark color ("White", "Black", "Gray")
+        orientation: Watermark direction ("Ascending (↗)" or "Descending (↘)")
     """
-    # Créer un document temporaire avec seulement la première page
+    # Create a temporary document with only the first page
     temp_doc = fitz.open()
     temp_doc.insert_pdf(doc, from_page=0, to_page=0)
     page = temp_doc.load_page(0)
 
-    # Appliquer le filigrane avec l'orientation choisie
+    # Apply watermark with chosen orientation
     apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color, orientation)
 
-    # Rendu en image (PNG)
+    # Render to image (PNG)
     pix = page.get_pixmap(alpha=True)
     return pix.tobytes("png")
 
-def apply_secure_raster_watermark_to_pdf(doc, text, opacity, font_size, spacing, color, dpi=300, orientation="Ascendant (↗)"):
+def apply_secure_raster_watermark_to_pdf(doc, text, opacity, font_size, spacing, color, dpi=300, orientation="Ascending (↗)"):
     """
-    Applique un filigrane sur un PDF en rendant chaque page comme une image (rasterisation).
-    Cela rend le filigrane indissociable du contenu original.
+    Apply a watermark on a PDF by rendering each page as an image (rasterization).
+    This makes the watermark inseparable from the original content.
 
     Args:
-        doc: Document PyMuPDF
-        text: Texte du filigrane
-        opacity: Opacité en pourcentage (0-100)
-        font_size: Taille de la police en points
-        spacing: Espacement entre les filigranes en pixels
-        color: Couleur du filigrane ("Blanc", "Noir", "Gris")
-        dpi: Résolution en DPI (300, 450, ou 600)
-        orientation: Direction du filigrane ("Ascendant (↗)" ou "Descendant (↘)")
+        doc: PyMuPDF document
+        text: Watermark text
+        opacity: Opacity as a percentage (0-100)
+        font_size: Font size in points
+        spacing: Spacing between watermarks in pixels
+        color: Watermark color ("White", "Black", "Gray")
+        dpi: Resolution in DPI (300, 450, or 600)
+        orientation: Watermark direction ("Ascending (↗)" or "Descending (↘)")
     """
     out_doc = fitz.open()
 
-    # On définit une matrice pour le DPI
-    # get_pixmap utilise par défaut 72 DPI. Pour avoir le DPI souhaité, on scale par DPI / 72.
+    # Define a matrix for the DPI
+    # get_pixmap uses 72 DPI by default. To get the desired DPI, scale by DPI / 72.
     zoom = dpi / 72
     mat = fitz.Matrix(zoom, zoom)
 
     for page in doc:
-        # 1. Rendre la page originale en image (PixMap) à haute résolution
+        # 1. Render the original page as a high-resolution image (PixMap)
         pix = page.get_pixmap(matrix=mat, alpha=False)
 
-        # 2. Convertir en image PIL
+        # 2. Convert to PIL image
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 
-        # 3. Convertir en RGBA pour appliquer le filigrane (le tiling utilise alpha_composite)
+        # 3. Convert to RGBA to apply the watermark (tiling uses alpha_composite)
         img_rgba = img.convert("RGBA")
 
-        # 4. Appliquer le filigrane (le tiling doit être adapté à la résolution élevée)
-        # On ajuste la taille de police et l'espacement proportionnellement au DPI
-        # pour garder le même aspect visuel relatif que sur la prévisualisation standard.
+        # 4. Apply the watermark (tiling must be adapted to the high resolution)
+        # Adjust font size and spacing proportionally to the DPI
+        # to keep the same visual appearance as in the standard preview.
         scale_factor = dpi / 72
         adjusted_font_size = int(font_size * scale_factor)
         adjusted_spacing = int(spacing * scale_factor)
@@ -341,16 +316,15 @@ def apply_secure_raster_watermark_to_pdf(doc, text, opacity, font_size, spacing,
             color=color, orientation=orientation
         )
 
-        # 5. Reconvertir en RGB pour l'insérer dans le nouveau PDF
+        # 5. Convert back to RGB for insertion into the new PDF
         final_img = watermarked_img.convert("RGB")
 
-        # 6. Créer une nouvelle page dans le document de sortie avec les dimensions originales
+        # 6. Create a new page in the output document with original dimensions
         new_page = out_doc.new_page(width=page.rect.width, height=page.rect.height)
 
-        # 7. Insérer l'image dans la nouvelle page
+        # 7. Insert the image into the new page
         img_buffer = io.BytesIO()
-        final_img.save(img_buffer, format="JPEG", quality=95)  # Qualité maintenue à 95%
+        final_img.save(img_buffer, format="JPEG", quality=95)
         new_page.insert_image(new_page.rect, stream=img_buffer.getvalue())
 
     return out_doc
-

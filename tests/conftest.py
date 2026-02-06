@@ -4,7 +4,7 @@ import os
 
 @pytest.fixture
 def sample_pdf(tmp_path):
-    """Crée un PDF simple pour les tests."""
+    """Create a simple PDF for tests."""
     pdf_path = tmp_path / "test.pdf"
     doc = fitz.open()
     page = doc.new_page()
@@ -16,7 +16,7 @@ def sample_pdf(tmp_path):
 
 @pytest.fixture
 def protected_pdf(tmp_path):
-    """Crée un PDF protégé par mot de passe."""
+    """Create a password-protected PDF."""
     pdf_path = tmp_path / "protected.pdf"
     doc = fitz.open()
     doc.new_page()
@@ -26,7 +26,7 @@ def protected_pdf(tmp_path):
 
 @pytest.fixture
 def corrupt_pdf(tmp_path):
-    """Crée un fichier PDF corrompu."""
+    """Create a corrupt PDF file."""
     pdf_path = tmp_path / "corrupt.pdf"
     with open(pdf_path, "w") as f:
         f.write("Definitely not a PDF")
