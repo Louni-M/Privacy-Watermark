@@ -13,6 +13,7 @@ from pdf_processing import (
     apply_watermark_to_pdf,  # Raster watermark (for backward compatibility)
     apply_vector_watermark_to_pdf,  # Vector watermark (quality-preserving)
     save_watermarked_pdf,
+    save_image_as_pdf,
     save_pdf_as_images,
     apply_watermark_to_pil_image,
     generate_pdf_preview,
@@ -515,8 +516,11 @@ class PassportFiligraneApp:
             return
         try:
             if self.current_file_type == "image":
-                with open(e.path, "wb") as f:
-                    f.write(self.watermarked_image_bytes)
+                if self.export_format_dropdown.value == "PDF":
+                    save_image_as_pdf(self.watermarked_image_bytes, e.path)
+                else:
+                    with open(e.path, "wb") as f:
+                        f.write(self.watermarked_image_bytes)
             elif self.current_file_type == "pdf" and self.pdf_doc:
                 if self.secure_mode_switch.value:
                     # Secure raster mode
