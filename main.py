@@ -133,6 +133,7 @@ class PassportFiligraneApp:
         self.pdf_doc = None
         self.current_file_type = None
         self.num_pages = 0
+        self.current_filename = ""
         self.update_timer = None
         self._preview_lock = threading.Lock()
 
@@ -431,6 +432,8 @@ class PassportFiligraneApp:
         if not file_path:
             return
 
+        self.current_filename = os.path.basename(file_path)
+        
         try:
             # Validate file size before loading
             validate_file_size(file_path)
@@ -583,7 +586,8 @@ class PassportFiligraneApp:
 
                 fmt = self.export_format_dropdown.value
                 img_fmt = "PNG" if "PNG" in fmt else "JPEG"
-                save_pdf_as_images(doc_to_save, e.path, "export", img_format=img_fmt)
+                base_name = os.path.splitext(self.current_filename)[0] if self.current_filename else "export"
+                save_pdf_as_images(doc_to_save, e.path, base_name, img_format=img_fmt)
                 self.page.snack_bar = ft.SnackBar(
                     ft.Text(f"Images exported to: {os.path.basename(e.path)}"),
                     bgcolor=ft.colors.GREEN
