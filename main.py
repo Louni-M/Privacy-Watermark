@@ -587,9 +587,13 @@ class PassportFiligraneApp:
                 fmt = self.export_format_dropdown.value
                 img_fmt = "PNG" if "PNG" in fmt else "JPEG"
                 base_name = os.path.splitext(self.current_filename)[0] if self.current_filename else "export"
+                ext = "png" if img_fmt == "PNG" else "jpg"
                 save_pdf_as_images(doc_to_save, e.path, base_name, img_format=img_fmt)
+                
+                success_msg = f"'{base_name}_page_001.{ext}' and {self.num_pages-1} more exported to: {os.path.basename(e.path)}" if self.num_pages > 1 else f"'{base_name}_page_001.{ext}' exported to: {os.path.basename(e.path)}"
+                
                 self.page.snack_bar = ft.SnackBar(
-                    ft.Text(f"'{base_name}' exported to: {os.path.basename(e.path)}"),
+                    ft.Text(success_msg),
                     bgcolor=ft.colors.GREEN
                 )
                 self.page.snack_bar.open = True
