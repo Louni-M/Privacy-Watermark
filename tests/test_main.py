@@ -85,7 +85,7 @@ def test_file_picker_setup():
     assert button is not None, "Selection button should exist in controls panel"
     
     # Check text in positional arg or attribute
-    assert button.text == "Sélectionner un fichier"
+    assert button.text == "Select a file"
 
 def test_generate_preview_resizing():
     from PIL import Image
@@ -132,8 +132,8 @@ def test_watermark_controls_setup():
     # Verify TextField (Task 4.1)
     text_field = next((c for c in controls_column.controls if isinstance(c, ft.TextField)), None)
     assert text_field is not None, "Watermark TextField should exist"
-    assert text_field.value == "COPIE", "Default watermark text should be 'COPIE'"
-    assert text_field.label == "Texte du filigrane", "TextField label should be correct"
+    assert text_field.value == "COPY", "Default watermark text should be 'COPY'"
+    assert text_field.label == "Watermark text", "TextField label should be correct"
     
     # Verify Sliders (Task 4.3, 4.5, 4.7)
     def find_all_controls(controls, control_type, results=None):
@@ -226,7 +226,7 @@ def test_save_button_setup():
     controls_column = left_panel.content
     
     # Find Save Button
-    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Enregistrer" in c.text), None)
+    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Save" in c.text), None)
     
     assert save_button is not None, "Save button should exist"
     assert save_button.disabled is True, "Save button should be disabled initially"
@@ -243,7 +243,7 @@ def test_save_dialog_trigger():
     # Find Save Button
     main_layout = next((call.args[0] for call in mock_page.add.call_args_list if isinstance(call.args[0], ft.Row)), None)
     controls_column = main_layout.controls[0].content
-    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Enregistrer" in c.text), None)
+    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Save" in c.text), None)
     
     # Find Save FilePicker
     # We expect TWO FilePickers: one for picking, one for saving
@@ -304,7 +304,7 @@ def test_initial_disabled_state():
         sliders.extend([sc for sc in container.controls if isinstance(sc, ft.Slider)])
     
     # Save button is also there
-    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Enregistrer" in c.text), None)
+    save_button = next((c for c in controls_column.controls if isinstance(c, ft.ElevatedButton) and "Save" in c.text), None)
 
     assert text_field.disabled is True, "TextField should be disabled initially"
     for s in sliders:

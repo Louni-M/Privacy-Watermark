@@ -1,79 +1,79 @@
 # Passport Filigrane
 
-Application macOS pour filigraner des documents d'identité et protéger votre vie privée.
+A macOS application for watermarking identity documents and protecting your privacy.
 
-## Fonctionnalités
+## Features
 
-- **Filigrane personnalisable** : texte, opacité, taille, espacement, couleur
-- **Orientation configurable** : ascendant (↗) ou descendant (↘)
-- **Support PDF & Images** : JPG, PNG, PDF multi-pages
-- **Mode Sécurisé** : rasterisation haute définition (300/450/600 DPI) rendant le filigrane impossible à supprimer
-- **Prévisualisation temps réel** : aperçu instantané des modifications
+- **Customizable watermark**: text, opacity, size, spacing, color
+- **Configurable orientation**: ascending (↗) or descending (↘)
+- **PDF & Image support**: JPG, PNG, multi-page PDF
+- **Secure Mode**: high-definition rasterization (300/450/600 DPI) making the watermark impossible to remove
+- **Real-time preview**: instant preview of changes
 
-## Démonstration du Mode Sécurisé (Raster)
+## Secure Mode (Raster) Demonstration
 
-Le **Mode Sécurisé** transforme chaque page du PDF en une image haute résolution avant d'appliquer le filigrane. Cela rend le filigrane indissociable du contenu et empêche toute tentative de suppression ou d'extraction de texte.
+**Secure Mode** converts each PDF page into a high-resolution image before applying the watermark. This makes the watermark inseparable from the content and prevents any attempt at removal or text extraction.
 
-| Mode Vectoriel (Standard) | Mode Sécurisé (Raster) |
+| Vector Mode (Standard) | Secure Mode (Raster) |
 |:-------------------------:|:----------------------:|
 | ![Vector Mode](assets/demo_vector.png) | ![Secure Mode](assets/demo_secure.png) |
-| **Texte sélectionnable** : Le filigrane est une couche de texte par-dessus le PDF. | **Image aplatie** : Le filigrane est fusionné avec les pixels du document. |
-| **Suppression** : Possible via des outils d'édition PDF. | **Suppression** : Impossible sans altérer l'image elle-même. |
-| **Recherche de texte** : Le filigrane est détectable techniquement. | **Recherche de texte** : Le filigrane est invisible pour les algorithmes (0 texte trouvé). |
-| **Poids** : Très léger. | **Poids** : Plus important (300+ DPI). |
+| **Selectable text**: The watermark is a text layer on top of the PDF. | **Flattened image**: The watermark is merged with the document pixels. |
+| **Removal**: Possible with PDF editing tools. | **Removal**: Impossible without visibly damaging the image. |
+| **Text search**: The watermark is technically detectable. | **Text search**: The watermark is invisible to algorithms (0 text found). |
+| **File size**: Very light. | **File size**: Larger (300+ DPI). |
 
 ## Installation
 
-### Depuis les releases (Recommandé)
+### From releases (Recommended)
 
-1. Télécharger `Passport-Filigrane.zip` (ou le dossier compressé) depuis les [Releases](https://github.com/Louni-M/Passport-Filigrane/releases)
-2. Extraire l'archive
-3. Glisser `Passport Filigrane.app` dans votre dossier **Applications**
-4. Lancer l'application (Note : Au premier lancement, un clic droit > Ouvrir peut être nécessaire car l'app n'est pas encore signée par un certificat développeur Apple).
+1. Download `Passport-Filigrane.zip` (or the compressed folder) from the [Releases](https://github.com/Louni-M/Passport-Filigrane/releases)
+2. Extract the archive
+3. Drag `Passport Filigrane.app` into your **Applications** folder
+4. Launch the application (Note: On first launch, a right-click > Open may be required as the app is not yet signed with an Apple developer certificate).
 
-### Depuis les sources
+### From source
 
 ```bash
-# Cloner le repo
+# Clone the repo
 git clone https://github.com/Louni-M/Passport-Filigrane.git
 cd Passport-Filigrane
 
-# Créer un environnement virtuel
+# Create a virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Installer les dépendances
+# Install dependencies
 pip install -r requirements.txt
 
-# Lancer l'application
+# Run the application
 python main.py
 ```
 
-### Build de l'application (Développeurs)
+### Building the application (Developers)
 
 ```bash
-# Le build utilise le mode onedir pour une performance optimale
+# The build uses onedir mode for optimal performance
 pyinstaller "Passport Filigrane.spec" --clean
 ```
 
-L'application est générée dans `dist/Passport Filigrane.app`.
+The application is generated in `dist/Passport Filigrane.app`.
 
-## Structure du projet
+## Project Structure
 
 ```
 Passport-Filigrane/
-├── main.py              # Application principale (UI Flet)
-├── pdf_processing.py    # Moteur de filigranage (PyMuPDF/Pillow)
-├── assets/              # Ressources (Icônes)
-├── tests/               # Tests unitaires et d'intégration
-├── SECURITY.md          # Politique de sécurité et hygiène Git
-└── Passport Filigrane.spec # Configuration du build PyInstaller
+├── main.py              # Main application (Flet UI)
+├── pdf_processing.py    # Watermarking engine (PyMuPDF/Pillow)
+├── assets/              # Resources (Icons)
+├── tests/               # Unit and integration tests
+├── SECURITY.md          # Security policy
+└── Passport Filigrane.spec # PyInstaller build configuration
 ```
 
-## Licence
+## License
 
-Projet personnel - Usage libre pour des fins personnelles et non commerciales.
+Personal project - Free to use for personal and non-commercial purposes.
 
-## Auteur
+## Author
 
 Louni Merk - 2026

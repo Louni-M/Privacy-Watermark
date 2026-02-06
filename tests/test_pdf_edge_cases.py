@@ -55,7 +55,7 @@ def test_encrypted_pdf_handling(encrypted_pdf_path):
     """Test that encrypted PDFs raise a user-friendly exception."""
     with pytest.raises(Exception) as excinfo:
         load_pdf(encrypted_pdf_path)
-    assert "protégé par mot de passe" in str(excinfo.value)
+    assert "password-protected" in str(excinfo.value)
 
 def test_large_pdf_handling(large_pdf_path):
     """Test watermarking a larger PDF."""
@@ -69,7 +69,7 @@ def test_large_pdf_handling(large_pdf_path):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
     
     # Check watermark on first and last page
@@ -92,7 +92,7 @@ def test_image_pdf_handling(image_pdf_path):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
     
     page = doc.load_page(0)

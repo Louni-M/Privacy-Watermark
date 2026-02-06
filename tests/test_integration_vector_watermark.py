@@ -57,7 +57,7 @@ def test_integration_text_remains_selectable_after_watermarking(realistic_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Save to temp file
@@ -98,7 +98,7 @@ def test_integration_quality_preserved_no_rasterization(realistic_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
 
     # Save to temp file
@@ -143,7 +143,7 @@ def test_integration_file_size_within_110_percent(realistic_pdf):
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Save to temp file
@@ -199,7 +199,7 @@ def test_integration_multipage_quality_preserved():
         opacity=40,
         font_size=48,
         spacing=200,
-        color="Gris"
+        color="Gray"
     )
 
     # Save watermarked version
@@ -248,7 +248,7 @@ def test_integration_vector_vs_raster_quality_comparison():
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Noir"
+        color="Black"
     )
 
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
@@ -265,7 +265,7 @@ def test_integration_vector_vs_raster_quality_comparison():
             "opacity": 30,
             "font_size": 36,
             "spacing": 150,
-            "color": "Noir"
+            "color": "Black"
         }
     )
 
@@ -315,7 +315,7 @@ def test_integration_with_test_fixtures():
         opacity=30,
         font_size=36,
         spacing=150,
-        color="Blanc"
+        color="White"
     )
 
     # Save watermarked version
