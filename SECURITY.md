@@ -1,4 +1,4 @@
-# Security Policy -- Passport Filigrane
+# Security Policy -- Privacy-Watermark
 
 This document describes the security measures implemented in Passport Filigrane,
 known limitations, and guidelines for users.
