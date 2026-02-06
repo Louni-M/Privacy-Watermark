@@ -23,6 +23,7 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+test_fixtures/
 
 # Build artifacts
 build/
@@ -32,3 +33,21 @@ dist/
 # Logs
 *.log
 error_log.txt
+
+# Secrets and credentials (defensive)
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+secrets.*
+credentials.*
+*_secret.*
+*_credentials.*
+
+# macOS code signing artifacts
+*.provisionprofile
+*.mobileprovision

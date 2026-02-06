@@ -1,6 +1,7 @@
 
 import pytest
 import fitz
+import io
 import os
 from pdf_processing import load_pdf, apply_vector_watermark_to_pdf
 from PIL import Image
@@ -21,16 +22,16 @@ def create_large_pdf(path, pages=20):
     doc.close()
 
 def create_image_pdf(path):
-    # Create an image first
-    img = Image.new('RGB', (100, 100), color = 'red')
-    img.save("temp_img.jpg")
-    
+    # Create an image in memory (no temp file on disk)
+    img = Image.new('RGB', (100, 100), color='red')
+    img_buffer = io.BytesIO()
+    img.save(img_buffer, format="JPEG")
+
     doc = fitz.open()
     page = doc.new_page()
-    page.insert_image(page.rect, filename="temp_img.jpg")
+    page.insert_image(page.rect, stream=img_buffer.getvalue())
     doc.save(path)
     doc.close()
-    os.remove("temp_img.jpg")
 
 @pytest.fixture
 def encrypted_pdf_path(tmp_path):
