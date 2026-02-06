@@ -1,18 +1,18 @@
 # Plan: Flexible Export Format Selection
 
-## Phase 1: Dynamic Export Format Dropdown [ ]
+## Phase 1: Dynamic Export Format Dropdown [~]
 
-- [ ] Task: Write tests for dynamic dropdown options based on file type
-  - [ ] Sub-task: Test that uploading an image sets dropdown options to JPG, PNG, PDF with JPG as default
-  - [ ] Sub-task: Test that uploading a PDF sets dropdown options to PDF, Images (JPG), Images (PNG) with PDF as default
-  - [ ] Sub-task: Test that dropdown is visible for both image and PDF uploads
-  - [ ] Sub-task: Test that dropdown resets correctly when switching between file types
+- [x] Task: Write tests for dynamic dropdown options based on file type [34ccea0]
+  - [x] Sub-task: Test that uploading an image sets dropdown options to JPG, PNG, PDF with JPG as default
+  - [x] Sub-task: Test that uploading a PDF sets dropdown options to PDF, Images (JPG), Images (PNG) with PDF as default
+  - [x] Sub-task: Test that dropdown is visible for both image and PDF uploads
+  - [x] Sub-task: Test that dropdown resets correctly when switching between file types
 
-- [ ] Task: Implement dynamic dropdown options in `main.py`
-  - [ ] Sub-task: Create a helper method to set dropdown options based on file type
-  - [ ] Sub-task: Update `on_file_result()` to call the helper and show dropdown for images
-  - [ ] Sub-task: Update PDF upload path to use new dropdown options (PDF, Images JPG, Images PNG)
-  - [ ] Sub-task: Ensure dropdown visibility is set correctly for all file types (including error/unknown)
+- [x] Task: Implement dynamic dropdown options in `main.py` [34ccea0]
+  - [x] Sub-task: Create a helper method to set dropdown options based on file type
+  - [x] Sub-task: Update `on_file_result()` to call the helper and show dropdown for images
+  - [x] Sub-task: Update PDF upload path to use new dropdown options (PDF, Images JPG, Images PNG)
+  - [x] Sub-task: Ensure dropdown visibility is set correctly for all file types (including error/unknown)
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
