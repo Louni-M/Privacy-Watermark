@@ -3,6 +3,8 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import base64
 import os
+import sys
+import stat
 import threading
 import traceback
 from pdf_processing import (
@@ -17,8 +19,33 @@ from pdf_processing import (
     apply_secure_raster_watermark_to_pdf
 )
 
+# --- Security constants ---
+MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024  # 100 MB
+MAX_PDF_PAGES = 50
+MAX_IMAGE_DIMENSION = 20000  # pixels per side
+
+def get_log_path():
+    """Return a secure, platform-appropriate log file path."""
+    if sys.platform == "darwin":
+        log_dir = os.path.expanduser("~/Library/Logs/PassportFiligrane")
+    elif sys.platform == "win32":
+        log_dir = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")), "PassportFiligrane", "Logs")
+    else:
+        log_dir = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "PassportFiligrane")
+
+    os.makedirs(log_dir, mode=0o700, exist_ok=True)
+    return os.path.join(log_dir, "error_log.txt")
+
+LOG_PATH = get_log_path()
+
+def sanitize_path_for_log(message: str) -> str:
+    """Remove potential file paths from log messages to protect user privacy."""
+    home = os.path.expanduser("~")
+    return message.replace(home, "~USER")
+
+
 def generate_preview(image_bytes_io):
-    """Génère un thumbnail de l'image (max 800px) pour la prévisualisation."""
+    """Genere un thumbnail de l'image (max 800px) pour la previsualisation."""
     img = Image.open(image_bytes_io)
     max_size = 800
     if img.width > max_size or img.height > max_size:
@@ -28,7 +55,7 @@ def generate_preview(image_bytes_io):
     return img_byte_arr.getvalue()
 
 def get_font(size):
-    """Essaye de charger une police système, sinon retourne la police par défaut."""
+    """Essaye de charger une police systeme, sinon retourne la police par defaut."""
     font_paths = [
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
@@ -42,23 +69,49 @@ def get_font(size):
                 continue
     return ImageFont.load_default()
 
+def strip_image_metadata(img):
+    """Return a clean copy of a PIL Image with all EXIF/metadata stripped."""
+    clean = Image.new(img.mode, img.size)
+    clean.putdata(list(img.getdata()))
+    return clean
+
 def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="Blanc", orientation="Ascendant (↗)"):
-    """Applique un filigrane répété en diagonale sur l'image."""
+    """Applique un filigrane repete en diagonale sur l'image."""
     img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
-    # Utilisation de la logique partagée de pdf_processing pour la cohérence
+    # Utilisation de la logique partagee de pdf_processing pour la coherence
     out = apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color=color, orientation=orientation)
+    out_rgb = strip_image_metadata(out.convert("RGB"))
     output = io.BytesIO()
-    out.convert("RGB").save(output, format="JPEG", quality=90)
+    out_rgb.save(output, format="JPEG", quality=90)
     return output.getvalue()
 
 def detect_file_type(file_path):
-    """Détermine si le fichier est une image ou un PDF."""
+    """Determine si le fichier est une image ou un PDF."""
     ext = os.path.splitext(file_path)[1].lower()
     if ext in ['.jpg', '.jpeg', '.png']:
         return "image"
     elif ext == '.pdf':
         return "pdf"
     return "unknown"
+
+def validate_file_size(file_path):
+    """Check that a file does not exceed the maximum allowed size."""
+    size = os.path.getsize(file_path)
+    if size > MAX_FILE_SIZE_BYTES:
+        size_mb = size / (1024 * 1024)
+        raise ValueError(
+            f"Fichier trop volumineux ({size_mb:.1f} Mo). "
+            f"La limite est de {MAX_FILE_SIZE_BYTES // (1024 * 1024)} Mo."
+        )
+
+def validate_image_dimensions(img):
+    """Check that an image's dimensions are within safe limits."""
+    if img.width > MAX_IMAGE_DIMENSION or img.height > MAX_IMAGE_DIMENSION:
+        raise ValueError(
+            f"Image trop grande ({img.width}x{img.height} px). "
+            f"La limite est de {MAX_IMAGE_DIMENSION}x{MAX_IMAGE_DIMENSION} px."
+        )
+
 
 class PassportFiligraneApp:
     def __init__(self, page: ft.Page):
@@ -68,13 +121,14 @@ class PassportFiligraneApp:
         self.page.padding = 0
         self.page.bgcolor = "#1a1a1a"
 
-        # État
+        # State
         self.original_image_bytes = None
         self.watermarked_image_bytes = None
         self.pdf_doc = None
         self.current_file_type = None
         self.num_pages = 0
         self.update_timer = None
+        self._preview_lock = threading.Lock()
 
         self.setup_ui()
 
@@ -83,7 +137,7 @@ class PassportFiligraneApp:
         self.file_picker = ft.FilePicker(on_result=self.on_file_result)
         self.file_picker.file_type = ft.FilePickerFileType.CUSTOM
         self.file_picker.allowed_extensions = ["jpg", "jpeg", "png", "pdf"]
-        
+
         self.save_file_picker = ft.FilePicker(on_result=self.on_save_result)
         self.save_dir_picker = ft.FilePicker(on_result=self.on_dir_result)
         self.page.overlay.extend([self.file_picker, self.save_file_picker, self.save_dir_picker])
@@ -95,7 +149,7 @@ class PassportFiligraneApp:
             on_change=self.update_preview, disabled=True,
         )
 
-        self.opacity_label = ft.Text("Opacité (30%)", size=14, color="#ffffff")
+        self.opacity_label = ft.Text("Opacite (30%)", size=14, color="#ffffff")
         self.opacity_slider = ft.Slider(
             min=0, max=100, value=30, divisions=100, label="{value}%",
             active_color="#3b82f6", on_change=self.update_preview, disabled=True
@@ -144,14 +198,26 @@ class PassportFiligraneApp:
             color="#ffffff", disabled=True,
         )
 
-        # Mode Sécurisé & DPI selection
+        # Mode Securise & DPI selection
         self.secure_mode_switch = ft.Switch(
-            label="Mode Sécurisé (Raster)",
+            label="Mode Securise (Raster)",
             value=False,
             active_color="#3b82f6",
             on_change=self.on_secure_mode_change,
             disabled=True,
             visible=False # Only for PDFs
+        )
+
+        self.vector_mode_warning = ft.Container(
+            content=ft.Text(
+                "Mode vectoriel : le filigrane peut etre supprime avec un editeur PDF. "
+                "Activez le Mode Securise pour les documents sensibles.",
+                size=11,
+                color="#ff9800",
+                italic=True,
+            ),
+            visible=False,
+            padding=ft.padding.only(top=4, bottom=4),
         )
 
         self.dpi_segmented_button = ft.SegmentedButton(
@@ -168,7 +234,7 @@ class PassportFiligraneApp:
 
         self.dpi_container = ft.Column(
             controls=[
-                ft.Text("Qualité (DPI)", size=12, color="#aaaaaa"),
+                ft.Text("Qualite (DPI)", size=12, color="#aaaaaa"),
                 self.dpi_segmented_button
             ],
             spacing=5,
@@ -182,7 +248,7 @@ class PassportFiligraneApp:
         controls_panel = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("Contrôles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                    ft.Text("Controles", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
                     self.watermark_text,
                     ft.Column(controls=[self.opacity_label, self.opacity_slider], spacing=0),
                     ft.Column(controls=[self.font_size_label, self.font_size_slider], spacing=0),
@@ -191,10 +257,11 @@ class PassportFiligraneApp:
                     self.orientation_dropdown,
                     ft.Divider(height=20, color="transparent"),
                     self.secure_mode_switch,
+                    self.vector_mode_warning,
                     self.dpi_container,
                     ft.Divider(height=20, color="transparent"),
                     ft.ElevatedButton(
-                        "Sélectionner un fichier", icon=ft.icons.UPLOAD_FILE,
+                        "Selectionner un fichier", icon=ft.icons.UPLOAD_FILE,
                         on_click=lambda _: self.file_picker.pick_files(
                             allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
                         ),
@@ -213,7 +280,7 @@ class PassportFiligraneApp:
         preview_panel = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("Prévisualisation", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                    ft.Text("Previsualisation", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
                     ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
                 ],
                 spacing=12,
@@ -224,11 +291,17 @@ class PassportFiligraneApp:
         self.page.add(ft.Row(controls=[controls_panel, preview_panel], expand=True, spacing=0))
 
     def show_error(self, message: str):
-        # Log to file for debugging built app
-        with open("error_log.txt", "a") as f:
-            f.write(f"\n--- ERROR: {message} ---\n")
-            traceback.print_exc(file=f)
-            
+        # Log to secure location, sanitizing file paths
+        try:
+            sanitized = sanitize_path_for_log(message)
+            with open(LOG_PATH, "a") as f:
+                f.write(f"\n--- ERROR: {sanitized} ---\n")
+                traceback.print_exc(file=f)
+            # Restrict permissions to owner-only
+            os.chmod(LOG_PATH, stat.S_IRUSR | stat.S_IWUSR)
+        except OSError:
+            pass  # Logging failure should not crash the app
+
         self.page.snack_bar = ft.SnackBar(ft.Text(message), bgcolor=ft.colors.ERROR)
         self.page.snack_bar.open = True
         self.page.update()
@@ -243,24 +316,31 @@ class PassportFiligraneApp:
         self.save_button.disabled = disabled or self.watermarked_image_bytes is None
         self.secure_mode_switch.disabled = disabled
         self.dpi_segmented_button.disabled = disabled
-        
+
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
             self.save_button.text = "Exporter en images"
         else:
             self.save_button.text = "Enregistrer le fichier"
         self.page.update()
 
+    def _update_vector_warning_visibility(self):
+        """Show warning when PDF is loaded in vector (non-secure) mode."""
+        is_pdf = self.current_file_type == "pdf"
+        is_vector = not self.secure_mode_switch.value
+        self.vector_mode_warning.visible = is_pdf and is_vector
+
     def on_secure_mode_change(self, e):
         # Toggle DPI selection visibility
         self.dpi_container.visible = self.secure_mode_switch.value
+        self._update_vector_warning_visibility()
         self.update_preview()
         self.page.update()
 
     def update_preview(self, e=None):
-        self.opacity_label.value = f"Opacité ({int(self.opacity_slider.value)}%)"
+        self.opacity_label.value = f"Opacite ({int(self.opacity_slider.value)}%)"
         self.font_size_label.value = f"Taille de police ({int(self.font_size_slider.value)} px)"
         self.spacing_label.value = f"Espacement ({int(self.spacing_slider.value)} px)"
-        
+
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
             self.save_button.text = "Exporter en images"
         else:
@@ -274,34 +354,36 @@ class PassportFiligraneApp:
             self.update_timer.cancel()
 
         def do_update():
-            try:
-                text = self.watermark_text.value
-                opacity = self.opacity_slider.value
-                font_size = int(self.font_size_slider.value)
-                spacing = int(self.spacing_slider.value)
-                color = self.color_dropdown.value
-                orientation = self.orientation_dropdown.value
+            with self._preview_lock:
+                try:
+                    text = self.watermark_text.value
+                    opacity = self.opacity_slider.value
+                    font_size = int(self.font_size_slider.value)
+                    spacing = int(self.spacing_slider.value)
+                    color = self.color_dropdown.value
+                    orientation = self.orientation_dropdown.value
+                    file_type = self.current_file_type
 
-                if self.current_file_type == "image":
-                    self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color, orientation=orientation)
-                elif self.current_file_type == "pdf" and self.pdf_doc:
-                    # Utilisation du rendu vectoriel natif pour la prévisualisation (bien plus net et fidèle)
-                    self.watermarked_image_bytes = generate_pdf_preview(
-                         doc=self.pdf_doc,
-                         text=text,
-                         opacity=opacity,
-                         font_size=font_size,
-                         spacing=spacing,
-                         color=color,
-                         orientation=orientation
-                    )
-                
-                self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
-                self.preview_image.visible = True
-                self.save_button.disabled = False
-                self.page.update()
-            except Exception as ex:
-                self.show_error(f"Erreur de mise à jour : {ex}")
+                    if file_type == "image" and self.original_image_bytes:
+                        self.watermarked_image_bytes = apply_watermark(self.original_image_bytes, text, opacity, font_size, spacing, color=color, orientation=orientation)
+                    elif file_type == "pdf" and self.pdf_doc:
+                        self.watermarked_image_bytes = generate_pdf_preview(
+                             doc=self.pdf_doc,
+                             text=text,
+                             opacity=opacity,
+                             font_size=font_size,
+                             spacing=spacing,
+                             color=color,
+                             orientation=orientation
+                        )
+
+                    if self.watermarked_image_bytes:
+                        self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
+                        self.preview_image.visible = True
+                        self.save_button.disabled = False
+                        self.page.update()
+                except Exception as ex:
+                    self.show_error(f"Erreur de mise a jour : {ex}")
 
         self.update_timer = threading.Timer(0.2, do_update)
         self.update_timer.start()
@@ -309,61 +391,88 @@ class PassportFiligraneApp:
     def on_file_result(self, e: ft.FilePickerResultEvent):
         if not e.files:
             return
-            
+
         file_path = e.files[0].path
         if not file_path:
             return
 
         try:
+            # Validate file size before loading
+            validate_file_size(file_path)
+
             self.current_file_type = detect_file_type(file_path)
-            
+
             if self.current_file_type == "image":
                 with open(file_path, "rb") as f:
                     content = f.read()
                 try:
-                    Image.open(io.BytesIO(content)).verify()
+                    img = Image.open(io.BytesIO(content))
+                    img.verify()
+                    # Re-open after verify (verify can close the image)
+                    img = Image.open(io.BytesIO(content))
+                    validate_image_dimensions(img)
                 except Exception:
                     self.show_error("Impossible de lire ce fichier image.")
                     return
                 self.original_image_bytes = content
                 self.pdf_doc = None
-                self.file_info_text.value = "Image chargée"
+                self.file_info_text.value = "Image chargee"
                 self.export_format_dropdown.visible = False
                 self.secure_mode_switch.visible = False
+                self.vector_mode_warning.visible = False
                 self.dpi_container.visible = False
-                
+
             elif self.current_file_type == "pdf":
                 self.current_file_type = "pdf"
                 self.pdf_doc, self.num_pages = load_pdf(file_path)
+
+                if self.num_pages > MAX_PDF_PAGES:
+                    self.show_error(
+                        f"PDF trop volumineux ({self.num_pages} pages). "
+                        f"La limite est de {MAX_PDF_PAGES} pages."
+                    )
+                    self.pdf_doc = None
+                    self.current_file_type = None
+                    self.set_controls_disabled(True)
+                    self.page.update()
+                    return
+
                 self.export_format_dropdown.visible = True
                 self.secure_mode_switch.visible = True
+                self._update_vector_warning_visibility()
                 self.dpi_container.visible = self.secure_mode_switch.value
-                self.file_info_text.value = f"PDF chargé : {self.num_pages} page(s)"
+                self.file_info_text.value = f"PDF charge : {self.num_pages} page(s)"
             else:
                 self.current_file_type = None
                 self.pdf_doc = None
                 self.export_format_dropdown.visible = False
                 self.secure_mode_switch.visible = False
+                self.vector_mode_warning.visible = False
                 self.dpi_container.visible = False
-                self.show_error("Format de fichier non supporté.")
+                self.show_error("Format de fichier non supporte.")
                 self.set_controls_disabled(True)
-                self.page.update() # Update here to reflect disabled controls and hidden elements
-                return # Exit early if file type is not supported
+                self.page.update()
+                return
 
             self.file_info_text.visible = True
             self.set_controls_disabled(False)
             self.update_preview()
             self.preview_image.visible = True
             self.page.update()
+        except ValueError as ve:
+            self.show_error(str(ve))
+            self.set_controls_disabled(True)
+            self.page.update()
         except Exception as ex:
             self.current_file_type = None
             self.pdf_doc = None
             self.export_format_dropdown.visible = False
             self.secure_mode_switch.visible = False
+            self.vector_mode_warning.visible = False
             self.dpi_container.visible = False
             self.show_error(str(ex))
             self.set_controls_disabled(True)
-            self.page.update() # Update here to reflect disabled controls and hidden elements
+            self.page.update()
 
     def on_save_result(self, e: ft.FilePickerResultEvent):
         if not e.path:
@@ -400,9 +509,9 @@ class PassportFiligraneApp:
                     doc_to_save = self.pdf_doc
 
                 save_watermarked_pdf(doc_to_save, e.path)
-                
+
             self.page.snack_bar = ft.SnackBar(
-                ft.Text(f"Fichier enregistré : {os.path.basename(e.path)}"),
+                ft.Text(f"Fichier enregistre : {os.path.basename(e.path)}"),
                 bgcolor=ft.colors.GREEN
             )
             self.page.snack_bar.open = True
@@ -438,10 +547,10 @@ class PassportFiligraneApp:
                         orientation=self.orientation_dropdown.value
                     )
                     doc_to_save = self.pdf_doc
-                
+
                 save_pdf_as_images(doc_to_save, e.path, "export")
                 self.page.snack_bar = ft.SnackBar(
-                    ft.Text(f"Images exportées dans : {os.path.basename(e.path)}"),
+                    ft.Text(f"Images exportees dans : {os.path.basename(e.path)}"),
                     bgcolor=ft.colors.GREEN
                 )
                 self.page.snack_bar.open = True
