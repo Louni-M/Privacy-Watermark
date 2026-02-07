@@ -1,6 +1,6 @@
 # Privacy Watermarking App on macOS
 
-A macOS application for watermarking documents and maintaining control over your important files (e.g. passport, ID sent for an online application)
+A macOS application for watermarking documents and maintaining control over your important files (e.g. passport, ID sent for an online application). It also ensures all EXIF Metadata is stripped from the output file.
 
 ## Features
 
