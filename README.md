@@ -72,12 +72,13 @@ The application is generated in `dist/Passport Filigrane.app`.
 
 ```
 Passport-Filigrane/
-├── main.py              # Main application (Flet UI)
-├── pdf_processing.py    # Watermarking engine (PyMuPDF/Pillow)
-├── assets/              # Resources (Icons)
-├── tests/               # Unit and integration tests
-├── SECURITY.md          # Security policy
-└── Passport Filigrane.spec # PyInstaller build configuration
+├── main.py                      # Main application (Flet UI)
+├── pdf_processing.py            # Watermarking engine (PyMuPDF/Pillow)
+├── requirements.txt             # Runtime dependencies
+├── requirements-dev.txt         # Dev & test dependencies
+├── Passport Filigrane.spec      # PyInstaller build configuration
+├── assets/                      # App icon & demo screenshots
+└── tests/                       # Unit and integration tests
 ```
 
 ## License
