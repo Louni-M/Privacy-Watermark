@@ -110,3 +110,12 @@
 - **ONEFILE vs ONEDIR**: Ne JAMAIS utiliser le mode `--onefile` (par défaut dans `flet pack`) pour les releases macOS. Ce mode compresse tout dans un seul binaire qui doit être décompressé dans `/tmp` à chaque lancement, ce qui prend 10-20 secondes.
 - **Solution**: Toujours construire en mode `--onedir`. Cela crée un bundle `.app` avec les librairies externes séparées (dans `Contents/Frameworks` ou `_internal`), permettant un lancement instantané (< 1s).
 - **Conséquence**: Le dossier `dist/` contiendra un dossier et l'exécutable. Pour la distribution, il faut zipper le dossier ou le bundle `.app` résultant.
+
+## 2026-02-17 Track: secure_mode_fix_20260217
+
+### Key Learnings
+- UI elements in Flet need explicit visibility updates when context changes (e.g., file loading).
+- Mocking `ft.FilePickerResultEvent` and external dependencies is essential for testing UI logic without user interaction.
+
+### Issues Encountered
+- Missing `secure_mode_switch.visible = True` caused a critical feature to be inaccessible for PDF files.
