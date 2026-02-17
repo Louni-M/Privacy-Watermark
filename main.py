@@ -477,6 +477,7 @@ class PassportFiligraneApp:
                     return
 
                 self.dpi_container.visible = self.secure_mode_switch.value
+                self.secure_mode_switch.visible = True
                 self.file_info_text.value = f"PDF loaded: {self.num_pages} page(s)"
                 self.update_export_options("pdf")
             else:
