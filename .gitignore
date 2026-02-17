@@ -51,3 +51,6 @@ credentials.*
 # macOS code signing artifacts
 *.provisionprofile
 *.mobileprovision
+
+# Large release binaries
+*.zip
