@@ -1,8 +1,0 @@
-{
-    "track_id": "pdf_hybrid_20260202",
-    "type": "feature",
-    "status": "new",
-    "created_at": "2026-02-02T17:48:00Z",
-    "updated_at": "2026-02-02T17:48:00Z",
-    "description": "Hybrid PDF Watermarking (Vector vs Secure Raster) with variable DPI support"
-}

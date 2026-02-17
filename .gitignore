@@ -14,10 +14,12 @@ ENV/
 .vscode/
 *.swp
 *.swo
+*~
 
 # OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # Test artifacts
 .pytest_cache/
@@ -29,12 +31,13 @@ test_fixtures/
 build/
 dist/
 *.egg-info/
+*.spec.bak
 
 # Logs
 *.log
 error_log.txt
 
-# Secrets and credentials (defensive)
+# Secrets and credentials
 .env
 .env.*
 *.pem
@@ -54,3 +57,5 @@ credentials.*
 
 # Large release binaries
 *.zip
+*.dmg
+*.tar.gz
