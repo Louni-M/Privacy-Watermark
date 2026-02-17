@@ -1,8 +1,0 @@
-{
-  "track_id": "pdf_quality_20260202",
-  "type": "bug",
-  "status": "new",
-  "created_at": "2026-02-02T00:00:00Z",
-  "updated_at": "2026-02-02T00:00:00Z",
-  "description": "PDF quality degradation fix - implement native vector watermarks to preserve document quality for official use"
-}
