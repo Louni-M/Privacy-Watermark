@@ -105,3 +105,8 @@
 ### Issues Encountered
 - **Snackbar Vagueness**: Initialement, le message "Images exported to..." était trop générique. L'utilisateur a explicitement demandé l'inclusion du nom de fichier réel avec le suffixe de page.
 - **FilePicker Extension Sync**: Flet ne met pas à jour dynamiquement les `allowed_extensions` d'un `FilePicker` déjà ouvert. Il faut s'assurer que les paramètres sont calculés au moment de l'appel à `pick_files()` ou `save_file()`.
+
+### Critical Performance Warning (macOS)
+- **ONEFILE vs ONEDIR**: Ne JAMAIS utiliser le mode `--onefile` (par défaut dans `flet pack`) pour les releases macOS. Ce mode compresse tout dans un seul binaire qui doit être décompressé dans `/tmp` à chaque lancement, ce qui prend 10-20 secondes.
+- **Solution**: Toujours construire en mode `--onedir`. Cela crée un bundle `.app` avec les librairies externes séparées (dans `Contents/Frameworks` ou `_internal`), permettant un lancement instantané (< 1s).
+- **Conséquence**: Le dossier `dist/` contiendra un dossier et l'exécutable. Pour la distribution, il faut zipper le dossier ou le bundle `.app` résultant.

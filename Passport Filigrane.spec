@@ -1,15 +1,19 @@
 # -*- mode: python ; coding: utf-8 -*-
+from PyInstaller.utils.hooks import collect_all
 
-# IMPORTANT: Build with PyInstaller >= 6.0.0 (CVE-2025-59042 fix)
-# IMPORTANT: Before publishing, replace codesign_identity and entitlements_file
-# with your Apple Developer credentials. See SECURITY.md for details.
+datas = []
+binaries = []
+hiddenimports = []
+tmp_ret = collect_all('flet')
+datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
+
 
 a = Analysis(
     ['main.py'],
     pathex=[],
-    binaries=[],
-    datas=[('pdf_processing.py', '.')],
-    hiddenimports=[],
+    binaries=binaries,
+    datas=datas,
+    hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -40,7 +44,6 @@ exe = EXE(
 coll = COLLECT(
     exe,
     a.binaries,
-    a.zipfiles,
     a.datas,
     strip=False,
     upx=True,
@@ -51,5 +54,5 @@ app = BUNDLE(
     coll,
     name='Passport Filigrane.app',
     icon='assets/app_icon.icns',
-    bundle_identifier='com.passportfiligrane.app',
+    bundle_identifier=None,
 )
