@@ -124,9 +124,9 @@ class PassportFiligraneApp:
     def __init__(self, page: ft.Page):
         self.page = page
         self.page.title = "Passport Filigrane"
-        self.page.theme_mode = ft.ThemeMode.DARK
+        self.page.theme = ft.Theme(color_scheme_seed=ft.colors.BLUE)
+        self.page.theme_mode = ft.ThemeMode.SYSTEM
         self.page.padding = 0
-        self.page.bgcolor = "#1a1a1a"
 
         # State
         self.original_image_bytes = None
@@ -140,6 +140,27 @@ class PassportFiligraneApp:
 
         self.setup_ui()
 
+    def _create_card(self, title, icon, content):
+        return ft.Card(
+            content=ft.Container(
+                content=ft.Column(
+                    controls=[
+                        ft.Row(
+                            controls=[
+                                ft.Icon(icon, color=ft.colors.PRIMARY),
+                                ft.Text(title, weight=ft.FontWeight.BOLD, size=16),
+                            ],
+                            alignment=ft.MainAxisAlignment.START,
+                        ),
+                        content
+                    ]
+                ),
+                padding=16,
+            ),
+            elevation=2,
+            margin=ft.margin.only(bottom=10)
+        )
+
     def setup_ui(self):
         # File Pickers
         self.file_picker = ft.FilePicker(on_result=self.on_file_result)
@@ -152,31 +173,27 @@ class PassportFiligraneApp:
 
         # Controls
         self.watermark_text = ft.TextField(
-            label="Watermark text", value="COPY", color="#ffffff",
-            border_color="#3b82f6", focused_border_color="#60a5fa",
+            label="Watermark text", value="COPY",
             on_change=self.update_preview, disabled=True,
         )
 
-        self.opacity_label = ft.Text("Opacity (30%)", size=14, color="#ffffff")
         self.opacity_slider = ft.Slider(
             min=0, max=100, value=30, divisions=100, label="{value}%",
-            active_color="#3b82f6", on_change=self.update_preview, disabled=True
+            on_change=self.update_preview, disabled=True, expand=True
         )
 
-        self.font_size_label = ft.Text("Font size (36 px)", size=14, color="#ffffff")
         self.font_size_slider = ft.Slider(
             min=12, max=72, value=36, divisions=60, label="{value}px",
-            active_color="#3b82f6", on_change=self.update_preview, disabled=True
+            on_change=self.update_preview, disabled=True, expand=True
         )
 
-        self.spacing_label = ft.Text("Spacing (150 px)", size=14, color="#ffffff")
         self.spacing_slider = ft.Slider(
             min=50, max=300, value=150, divisions=250, label="{value}px",
-            active_color="#3b82f6", on_change=self.update_preview, disabled=True
+            on_change=self.update_preview, disabled=True, expand=True
         )
 
         self.color_dropdown = ft.Dropdown(
-            label="Text color", label_style=ft.TextStyle(color="#ffffff", size=14),
+            label="Text color",
             options=[
                 ft.dropdown.Option("White", "White"),
                 ft.dropdown.Option("Black", "Black"),
@@ -186,7 +203,7 @@ class PassportFiligraneApp:
         )
 
         self.orientation_dropdown = ft.Dropdown(
-            label="Orientation", label_style=ft.TextStyle(color="#ffffff", size=14),
+            label="Orientation",
             options=[
                 ft.dropdown.Option("Ascending (↗)", "Ascending (↗)"),
                 ft.dropdown.Option("Descending (↘)", "Descending (↘)"),
@@ -195,37 +212,49 @@ class PassportFiligraneApp:
         )
 
         self.export_format_dropdown = ft.Dropdown(
-            label="Export format", label_style=ft.TextStyle(color="#ffffff", size=14),
+            label="Export format",
             options=[ft.dropdown.Option("PDF", "PDF"), ft.dropdown.Option("Images (JPG)", "Images")],
             value="PDF", visible=False, on_change=lambda _: self.page.update()
         )
 
         self.save_button = ft.ElevatedButton(
             "Save file", icon=ft.icons.SAVE,
-            on_click=self.on_save_button_click, bgcolor=ft.colors.GREEN_700,
-            color="#ffffff", disabled=True,
+            on_click=self.on_save_button_click,
+            disabled=True,
+            style=ft.ButtonStyle(
+                bgcolor=ft.colors.PRIMARY,
+                color=ft.colors.ON_PRIMARY,
+                padding=ft.padding.all(15)
+            ),
+            expand=True
+        )
+
+        self.change_file_button = ft.TextButton(
+            "Change file", icon=ft.icons.FOLDER_OPEN,
+            on_click=lambda _: self.file_picker.pick_files(
+                allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
+            ),
+            expand=True
         )
 
         # Secure Mode & DPI selection
         self.secure_mode_switch = ft.Switch(
             label="Secure Mode (Raster)",
             value=False,
-            active_color="#3b82f6",
             on_change=self.on_secure_mode_change,
             disabled=True,
             visible=False # Only for PDFs
         )
 
         self.vector_mode_warning = ft.Container(
-            content=ft.Text(
-                "Vector mode: the watermark can be removed with a PDF editor. "
-                "Enable Secure Mode for sensitive documents.",
-                size=11,
-                color="#ff9800",
-                italic=True,
-            ),
-            visible=False,
-            padding=ft.padding.only(top=4, bottom=4),
+            content=ft.Row([
+                ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.ON_ERROR_CONTAINER),
+                ft.Text("Vector mode: Watermark can be removed with a PDF editor. Enable Secure Mode for sensitive documents.", color=ft.colors.ON_ERROR_CONTAINER, size=12, expand=True)
+            ]),
+            bgcolor=ft.colors.ERROR_CONTAINER,
+            border_radius=8,
+            padding=10,
+            visible=False
         )
 
         self.dpi_segmented_button = ft.SegmentedButton(
@@ -242,61 +271,118 @@ class PassportFiligraneApp:
 
         self.dpi_container = ft.Column(
             controls=[
-                ft.Text("Quality (DPI)", size=12, color="#aaaaaa"),
+                ft.Text("Quality (DPI)", size=12, color=ft.colors.ON_SURFACE_VARIANT),
                 self.dpi_segmented_button
             ],
             spacing=5,
             visible=False
         )
 
-        self.file_info_text = ft.Text("", size=12, color="#aaaaaa", italic=True, visible=False)
+        self.file_info_text = ft.Text("", size=12, color=ft.colors.ON_SURFACE_VARIANT, italic=True, visible=False)
         self.preview_image = ft.Image(src_base64="", fit="contain", visible=False)
 
-        # Layout panels
-        controls_panel = ft.Container(
-            content=ft.Column(
-                controls=[
-                    ft.Text("Controls", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
-                    self.watermark_text,
-                    ft.Column(controls=[self.opacity_label, self.opacity_slider], spacing=0),
-                    ft.Column(controls=[self.font_size_label, self.font_size_slider], spacing=0),
-                    ft.Column(controls=[self.spacing_label, self.spacing_slider], spacing=0),
-                    self.color_dropdown,
-                    self.orientation_dropdown,
-                    ft.Divider(height=20, color="transparent"),
-                    self.secure_mode_switch,
-                    self.vector_mode_warning,
-                    self.dpi_container,
-                    ft.Divider(height=20, color="transparent"),
-                    ft.ElevatedButton(
-                        "Select a file", icon=ft.icons.UPLOAD_FILE,
-                        on_click=lambda _: self.file_picker.pick_files(
-                            allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
-                        ),
-                        bgcolor="#3b82f6", color="#ffffff",
-                    ),
-                    self.file_info_text,
-                    self.export_format_dropdown,
-                    self.save_button,
-                ],
-                spacing=12,
-                scroll=ft.ScrollMode.AUTO,
-            ),
-            width=300, bgcolor="#252525", padding=16, border_radius=ft.border_radius.all(8),
+        # Build cards
+        watermark_card = self._create_card(
+            "Watermark Content",
+            ft.icons.TEXT_FIELDS,
+            ft.Column([
+                self.watermark_text,
+                self.color_dropdown,
+            ])
         )
 
-        preview_panel = ft.Container(
+        self.opacity_label = ft.Text("30%", size=12, color=ft.colors.ON_SURFACE_VARIANT)
+        self.font_size_label = ft.Text("36px", size=12, color=ft.colors.ON_SURFACE_VARIANT)
+        self.spacing_label = ft.Text("150px", size=12, color=ft.colors.ON_SURFACE_VARIANT)
+
+        style_card = self._create_card(
+            "Style & Layout",
+            ft.icons.PALETTE,
+            ft.Column([
+                ft.Row([ft.Icon(ft.icons.OPACITY, size=20, color=ft.colors.ON_SURFACE_VARIANT), ft.Text("Opacity")], alignment=ft.MainAxisAlignment.START, spacing=5),
+                ft.Row([self.opacity_slider, self.opacity_label], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                ft.Row([ft.Icon(ft.icons.FORMAT_SIZE, size=20, color=ft.colors.ON_SURFACE_VARIANT), ft.Text("Font Size")], alignment=ft.MainAxisAlignment.START, spacing=5),
+                ft.Row([self.font_size_slider, self.font_size_label], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                ft.Row([ft.Icon(ft.icons.SPACE_BAR, size=20, color=ft.colors.ON_SURFACE_VARIANT), ft.Text("Spacing")], alignment=ft.MainAxisAlignment.START, spacing=5),
+                ft.Row([self.spacing_slider, self.spacing_label], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                self.orientation_dropdown,
+            ], spacing=5)
+        )
+
+        export_card = self._create_card(
+            "Security & Export",
+            ft.icons.SECURITY,
+            ft.Column([
+                self.secure_mode_switch,
+                self.vector_mode_warning,
+                self.dpi_container,
+                self.export_format_dropdown,
+                self.file_info_text,
+            ], spacing=10)
+        )
+
+        # Layout panels
+        self.controls_panel = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("Preview", size=18, weight=ft.FontWeight.BOLD, color="#ffffff"),
+                    watermark_card,
+                    style_card,
+                    export_card,
+                    ft.Container(
+                        content=ft.Column([
+                            ft.Row([self.save_button]),
+                            ft.Row([self.change_file_button]),
+                        ]),
+                        padding=ft.padding.only(top=10, bottom=20)
+                    )
+                ],
+                spacing=0,
+                scroll=ft.ScrollMode.AUTO,
+            ),
+            width=340, padding=16, border=ft.border.only(right=ft.border.BorderSide(1, ft.colors.OUTLINE_VARIANT)),
+        )
+
+        self.preview_panel = ft.Container(
+            content=ft.Column(
+                controls=[
                     ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
                 ],
                 spacing=12,
             ),
-            expand=True, bgcolor="#1a1a1a", padding=16,
+            expand=True, padding=16,
         )
 
-        self.page.add(ft.Row(controls=[controls_panel, preview_panel], expand=True, spacing=0))
+        # States
+        self.empty_state = ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Icon(ft.icons.UPLOAD_FILE, size=100, color=ft.colors.ON_SURFACE_VARIANT),
+                    ft.Text("Select a Document", size=24, weight=ft.FontWeight.BOLD),
+                    ft.Text("Upload a JPG, PNG, or PDF file to apply a watermark.", size=16, color=ft.colors.ON_SURFACE_VARIANT),
+                    ft.ElevatedButton(
+                        "Browse Files", icon=ft.icons.FOLDER_OPEN,
+                        on_click=lambda _: self.file_picker.pick_files(
+                            allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
+                        ),
+                        style=ft.ButtonStyle(padding=ft.padding.all(20))
+                    ),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20,
+            ),
+            alignment=ft.alignment.center,
+            expand=True,
+            visible=True
+        )
+
+        self.loaded_state = ft.Row(
+            controls=[self.controls_panel, self.preview_panel],
+            expand=True,
+            spacing=0,
+            visible=False
+        )
+
+        self.page.add(self.empty_state, self.loaded_state)
 
     def show_error(self, message: str):
         # Log to secure location, sanitizing file paths
@@ -329,6 +415,15 @@ class PassportFiligraneApp:
             self.save_button.text = "Export as images"
         else:
             self.save_button.text = "Save file"
+
+        if not disabled:
+            self.empty_state.visible = False
+            self.loaded_state.visible = True
+        else:
+            if not self.current_file_type:
+                self.empty_state.visible = True
+                self.loaded_state.visible = False
+
         self.page.update()
 
     def update_export_options(self, file_type):
@@ -368,9 +463,9 @@ class PassportFiligraneApp:
         self.page.update()
 
     def update_preview(self, e=None):
-        self.opacity_label.value = f"Opacity ({int(self.opacity_slider.value)}%)"
-        self.font_size_label.value = f"Font size ({int(self.font_size_slider.value)} px)"
-        self.spacing_label.value = f"Spacing ({int(self.spacing_slider.value)} px)"
+        self.opacity_label.value = f"{int(self.opacity_slider.value)}%"
+        self.font_size_label.value = f"{int(self.font_size_slider.value)}px"
+        self.spacing_label.value = f"{int(self.spacing_slider.value)}px"
 
         if self.current_file_type == "pdf" and self.export_format_dropdown.value == "Images":
             self.save_button.text = "Export as images"
