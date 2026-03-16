@@ -126,7 +126,7 @@ class PassportFiligraneApp:
         self.page.title = "Passport Filigrane"
         self.page.theme_mode = ft.ThemeMode.DARK
         self.page.padding = 0
-        self.page.bgcolor = "#1a1a1a"
+        self.page.bgcolor = "#0f172a"
 
         # State
         self.original_image_bytes = None
@@ -153,26 +153,26 @@ class PassportFiligraneApp:
         # Controls
         self.watermark_text = ft.TextField(
             label="Watermark text", value="COPY", color="#ffffff",
-            border_color="#3b82f6", focused_border_color="#60a5fa",
+            border_color="#ec4899", focused_border_color="#f472b6",
             on_change=self.update_preview, disabled=True,
         )
 
         self.opacity_label = ft.Text("Opacity (30%)", size=14, color="#ffffff")
         self.opacity_slider = ft.Slider(
             min=0, max=100, value=30, divisions=100, label="{value}%",
-            active_color="#3b82f6", on_change=self.update_preview, disabled=True
+            active_color="#10b981", on_change=self.update_preview, disabled=True
         )
 
         self.font_size_label = ft.Text("Font size (36 px)", size=14, color="#ffffff")
         self.font_size_slider = ft.Slider(
             min=12, max=72, value=36, divisions=60, label="{value}px",
-            active_color="#3b82f6", on_change=self.update_preview, disabled=True
+            active_color="#f59e0b", on_change=self.update_preview, disabled=True
         )
 
         self.spacing_label = ft.Text("Spacing (150 px)", size=14, color="#ffffff")
         self.spacing_slider = ft.Slider(
             min=50, max=300, value=150, divisions=250, label="{value}px",
-            active_color="#3b82f6", on_change=self.update_preview, disabled=True
+            active_color="#8b5cf6", on_change=self.update_preview, disabled=True
         )
 
         self.color_dropdown = ft.Dropdown(
@@ -210,7 +210,7 @@ class PassportFiligraneApp:
         self.secure_mode_switch = ft.Switch(
             label="Secure Mode (Raster)",
             value=False,
-            active_color="#3b82f6",
+            active_color="#06b6d4",
             on_change=self.on_secure_mode_change,
             disabled=True,
             visible=False # Only for PDFs
@@ -273,7 +273,7 @@ class PassportFiligraneApp:
                         on_click=lambda _: self.file_picker.pick_files(
                             allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
                         ),
-                        bgcolor="#3b82f6", color="#ffffff",
+                        bgcolor="#ec4899", color="#ffffff",
                     ),
                     self.file_info_text,
                     self.export_format_dropdown,
@@ -282,7 +282,7 @@ class PassportFiligraneApp:
                 spacing=12,
                 scroll=ft.ScrollMode.AUTO,
             ),
-            width=300, bgcolor="#252525", padding=16, border_radius=ft.border_radius.all(8),
+            width=300, bgcolor="#1e293b", padding=16, border_radius=ft.border_radius.all(8),
         )
 
         preview_panel = ft.Container(
@@ -293,7 +293,7 @@ class PassportFiligraneApp:
                 ],
                 spacing=12,
             ),
-            expand=True, bgcolor="#1a1a1a", padding=16,
+            expand=True, bgcolor="#0f172a", padding=16,
         )
 
         self.page.add(ft.Row(controls=[controls_panel, preview_panel], expand=True, spacing=0))
