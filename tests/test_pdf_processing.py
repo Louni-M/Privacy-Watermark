@@ -67,13 +67,47 @@ def test_generate_pdf_preview(sample_pdf):
         spacing=100,
         color="Black"
     )
-    
+
     assert isinstance(preview_bytes, bytes)
     assert len(preview_bytes) > 0
-    
+
     # Verify it is a valid image
     img = Image.open(io.BytesIO(preview_bytes))
     assert img.format == "PNG"
     assert img.width > 0
     assert img.height > 0
+    doc.close()
+
+
+def test_generate_pdf_preview_does_not_modify_original(sample_pdf):
+    doc, num_pages = load_pdf(sample_pdf)
+    page_count_before = doc.page_count
+    generate_pdf_preview(doc=doc, text="COPY", opacity=50, font_size=36, spacing=100, color="Black")
+    assert doc.page_count == page_count_before
+    assert doc.page_count == num_pages
+    doc.close()
+
+
+def test_generate_pdf_preview_with_orientations(sample_pdf):
+    doc, _ = load_pdf(sample_pdf)
+    for orientation in ("Ascending (↗)", "Descending (↘)"):
+        preview_bytes = generate_pdf_preview(
+            doc=doc, text="COPY", opacity=50, font_size=36, spacing=100,
+            color="Black", orientation=orientation
+        )
+        img = Image.open(io.BytesIO(preview_bytes))
+        assert img.format == "PNG"
+        assert img.width > 0 and img.height > 0
+    doc.close()
+
+
+def test_generate_pdf_preview_with_all_colors(sample_pdf):
+    doc, _ = load_pdf(sample_pdf)
+    for color in ("White", "Black", "Gray"):
+        preview_bytes = generate_pdf_preview(
+            doc=doc, text="COPY", opacity=50, font_size=36, spacing=100, color=color
+        )
+        img = Image.open(io.BytesIO(preview_bytes))
+        assert img.format == "PNG"
+        assert img.width > 0 and img.height > 0
     doc.close()
