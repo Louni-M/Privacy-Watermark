@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock, patch, mock_open
 import pytest
 import flet as ft
+from PIL import Image
+import io
 from main import main
 
 def test_main_page_setup():
@@ -347,5 +349,67 @@ def test_error_handling_invalid_file():
                 # OR if we really want to test it, we'd mock ft.FilePicker.
                 pass
             
-            # If we reached here without crash, it's good. 
+            # If we reached here without crash, it's good.
             # In a real run, show_error would be called.
+
+
+# --- Security vulnerability fix tests ---
+
+def test_watermark_text_max_length():
+    """Vulnerability 1: TextField must have max_length=200 to prevent DoS via huge text."""
+    mock_page = MagicMock(spec=ft.Page)
+    mock_page.overlay = []
+    main(mock_page)
+    main_layout = next(
+        (call.args[0] for call in mock_page.add.call_args_list if isinstance(call.args[0], ft.Row)), None
+    )
+    controls_column = main_layout.controls[0].content
+    text_field = next(c for c in controls_column.controls if isinstance(c, ft.TextField))
+    assert text_field.max_length == 200, "Watermark TextField must have max_length=200"
+
+
+def test_strip_image_metadata_uses_paste():
+    """Vulnerability 2: strip_image_metadata must use paste(), not getdata(), to avoid OOM."""
+    from main import strip_image_metadata
+
+    img = Image.new("RGB", (10, 10), color="blue")
+    with patch.object(Image.Image, "putdata", side_effect=AssertionError("putdata must not be called")):
+        result = strip_image_metadata(img)
+
+    assert result is not None
+    assert result.size == img.size
+
+
+def test_strip_image_metadata_strips_exif():
+    """strip_image_metadata must return an image without EXIF metadata."""
+    from main import strip_image_metadata
+
+    img = Image.new("RGB", (10, 10), color="red")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    buf.seek(0)
+    img_with_meta = Image.open(buf)
+
+    result = strip_image_metadata(img_with_meta)
+    assert "exif" not in result.info
+
+
+def test_sanitize_path_for_log_strips_newlines():
+    """Vulnerability 3: sanitize_path_for_log must strip \\n and \\r to prevent log injection."""
+    from main import sanitize_path_for_log
+
+    message = "some message\ninjected log line\r another line"
+    result = sanitize_path_for_log(message)
+    assert "\n" not in result
+    assert "\r" not in result
+
+
+def test_watermark_text_length_validation():
+    """Vulnerability 1 (server-side guard): apply_watermark_to_pil_image must reject text > 200 chars."""
+    from pdf_processing import apply_watermark_to_pil_image
+
+    img = Image.new("RGBA", (100, 100))
+    long_text = "A" * 201
+
+    with pytest.raises(ValueError, match="too long"):
+        apply_watermark_to_pil_image(img, long_text, 30, 36, 150)

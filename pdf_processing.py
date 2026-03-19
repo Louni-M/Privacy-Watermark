@@ -73,6 +73,9 @@ def apply_watermark_to_pil_image(img, text, opacity, font_size, spacing, color="
         color: Text color ("White", "Black", "Gray")
         orientation: Watermark direction ("Ascending (↗)" or "Descending (↘)")
     """
+    if len(text) > 200:
+        raise ValueError("Watermark text is too long (max 200 characters).")
+
     color_map = {
         "White": (255, 255, 255),
         "Black": (0, 0, 0),

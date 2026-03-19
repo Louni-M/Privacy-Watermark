@@ -40,9 +40,11 @@ def get_log_path():
 LOG_PATH = get_log_path()
 
 def sanitize_path_for_log(message: str) -> str:
-    """Remove potential file paths from log messages to protect user privacy."""
+    """Remove potential file paths and control characters from log messages."""
     home = os.path.expanduser("~")
-    return message.replace(home, "~USER")
+    sanitized = message.replace(home, "~USER")
+    sanitized = sanitized.replace("\n", " ").replace("\r", " ")
+    return sanitized
 
 
 def generate_preview(image_bytes_io):
@@ -73,7 +75,7 @@ def get_font(size):
 def strip_image_metadata(img):
     """Return a clean copy of a PIL Image with all EXIF/metadata stripped."""
     clean = Image.new(img.mode, img.size)
-    clean.putdata(list(img.getdata()))
+    clean.paste(img, (0, 0))
     return clean
 
 def apply_watermark(image_bytes, text, opacity, font_size, spacing, color="White", orientation="Ascending (↗)", output_format="JPEG"):
@@ -154,7 +156,7 @@ class PassportFiligraneApp:
         self.watermark_text = ft.TextField(
             label="Watermark text", value="COPY", color="#ffffff",
             border_color="#ec4899", focused_border_color="#f472b6",
-            on_change=self.update_preview, disabled=True,
+            on_change=self.update_preview, disabled=True, max_length=200,
         )
 
         self.opacity_label = ft.Text("Opacity (30%)", size=14, color="#ffffff")
