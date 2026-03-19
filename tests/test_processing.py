@@ -1,4 +1,3 @@
-import pytest
 import io
 from PIL import Image
 from main import apply_watermark

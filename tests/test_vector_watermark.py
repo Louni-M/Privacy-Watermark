@@ -8,8 +8,6 @@ PyMuPDF's native vector text rendering to preserve PDF quality.
 import pytest
 import fitz
 from pdf_processing import apply_vector_watermark_to_pdf
-from PIL import Image
-import io
 
 
 @pytest.fixture

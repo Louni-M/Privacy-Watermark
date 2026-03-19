@@ -201,31 +201,6 @@ def apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, colo
         y += spacing
         row += 1
 
-def apply_watermark_to_pdf(doc, watermark_params):
-    """
-    Apply a watermark on all pages of the PDF document.
-    """
-    text = watermark_params.get("text", "COPY")
-    opacity = watermark_params.get("opacity", 30)
-    font_size = watermark_params.get("font_size", 36)
-    spacing = watermark_params.get("spacing", 150)
-    color = watermark_params.get("color", "White")
-
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
-        pix = page.get_pixmap()
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-
-        # Apply watermark
-        watermarked_img = apply_watermark_to_pil_image(img.convert("RGBA"), text, opacity, font_size, spacing, color=color)
-
-        # Convert to bytes for re-insertion into the PDF
-        img_byte_arr = io.BytesIO()
-        watermarked_img.convert("RGB").save(img_byte_arr, format='JPEG', quality=90)
-
-        # Insert watermarked image on top of the page
-        page.insert_image(page.rect, stream=img_byte_arr.getvalue())
-
 def save_watermarked_pdf(doc, output_path):
     """
     Save the modified PDF document.

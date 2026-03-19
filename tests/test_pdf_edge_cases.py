@@ -2,7 +2,6 @@
 import pytest
 import fitz
 import io
-import os
 from pdf_processing import load_pdf, apply_vector_watermark_to_pdf
 from PIL import Image
 

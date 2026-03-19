@@ -1,5 +1,4 @@
 import pytest
-import os
 from main import detect_file_type
 
 def test_detect_file_type_images():

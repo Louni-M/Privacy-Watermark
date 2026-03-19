@@ -89,26 +89,20 @@ def test_file_picker_setup():
     # Check text in positional arg or attribute
     assert button.text == "Select a file"
 
-def test_generate_preview_resizing():
+def test_apply_watermark_resizes_correctly():
     from PIL import Image
-    from main import generate_preview
+    from main import apply_watermark
     import io
-    
-    # Create a large test image (1600x1200)
-    large_image = Image.new("RGB", (1600, 1200), color="red")
+
+    # Create a small test image
+    img = Image.new("RGB", (200, 200), color="blue")
     img_byte_arr = io.BytesIO()
-    large_image.save(img_byte_arr, format='PNG')
-    img_byte_arr.seek(0)
-    
-    # Execute generate_preview (should resize to max 800px width)
-    preview_bytes = generate_preview(img_byte_arr)
-    
-    # Verify results
-    result_img = Image.open(io.BytesIO(preview_bytes))
-    assert result_img.width <= 800
-    # Ratio should be preserved: 1600/1200 = 800/600
-    assert result_img.width == 800
-    assert result_img.height == 600
+    img.save(img_byte_arr, format='PNG')
+
+    result_bytes = apply_watermark(img_byte_arr.getvalue(), "TEST", 30, 20, 50)
+
+    result_img = Image.open(io.BytesIO(result_bytes))
+    assert result_img.size == (200, 200)
 
 def test_watermark_controls_setup():
     # Setup
@@ -260,29 +254,6 @@ def test_save_dialog_trigger():
     
     # Verify save_file was called
     assert save_picker.save_file.called, "save_file() should be called when Save button is clicked"
-
-def test_error_handling_invalid_file():
-    # Setup
-    mock_page = MagicMock(spec=ft.Page)
-    mock_page.controls = []
-    mock_page.overlay = []
-    
-    # Execute
-    main(mock_page)
-    
-    # Find on_file_result handler
-    file_picker = next(item for item in mock_page.overlay if isinstance(item, ft.FilePicker))
-    
-    # Mock a corrupted file error (PIL UnidentifiedImageError or similar)
-    with MagicMock() as mock_event:
-        mock_event.files = [MagicMock(path="corrupted.jpg")]
-        
-        # We need to mock the open and PIL.Image.open as well if we were testing the handler directly,
-        # but here we want to see if main handles the exception.
-        # However, the handler is defined INSIDE main, so we can't easily mock its internal calls
-        # WITHOUT refactoring main to use a separate handler function (which is part of Task 8.2/8.5).
-        # For now, let's just mark Task 8.1 as started by creating the structure.
-        pass
 
 def test_initial_disabled_state():
     # Setup
