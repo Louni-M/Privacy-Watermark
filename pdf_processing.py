@@ -273,7 +273,7 @@ def save_pdf_as_images(doc, output_dir, base_name, img_format="JPEG"):
 
 def generate_pdf_preview(doc, text, opacity, font_size, spacing, color, orientation="Ascending (↗)"):
     """
-    Generate a preview of the first page with the vector watermark.
+    Generate a preview of the first page with the watermark applied.
     Does not modify the original document.
     Returns the image bytes (PNG).
 
@@ -286,17 +286,14 @@ def generate_pdf_preview(doc, text, opacity, font_size, spacing, color, orientat
         color: Watermark color ("White", "Black", "Gray")
         orientation: Watermark direction ("Ascending (↗)" or "Descending (↘)")
     """
-    # Create a temporary document with only the first page
-    temp_doc = fitz.open()
-    temp_doc.insert_pdf(doc, from_page=0, to_page=0)
-    page = temp_doc.load_page(0)
-
-    # Apply watermark with chosen orientation
-    apply_vector_watermark_to_page(page, text, opacity, font_size, spacing, color, orientation)
-
-    # Render to image (PNG)
-    pix = page.get_pixmap(alpha=True)
-    return pix.tobytes("png")
+    img = pdf_page_to_image(doc, 0)
+    watermarked = apply_watermark_to_pil_image(
+        img, text, opacity, font_size, spacing,
+        color=color, orientation=orientation
+    )
+    buf = io.BytesIO()
+    watermarked.save(buf, format="PNG")
+    return buf.getvalue()
 
 def apply_secure_raster_watermark_to_pdf(doc, text, opacity, font_size, spacing, color, dpi=300, orientation="Ascending (↗)"):
     """

@@ -1,6 +1,10 @@
+import sys
+import os
 import pytest
 import fitz
-import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 
 @pytest.fixture
 def sample_pdf(tmp_path):
