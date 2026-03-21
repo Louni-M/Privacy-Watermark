@@ -46,10 +46,6 @@ class PassportFiligraneApp:
         self.update_timer: threading.Timer | None = None
         self._preview_lock = threading.Lock()
 
-        # Preview animation settings
-        self._preview_fade_opacity = 0.3
-        self._preview_fade_duration_ms = 300
-
         self.setup_ui()
 
     # -------------------------------------------------------------------------
@@ -183,10 +179,8 @@ class PassportFiligraneApp:
                 controls=[
                     ft.Container(
                         content=ft.Icon(ft.icons.CLOUD_UPLOAD_OUTLINED, size=48, color=ACCENT_PINK_LIGHT),
-                        bgcolor="#1Aec4899",
                         padding=16,
                         border_radius=40,
-                        margin=ft.margin.only(bottom=8)
                     ),
                     ft.Text("No file selected", size=20, color=TEXT_WHITE, weight=ft.FontWeight.W_600),
                     ft.Text("Drag and drop a file here, or click to browse", size=14, color=TEXT_MUTED, text_align=ft.TextAlign.CENTER),
@@ -199,7 +193,6 @@ class PassportFiligraneApp:
             ),
             alignment=ft.alignment.center,
             border=ft.border.all(2, "#1Affffff"),
-            bgcolor="#05ffffff",
             border_radius=16,
             padding=40,
             width=400,
@@ -208,7 +201,6 @@ class PassportFiligraneApp:
         return ft.Container(
             content=dropzone_card,
             expand=True, alignment=ft.alignment.center,
-            left=0, right=0, top=0, bottom=0,
         )
 
     def _create_loading_indicator(self) -> ft.Container:
@@ -224,7 +216,6 @@ class PassportFiligraneApp:
                 spacing=8,
             ),
             expand=True, alignment=ft.alignment.center, visible=False,
-            left=0, right=0, top=0, bottom=0,
         )
 
     def _set_preview_visibility(self, *, empty: bool = False, loading: bool = False, ready: bool = False) -> None:
@@ -241,7 +232,6 @@ class PassportFiligraneApp:
             content=self.preview_image,
             alignment=ft.alignment.center,
             expand=True, visible=False,
-            left=0, right=0, top=0, bottom=0,
         )
         self.empty_state_container = self._create_empty_state()
         self.loading_indicator = self._create_loading_indicator()
@@ -451,7 +441,6 @@ class PassportFiligraneApp:
                     if self.watermarked_image_bytes:
                         self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
                         self._set_preview_visibility(ready=True)
-                        self.preview_container.visible = True
                         self.save_button.disabled = False
                         self.page.update()
                 except Exception as ex:
