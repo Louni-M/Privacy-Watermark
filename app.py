@@ -261,7 +261,7 @@ class PassportFiligraneApp:
                                 self.preview_image,
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
                             expand=True,
                         ),
                         expand=True,
