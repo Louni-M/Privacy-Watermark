@@ -1,4 +1,4 @@
-Last updated at commit: 2a2e358
+Last updated at commit: 52d4b0b
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -31,7 +31,7 @@ constants.py         # Colors, DPI options, JPEG quality, input limits
 1. `apply_vector_watermark_to_pdf()` in `pdf_processing.py` — uses PyMuPDF `page.insert_text()` with rotation matrix
 2. `apply_watermark_to_pil_image()` in `watermark.py` — PIL-based diagonal tile overlay
 
-Preview generation runs in a debounced background thread (`threading.Timer`) with `_preview_lock` protecting shared state.
+Preview generation runs in a debounced background thread (`threading.Timer`, 0.5s) with `_preview_lock` protecting shared state. `_pixmap_to_image()` in `pdf_processing.py` handles PyMuPDF→PIL conversion.
 
 ## Development Commands
 
