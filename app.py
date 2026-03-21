@@ -447,7 +447,7 @@ class PassportFiligraneApp:
                 except Exception as ex:
                     self._show_error(f"Preview update error: {ex}")
 
-        self.update_timer = threading.Timer(0.2, do_update)
+        self.update_timer = threading.Timer(0.5, do_update)
         self.update_timer.start()
 
     def _load_image(self, file_path: str) -> None:
