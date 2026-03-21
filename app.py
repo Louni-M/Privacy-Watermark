@@ -253,13 +253,19 @@ class PassportFiligraneApp:
             content=ft.Column(
                 controls=[
                     ft.Text("Preview", size=18, weight=ft.FontWeight.BOLD, color=TEXT_WHITE),
-                    ft.Stack(
-                        controls=[
-                            ft.Container(content=self.empty_state_container, expand=True),
-                            ft.Container(content=self.loading_indicator, expand=True),
-                            ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
-                        ],
+                    ft.Container(
+                        content=ft.Column(
+                            controls=[
+                                self.empty_state_container,
+                                self.loading_indicator,
+                                self.preview_image,
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            expand=True,
+                        ),
                         expand=True,
+                        alignment=ft.alignment.center,
                     ),
                 ],
                 spacing=12,
