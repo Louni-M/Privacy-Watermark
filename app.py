@@ -426,10 +426,7 @@ class PassportFiligraneApp:
                     if self.watermarked_image_bytes:
                         self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
                         self._set_preview_visibility(ready=True)
-                        self.preview_image.opacity = 0
-                        self.preview_image.update()
-                        self.preview_image.animate_opacity(self._preview_fade_opacity, self._preview_fade_duration_ms)
-                        self.preview_image.opacity = 1
+                        self.preview_image.visible = True
                         self.save_button.disabled = False
                         self.page.update()
                 except Exception as ex:
