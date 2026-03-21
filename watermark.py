@@ -96,10 +96,9 @@ def apply_watermark(
     out = apply_watermark_to_pil_image(img, params)
 
     output = io.BytesIO()
+    out_rgb = strip_image_metadata(out.convert("RGB"))
     if output_format.upper() == "PNG":
-        out_rgb = strip_image_metadata(out.convert("RGB"))
         out_rgb.save(output, format="PNG")
     else:
-        out_rgb = strip_image_metadata(out.convert("RGB"))
         out_rgb.save(output, format="JPEG", quality=JPEG_EXPORT_QUALITY)
     return output.getvalue()
