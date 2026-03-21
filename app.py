@@ -163,10 +163,79 @@ class PassportFiligraneApp:
             visible=False
         )
 
+    def _create_select_file_button(self) -> ft.ElevatedButton:
+        """Create the 'Select a file' button used in both empty state and controls panel."""
+        return ft.ElevatedButton(
+            "Select a file", icon=ft.icons.UPLOAD_FILE,
+            on_click=lambda _: self.file_picker.pick_files(
+                allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
+            ),
+            bgcolor=ACCENT_PINK, color=TEXT_WHITE,
+        )
+
+    def _create_empty_state(self) -> ft.Container:
+        dropzone_card = ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Container(
+                        content=ft.Icon(ft.icons.CLOUD_UPLOAD_OUTLINED, size=48, color=ACCENT_PINK_LIGHT),
+                        padding=16,
+                        border_radius=40,
+                    ),
+                    ft.Text("No file selected", size=20, color=TEXT_WHITE, weight=ft.FontWeight.W_600),
+                    ft.Text("Drag and drop a file here, or click to browse", size=14, color=TEXT_MUTED, text_align=ft.TextAlign.CENTER),
+                    ft.Container(height=8),
+                    self._create_select_file_button(),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=8,
+            ),
+            alignment=ft.alignment.center,
+            border=ft.border.all(2, "#1Affffff"),
+            border_radius=16,
+            padding=40,
+            width=400,
+            height=300,
+        )
+        return ft.Container(
+            content=dropzone_card,
+            expand=True, alignment=ft.alignment.center,
+        )
+
+    def _create_loading_indicator(self) -> ft.Container:
+        """Create the loading spinner shown while preview is being generated."""
+        return ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.ProgressRing(color=ACCENT_PINK, width=40, height=40),
+                    ft.Text("Loading preview...", size=14, color=TEXT_MUTED),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=8,
+            ),
+            expand=True, alignment=ft.alignment.center, visible=False,
+        )
+
+    def _set_preview_visibility(self, *, empty: bool = False, loading: bool = False, ready: bool = False) -> None:
+        """Set preview area visibility state for empty, loading, or ready states."""
+        self.empty_state_container.visible = empty
+        self.loading_indicator.visible = loading
+        self.preview_container.visible = ready
+
     def _create_export_controls(self) -> None:
         """Create file info display and preview image."""
         self.file_info_text = ft.Text("", size=12, color=TEXT_MUTED, italic=True, visible=False)
-        self.preview_image = ft.Image(src_base64="", fit="contain", visible=False)
+        # preview_image.visible defaults to True; visibility is controlled by parent preview_container
+        self.preview_image = ft.Image(src_base64="", fit="contain")
+        self.preview_container = ft.Container(
+            content=self.preview_image,
+            alignment=ft.alignment.center,
+            expand=True, visible=False,
+        )
+        self.empty_state_container = self._create_empty_state()
+        self.loading_indicator = self._create_loading_indicator()
 
     def _build_layout(self) -> None:
         """Assemble all controls into the two-panel layout."""
@@ -185,13 +254,7 @@ class PassportFiligraneApp:
                     self.vector_mode_warning,
                     self.dpi_container,
                     ft.Divider(height=20, color="transparent"),
-                    ft.ElevatedButton(
-                        "Select a file", icon=ft.icons.UPLOAD_FILE,
-                        on_click=lambda _: self.file_picker.pick_files(
-                            allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
-                        ),
-                        bgcolor=ACCENT_PINK, color=TEXT_WHITE,
-                    ),
+                    self._create_select_file_button(),
                     self.file_info_text,
                     self.export_format_dropdown,
                     self.save_button,
@@ -206,9 +269,17 @@ class PassportFiligraneApp:
             content=ft.Column(
                 controls=[
                     ft.Text("Preview", size=18, weight=ft.FontWeight.BOLD, color=TEXT_WHITE),
-                    ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
+                    ft.Stack(
+                        controls=[
+                            self.empty_state_container,
+                            self.loading_indicator,
+                            self.preview_container,
+                        ],
+                        expand=True,
+                    ),
                 ],
                 spacing=12,
+                expand=True,
             ),
             expand=True, bgcolor=BG_PRIMARY, padding=16,
         )
@@ -345,6 +416,8 @@ class PassportFiligraneApp:
         self.page.update()
 
         if self.current_file_type is None:
+            self._set_preview_visibility(empty=True)
+            self.page.update()
             return
 
         if self.update_timer:
@@ -368,7 +441,7 @@ class PassportFiligraneApp:
 
                     if self.watermarked_image_bytes:
                         self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
-                        self.preview_image.visible = True
+                        self._set_preview_visibility(ready=True)
                         self.save_button.disabled = False
                         self.page.update()
                 except Exception as ex:
@@ -426,10 +499,9 @@ class PassportFiligraneApp:
     def _finalize_file_load(self) -> None:
         """Common finalization after a successful file load."""
         self.file_info_text.visible = True
+        self._set_preview_visibility(loading=True)
         self.set_controls_disabled(False)
         self.update_preview()
-        self.preview_image.visible = True
-        self.page.update()
 
     def on_file_result(self, e: ft.FilePickerResultEvent) -> None:
         if not e.files:
