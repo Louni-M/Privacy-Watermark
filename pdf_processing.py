@@ -17,15 +17,9 @@ from watermark import WatermarkParams, get_font, apply_watermark_to_pil_image  #
 
 
 def _pixmap_to_image(pix, alpha: bool = True) -> Image.Image:
-    """Convert PyMuPDF pixmap to PIL Image with correct orientation.
-
-    PyMuPDF pixmaps use a bottom-up coordinate system, so we transpose
-    to match PIL's top-down expectation.
-    """
+    """Convert PyMuPDF pixmap to PIL Image."""
     mode = "RGBA" if alpha else "RGB"
-    return Image.frombytes(mode, [pix.width, pix.height], pix.samples).transpose(
-        Image.FLIP_TOP_BOTTOM
-    )
+    return Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 
 
 class PdfLoadError(RuntimeError):
