@@ -106,8 +106,8 @@ class TestApplyWatermarkToPilImage:
         params = WatermarkParams(text="VISIBLE", opacity=100, font_size=36, spacing=80, color="Black")
         result = apply_watermark_to_pil_image(rgba_image, params)
         # With 100% opacity black text on white, some pixels must have changed
-        original_pixels = list(rgba_image.getdata())
-        result_pixels = list(result.getdata())
+        original_pixels = list(rgba_image.get_flattened_data())
+        result_pixels = list(result.get_flattened_data())
         assert original_pixels != result_pixels
 
 
