@@ -16,6 +16,18 @@ from constants import (
 from watermark import WatermarkParams, get_font, apply_watermark_to_pil_image  # noqa: F401 (re-exported)
 
 
+def _pixmap_to_image(pix, alpha: bool = True) -> Image.Image:
+    """Convert PyMuPDF pixmap to PIL Image with correct orientation.
+
+    PyMuPDF pixmaps use a bottom-up coordinate system, so we transpose
+    to match PIL's top-down expectation.
+    """
+    mode = "RGBA" if alpha else "RGB"
+    return Image.frombytes(mode, [pix.width, pix.height], pix.samples).transpose(
+        Image.FLIP_TOP_BOTTOM
+    )
+
+
 class PdfLoadError(RuntimeError):
     """Base exception for PDF loading failures."""
     pass
@@ -54,8 +66,7 @@ def load_pdf(file_path: str) -> tuple[fitz.Document, int]:
 def pdf_page_to_image(doc: fitz.Document, page_num: int) -> Image.Image:
     """Convert a PDF page to a PIL Image (RGBA)."""
     page = doc.load_page(page_num)
-    pix = page.get_pixmap(alpha=True)
-    return Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
+    return _pixmap_to_image(page.get_pixmap(alpha=True), alpha=True)
 
 
 def apply_vector_watermark_to_pdf(doc: fitz.Document, params: WatermarkParams) -> None:
@@ -150,8 +161,7 @@ def save_pdf_as_images(
 
     for i in range(len(doc)):
         page = doc.load_page(i)
-        pix = page.get_pixmap()
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        img = _pixmap_to_image(page.get_pixmap(), alpha=False)
 
         ext = "png" if img_format.upper() == "PNG" else "jpg"
         pil_fmt = "PNG" if img_format.upper() == "PNG" else "JPEG"
@@ -211,8 +221,7 @@ def apply_secure_raster_watermark_to_pdf(
     )
 
     for page in doc:
-        pix = page.get_pixmap(matrix=mat, alpha=False)
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        img = _pixmap_to_image(page.get_pixmap(matrix=mat, alpha=False), alpha=False)
         img_rgba = img.convert("RGBA")
 
         watermarked_img = apply_watermark_to_pil_image(img_rgba, adjusted_params)
