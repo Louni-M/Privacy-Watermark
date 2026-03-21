@@ -178,19 +178,37 @@ class PassportFiligraneApp:
         )
 
     def _create_empty_state(self) -> ft.Container:
-        return ft.Container(
+        dropzone_card = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Icon(ft.icons.UPLOAD_FILE, size=64, color=ACCENT_PINK_LIGHT),
-                    ft.Text("No file selected", size=18, color=TEXT_WHITE, weight=ft.FontWeight.BOLD),
-                    ft.Text("Click below or drag a file here", size=14, color=TEXT_MUTED),
+                    ft.Container(
+                        content=ft.Icon(ft.icons.CLOUD_UPLOAD_OUTLINED, size=48, color=ACCENT_PINK_LIGHT),
+                        bgcolor="#1Aec4899",
+                        padding=16,
+                        border_radius=40,
+                        margin=ft.margin.only(bottom=8)
+                    ),
+                    ft.Text("No file selected", size=20, color=TEXT_WHITE, weight=ft.FontWeight.W_600),
+                    ft.Text("Drag and drop a file here, or click to browse", size=14, color=TEXT_MUTED, text_align=ft.TextAlign.CENTER),
+                    ft.Container(height=8),
                     self._create_select_file_button(),
                 ],
-                alignment=ft.alignment.center,
+                alignment=ft.MainAxisAlignment.CENTER,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=12,
+                spacing=8,
             ),
+            alignment=ft.alignment.center,
+            border=ft.border.all(2, "#1Affffff"),
+            bgcolor="#05ffffff",
+            border_radius=16,
+            padding=40,
+            width=400,
+            height=300,
+        )
+        return ft.Container(
+            content=dropzone_card,
             expand=True, alignment=ft.alignment.center,
+            left=0, right=0, top=0, bottom=0,
         )
 
     def _create_loading_indicator(self) -> ft.Container:
@@ -201,23 +219,30 @@ class PassportFiligraneApp:
                     ft.ProgressRing(color=ACCENT_PINK, width=40, height=40),
                     ft.Text("Loading preview...", size=14, color=TEXT_MUTED),
                 ],
-                alignment=ft.alignment.center,
+                alignment=ft.MainAxisAlignment.CENTER,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=8,
             ),
             expand=True, alignment=ft.alignment.center, visible=False,
+            left=0, right=0, top=0, bottom=0,
         )
 
     def _set_preview_visibility(self, *, empty: bool = False, loading: bool = False, ready: bool = False) -> None:
         """Set preview area visibility state for empty, loading, or ready states."""
         self.empty_state_container.visible = empty
         self.loading_indicator.visible = loading
-        self.preview_image.visible = ready
+        self.preview_container.visible = ready
 
     def _create_export_controls(self) -> None:
         """Create file info display and preview image."""
         self.file_info_text = ft.Text("", size=12, color=TEXT_MUTED, italic=True, visible=False)
-        self.preview_image = ft.Image(src_base64="", fit="contain", visible=False)
+        self.preview_image = ft.Image(src_base64="", fit="contain")
+        self.preview_container = ft.Container(
+            content=self.preview_image,
+            alignment=ft.alignment.center,
+            expand=True, visible=False,
+            left=0, right=0, top=0, bottom=0,
+        )
         self.empty_state_container = self._create_empty_state()
         self.loading_indicator = self._create_loading_indicator()
 
@@ -257,7 +282,7 @@ class PassportFiligraneApp:
                         controls=[
                             self.empty_state_container,
                             self.loading_indicator,
-                            self.preview_image,
+                            self.preview_container,
                         ],
                         expand=True,
                     ),
@@ -426,7 +451,7 @@ class PassportFiligraneApp:
                     if self.watermarked_image_bytes:
                         self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
                         self._set_preview_visibility(ready=True)
-                        self.preview_image.visible = True
+                        self.preview_container.visible = True
                         self.save_button.disabled = False
                         self.page.update()
                 except Exception as ex:
