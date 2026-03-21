@@ -1,17 +1,10 @@
 import pytest
 import flet as ft
 from unittest.mock import MagicMock, patch, mock_open
-from main import PassportFiligraneApp, apply_watermark
+from app import PassportFiligraneApp
+from watermark import apply_watermark, WatermarkParams
 import io
 from PIL import Image
-
-@pytest.fixture
-def app():
-    mock_page = MagicMock(spec=ft.Page)
-    mock_page.overlay = []
-    mock_page.controls = []
-    return PassportFiligraneApp(mock_page)
-
 def test_png_export_save_dialog_params(app):
     # Setup for image
     app.current_file_type = "image"
@@ -49,7 +42,8 @@ def test_apply_watermark_supports_png_format():
     img_bytes = buf.getvalue()
     
     # Execute with PNG format
-    png_bytes = apply_watermark(img_bytes, "TEST", 30, 20, 50, output_format="PNG")
+    params = WatermarkParams(text="TEST", opacity=30, font_size=20, spacing=50)
+    png_bytes = apply_watermark(img_bytes, params, output_format="PNG")
     
     # Verify it is a PNG
     result_img = Image.open(io.BytesIO(png_bytes))
@@ -63,7 +57,7 @@ def test_on_save_result_writes_png(app):
     mock_event = MagicMock()
     mock_event.path = "test.png"
     
-    with patch("main.open", mock_open()) as mocked_file:
+    with patch("builtins.open", mock_open()) as mocked_file:
         app.on_save_result(mock_event)
         mocked_file.assert_called_with("test.png", "wb")
         mocked_file().write.assert_called_with(b"png-data")
@@ -78,7 +72,7 @@ def test_pdf_to_png_images_params(app):
     mock_event.path = "/fake/dir"
     
     # Mock save_pdf_as_images
-    with patch("main.save_pdf_as_images") as mock_save_pdf:
+    with patch("pdf_processing.save_pdf_as_images") as mock_save_pdf:
         app.on_dir_result(mock_event)
         args, kwargs = mock_save_pdf.call_args
         assert kwargs.get("img_format") == "PNG"

@@ -2,8 +2,35 @@ import sys
 import os
 import pytest
 import fitz
+import flet as ft
+from unittest.mock import MagicMock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from app import PassportFiligraneApp
+
+
+def find_all_controls(controls, control_type, results=None):
+    """Recursively find all controls of a given type in a Flet control tree."""
+    if results is None:
+        results = []
+    for c in controls:
+        if isinstance(c, control_type):
+            results.append(c)
+        if hasattr(c, "controls") and c.controls:
+            find_all_controls(c.controls, control_type, results)
+        if hasattr(c, "content") and c.content:
+            if isinstance(c.content, ft.Column) or isinstance(c.content, ft.Row):
+                find_all_controls(c.content.controls, control_type, results)
+    return results
+
+
+@pytest.fixture
+def app():
+    mock_page = MagicMock(spec=ft.Page)
+    mock_page.overlay = []
+    mock_page.controls = []
+    return PassportFiligraneApp(mock_page)
 
 
 @pytest.fixture

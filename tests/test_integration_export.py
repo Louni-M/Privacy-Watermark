@@ -1,15 +1,7 @@
 import pytest
 import flet as ft
 from unittest.mock import MagicMock, patch, mock_open
-from main import PassportFiligraneApp
-
-@pytest.fixture
-def app():
-    mock_page = MagicMock(spec=ft.Page)
-    mock_page.overlay = []
-    mock_page.controls = []
-    return PassportFiligraneApp(mock_page)
-
+from app import PassportFiligraneApp
 def test_integration_image_export_matrix(app):
     app.current_file_type = "image"
     app.save_file_picker.save_file = MagicMock()
@@ -55,21 +47,21 @@ def test_integration_pdf_export_matrix(app):
 
 def test_integration_backward_compatibility_on_file_result(app):
     # Verify existing flows (validation, type detection) aren't broken
-    with patch("main.detect_file_type", return_value="image"), \
-         patch("main.validate_file_size"), \
-         patch("main.open", mock_open(read_data=b"fake-image-data")), \
-         patch("main.Image.open") as mock_img_open:
-        
-        mock_img = MagicMock()
-        mock_img.width = 100
-        mock_img.height = 100
-        mock_img_open.return_value = mock_img
-        
+    mock_img = MagicMock()
+    mock_img.width = 100
+    mock_img.height = 100
+    mock_img.verify = MagicMock()
+
+    with patch("app.detect_file_type", return_value="image"), \
+         patch("app.validate_file_size"), \
+         patch("builtins.open", mock_open(read_data=b"fake-image-data")), \
+         patch("PIL.Image.open", return_value=mock_img):
+
         mock_event = MagicMock()
         mock_event.files = [MagicMock(path="test.jpg")]
-        
+
         app.on_file_result(mock_event)
-        
+
         assert app.current_file_type == "image"
-        assert app.export_format_dropdown.visible == True
+        assert app.export_format_dropdown.visible is True
         assert app.export_format_dropdown.value == "JPG"

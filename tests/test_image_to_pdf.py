@@ -1,17 +1,9 @@
 import pytest
 import flet as ft
 from unittest.mock import MagicMock, patch, mock_open
-from main import PassportFiligraneApp
+from app import PassportFiligraneApp
 import io
 from PIL import Image
-
-@pytest.fixture
-def app():
-    mock_page = MagicMock(spec=ft.Page)
-    mock_page.overlay = []
-    mock_page.controls = []
-    return PassportFiligraneApp(mock_page)
-
 def test_image_to_pdf_save_dialog_params(app):
     # Setup
     app.current_file_type = "image"
@@ -38,7 +30,7 @@ def test_save_image_as_pdf_integration(app):
     mock_event.path = "output.pdf"
     
     # We need to mock the new function save_image_as_pdf
-    with patch("main.save_image_as_pdf") as mock_save_pdf:
+    with patch("pdf_processing.save_image_as_pdf") as mock_save_pdf:
         app.on_save_result(mock_event)
         mock_save_pdf.assert_called_once_with(b"fake-img-data", "output.pdf")
 

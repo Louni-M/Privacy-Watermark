@@ -1,5 +1,5 @@
 import pytest
-from main import detect_file_type
+from utils import detect_file_type
 
 def test_detect_file_type_images():
     assert detect_file_type("test.jpg") == "image"

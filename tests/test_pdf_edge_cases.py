@@ -3,6 +3,7 @@ import pytest
 import fitz
 import io
 from pdf_processing import load_pdf, apply_vector_watermark_to_pdf
+from watermark import WatermarkParams
 from PIL import Image
 
 def create_encrypted_pdf(path):
@@ -62,14 +63,8 @@ def test_large_pdf_handling(large_pdf_path):
     assert count == 20
     
     # Should not crash
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="WATERMARK",
-        opacity=30,
-        font_size=36,
-        spacing=150,
-        color="Black"
-    )
+    params = WatermarkParams(text="WATERMARK", opacity=30, font_size=36, spacing=150, color="Black")
+    apply_vector_watermark_to_pdf(doc, params)
     
     # Check watermark on first and last page
     page0 = doc.load_page(0)
@@ -85,14 +80,8 @@ def test_image_pdf_handling(image_pdf_path):
     """Test watermarking a PDF that contains only images."""
     doc, count = load_pdf(image_pdf_path)
     
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="WATERMARK",
-        opacity=30,
-        font_size=36,
-        spacing=150,
-        color="Black"
-    )
+    params = WatermarkParams(text="WATERMARK", opacity=30, font_size=36, spacing=150, color="Black")
+    apply_vector_watermark_to_pdf(doc, params)
     
     page = doc.load_page(0)
     # The watermark text should be added on top of the image

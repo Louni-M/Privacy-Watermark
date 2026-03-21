@@ -9,6 +9,7 @@ import pytest
 import fitz
 import os
 import tempfile
+from watermark import WatermarkParams
 
 
 @pytest.fixture
@@ -17,14 +18,12 @@ def realistic_pdf(tmp_path):
     pdf_path = tmp_path / "realistic.pdf"
     doc = fitz.open()
 
-    # Page 1: Text-heavy page
-    page1 = doc.new_page(width=595, height=842)  # A4
+    page1 = doc.new_page(width=595, height=842)
     page1.insert_text((50, 50), "Document Title", fontsize=24)
     page1.insert_text((50, 100), "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", fontsize=12)
     page1.insert_text((50, 130), "Sed do eiusmod tempor incididunt ut labore et dolore.", fontsize=12)
     page1.insert_text((50, 160), "Ut enim ad minim veniam, quis nostrud exercitation.", fontsize=12)
 
-    # Page 2: Mixed content
     page2 = doc.new_page(width=595, height=842)
     page2.insert_text((50, 50), "Page 2 - Graphics", fontsize=20)
     page2.draw_rect(fitz.Rect(50, 100, 300, 250), color=(0, 0, 1), width=2)
@@ -36,37 +35,21 @@ def realistic_pdf(tmp_path):
 
 
 def test_integration_text_remains_selectable_after_watermarking(realistic_pdf):
-    """
-    Integration test: Verify original PDF text remains selectable after watermarking.
-    Acceptance Criterion AC-2.
-    """
     from pdf_processing import apply_vector_watermark_to_pdf
 
-    # Load PDF
     doc = fitz.open(realistic_pdf)
-
-    # Extract original text from first page
     original_text = doc[0].get_text()
     assert "Document Title" in original_text
     assert "Lorem ipsum" in original_text
 
-    # Apply vector watermark
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="CONFIDENTIEL",
-        opacity=30,
-        font_size=36,
-        spacing=150,
-        color="White"
-    )
+    params = WatermarkParams(text="CONFIDENTIEL", opacity=30, font_size=36, spacing=150, color="White")
+    apply_vector_watermark_to_pdf(doc, params)
 
-    # Save to temp file
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
         tmp_path = tmp.name
         doc.save(tmp_path)
     doc.close()
 
-    # Reload and verify text is still selectable
     watermarked_doc = fitz.open(tmp_path)
     watermarked_text = watermarked_doc[0].get_text()
 
@@ -78,44 +61,24 @@ def test_integration_text_remains_selectable_after_watermarking(realistic_pdf):
 
 
 def test_integration_quality_preserved_no_rasterization(realistic_pdf):
-    """
-    Integration test: Verify original PDF quality is preserved (no rasterization).
-    Acceptance Criterion: Original content should remain vector-based.
-    """
     from pdf_processing import apply_vector_watermark_to_pdf
 
-    # Load PDF
     doc = fitz.open(realistic_pdf)
-
-    # Get original page content stream
     original_content = doc[0].read_contents()
-    original_has_vector_ops = b'Tf' in original_content  # Font operator
+    original_has_vector_ops = b'Tf' in original_content
 
-    # Apply vector watermark
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="COPIE",
-        opacity=30,
-        font_size=36,
-        spacing=150,
-        color="Black"
-    )
+    params = WatermarkParams(text="COPIE", opacity=30, font_size=36, spacing=150, color="Black")
+    apply_vector_watermark_to_pdf(doc, params)
 
-    # Save to temp file
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
         tmp_path = tmp.name
         doc.save(tmp_path)
     doc.close()
 
-    # Reload and verify content is still vector-based
     watermarked_doc = fitz.open(tmp_path)
     watermarked_content = watermarked_doc[0].read_contents()
 
-    # Original vector operators should still be present
     assert b'Tf' in watermarked_content, "Font operators should be preserved (not rasterized)"
-
-    # Should NOT contain large image data streams (which would indicate rasterization)
-    # Check that the content doesn't have excessive image data
     content_size = len(watermarked_content)
     assert content_size < 100000, "Content should not have excessive data (would indicate rasterization)"
 
@@ -124,97 +87,53 @@ def test_integration_quality_preserved_no_rasterization(realistic_pdf):
 
 
 def test_integration_file_size_within_110_percent(realistic_pdf):
-    """
-    Integration test: Verify file size remains within 110% of original.
-    Acceptance Criterion AC-4.
-    """
     from pdf_processing import apply_vector_watermark_to_pdf
 
-    # Get original file size
     original_size = os.path.getsize(realistic_pdf)
-
-    # Load PDF
     doc = fitz.open(realistic_pdf)
 
-    # Apply vector watermark
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="COPIE",
-        opacity=30,
-        font_size=36,
-        spacing=150,
-        color="White"
-    )
+    params = WatermarkParams(text="COPIE", opacity=30, font_size=36, spacing=150, color="White")
+    apply_vector_watermark_to_pdf(doc, params)
 
-    # Save to temp file
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
         tmp_path = tmp.name
         doc.save(tmp_path)
     doc.close()
 
-    # Get watermarked file size
     watermarked_size = os.path.getsize(tmp_path)
-
-    # Calculate size ratio
     size_ratio = watermarked_size / original_size
 
-    # Verify reasonable size increase
-    # NOTE: Small test PDFs will have large relative increases due to font embedding overhead.
-    # For production PDFs (which are already larger), the relative increase is much smaller.
-    # AC-4 states "within 110% of original" - this applies to production PDFs.
-    # For test PDFs, we use a more lenient threshold.
-
-    # Absolute size should still be reasonable (not megabytes for a small test)
     assert watermarked_size < 500000, f"Watermarked file too large: {watermarked_size} bytes"
-
-    # For production PDFs, size increase is typically < 110%
-    # For test PDFs, we verify it doesn't explode unreasonably
     assert size_ratio < 15.0, f"File size increased by {size_ratio:.2f}x (test PDF with font embedding)"
 
     os.unlink(tmp_path)
 
 
 def test_integration_multipage_quality_preserved():
-    """
-    Integration test: Verify quality is preserved on all pages of multi-page document.
-    """
     from pdf_processing import apply_vector_watermark_to_pdf
 
-    # Create multi-page PDF
     doc = fitz.open()
     for i in range(5):
         page = doc.new_page(width=595, height=842)
         page.insert_text((50, 50), f"Page {i+1} Content", fontsize=20)
         page.insert_text((50, 100), "Important text that must remain selectable.", fontsize=12)
 
-    # Save to temp file (original)
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
         original_path = tmp.name
         doc.save(original_path)
 
-    # Apply vector watermark
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="DRAFT",
-        opacity=40,
-        font_size=48,
-        spacing=200,
-        color="Gray"
-    )
+    params = WatermarkParams(text="DRAFT", opacity=40, font_size=48, spacing=200, color="Gray")
+    apply_vector_watermark_to_pdf(doc, params)
 
-    # Save watermarked version
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
         watermarked_path = tmp.name
         doc.save(watermarked_path)
     doc.close()
 
-    # Reload and verify all pages
     watermarked_doc = fitz.open(watermarked_path)
 
     for page_num in range(len(watermarked_doc)):
         page_text = watermarked_doc[page_num].get_text()
-
-        # Verify original text is selectable on each page
         assert f"Page {page_num+1} Content" in page_text, f"Page {page_num+1} text should be selectable"
         assert "Important text" in page_text, f"Page {page_num+1} content should be preserved"
 
@@ -224,46 +143,29 @@ def test_integration_multipage_quality_preserved():
 
 
 def test_integration_with_test_fixtures():
-    """
-    Integration test: Verify vector watermark works with actual test fixtures.
-    Uses the high-resolution test fixture to verify quality at 400% zoom (AC-1).
-    """
     from pdf_processing import apply_vector_watermark_to_pdf
 
-    # Use actual test fixture
     fixture_path = "test_fixtures/highres_test.pdf"
 
     if not os.path.exists(fixture_path):
         pytest.skip("Test fixture not found")
 
-    # Load fixture
     doc = fitz.open(fixture_path)
 
-    # Apply vector watermark
-    apply_vector_watermark_to_pdf(
-        doc=doc,
-        text="TEST",
-        opacity=30,
-        font_size=36,
-        spacing=150,
-        color="White"
-    )
+    params = WatermarkParams(text="TEST", opacity=30, font_size=36, spacing=150, color="White")
+    apply_vector_watermark_to_pdf(doc, params)
 
-    # Save watermarked version
     with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
         output_path = tmp.name
         doc.save(output_path)
     doc.close()
 
-    # Reload and verify
     watermarked_doc = fitz.open(output_path)
 
-    # Verify text is preserved
     page_text = watermarked_doc[0].get_text()
     assert "High-Resolution Quality Test" in page_text, "Original text should be preserved"
     assert "Zoom to 400%" in page_text, "Instructions should be preserved"
 
-    # Verify content is vector-based
     content = watermarked_doc[0].read_contents()
     assert b'Tf' in content, "Font operators should be present (vector text)"
     assert b'TJ' in content or b'Tj' in content, "Text show operators should be present"
