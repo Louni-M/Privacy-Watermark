@@ -253,19 +253,13 @@ class PassportFiligraneApp:
             content=ft.Column(
                 controls=[
                     ft.Text("Preview", size=18, weight=ft.FontWeight.BOLD, color=TEXT_WHITE),
-                    ft.Container(
-                        content=ft.Column(
-                            controls=[
-                                self.empty_state_container,
-                                self.loading_indicator,
-                                self.preview_image,
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
-                            expand=True,
-                        ),
+                    ft.Stack(
+                        controls=[
+                            self.empty_state_container,
+                            self.loading_indicator,
+                            self.preview_image,
+                        ],
                         expand=True,
-                        alignment=ft.alignment.center,
                     ),
                 ],
                 spacing=12,
@@ -430,15 +424,14 @@ class PassportFiligraneApp:
                         self.watermarked_image_bytes = generate_pdf_preview(self.pdf_doc, params)
 
                     if self.watermarked_image_bytes:
-                        def update_ui():
-                            self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
-                            self._set_preview_visibility(ready=True)
-                            self.preview_image.opacity = 0
-                            self.preview_image.update()
-                            self.preview_image.animate_opacity(self._preview_fade_opacity, self._preview_fade_duration_ms)
-                            self.preview_image.opacity = 1
-                            self.save_button.disabled = False
-                        self.page.call_from_thread(update_ui)
+                        self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
+                        self._set_preview_visibility(ready=True)
+                        self.preview_image.opacity = 0
+                        self.preview_image.update()
+                        self.preview_image.animate_opacity(self._preview_fade_opacity, self._preview_fade_duration_ms)
+                        self.preview_image.opacity = 1
+                        self.save_button.disabled = False
+                        self.page.update()
                 except Exception as ex:
                     self._show_error(f"Preview update error: {ex}")
 
