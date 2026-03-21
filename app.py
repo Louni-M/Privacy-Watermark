@@ -46,6 +46,10 @@ class PassportFiligraneApp:
         self.update_timer: threading.Timer | None = None
         self._preview_lock = threading.Lock()
 
+        # Preview animation settings
+        self._preview_fade_opacity = 0.3
+        self._preview_fade_duration_ms = 300
+
         self.setup_ui()
 
     # -------------------------------------------------------------------------
@@ -163,10 +167,59 @@ class PassportFiligraneApp:
             visible=False
         )
 
+    def _create_select_file_button(self) -> ft.ElevatedButton:
+        """Create the 'Select a file' button used in both empty state and controls panel."""
+        return ft.ElevatedButton(
+            "Select a file", icon=ft.icons.UPLOAD_FILE,
+            on_click=lambda _: self.file_picker.pick_files(
+                allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
+            ),
+            bgcolor=ACCENT_PINK, color=TEXT_WHITE,
+        )
+
+    def _create_empty_state(self) -> ft.Container:
+        return ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Icon(ft.icons.UPLOAD_FILE, size=64, color=ACCENT_PINK_LIGHT),
+                    ft.Text("No file selected", size=18, color=TEXT_WHITE, weight=ft.FontWeight.BOLD),
+                    ft.Text("Click below or drag a file here", size=14, color=TEXT_MUTED),
+                    self._create_select_file_button(),
+                ],
+                alignment=ft.alignment.center,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=12,
+            ),
+            expand=True, alignment=ft.alignment.center,
+        )
+
+    def _create_loading_indicator(self) -> ft.Container:
+        """Create the loading spinner shown while preview is being generated."""
+        return ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.ProgressRing(color=ACCENT_PINK, width=40, height=40),
+                    ft.Text("Loading preview...", size=14, color=TEXT_MUTED),
+                ],
+                alignment=ft.alignment.center,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=8,
+            ),
+            expand=True, alignment=ft.alignment.center, visible=False,
+        )
+
+    def _set_preview_visibility(self, *, empty: bool = False, loading: bool = False, ready: bool = False) -> None:
+        """Set preview area visibility state for empty, loading, or ready states."""
+        self.empty_state_container.visible = empty
+        self.loading_indicator.visible = loading
+        self.preview_image.visible = ready
+
     def _create_export_controls(self) -> None:
         """Create file info display and preview image."""
         self.file_info_text = ft.Text("", size=12, color=TEXT_MUTED, italic=True, visible=False)
         self.preview_image = ft.Image(src_base64="", fit="contain", visible=False)
+        self.empty_state_container = self._create_empty_state()
+        self.loading_indicator = self._create_loading_indicator()
 
     def _build_layout(self) -> None:
         """Assemble all controls into the two-panel layout."""
@@ -185,13 +238,7 @@ class PassportFiligraneApp:
                     self.vector_mode_warning,
                     self.dpi_container,
                     ft.Divider(height=20, color="transparent"),
-                    ft.ElevatedButton(
-                        "Select a file", icon=ft.icons.UPLOAD_FILE,
-                        on_click=lambda _: self.file_picker.pick_files(
-                            allow_multiple=False, allowed_extensions=["jpg", "jpeg", "png", "pdf"]
-                        ),
-                        bgcolor=ACCENT_PINK, color=TEXT_WHITE,
-                    ),
+                    self._create_select_file_button(),
                     self.file_info_text,
                     self.export_format_dropdown,
                     self.save_button,
@@ -206,7 +253,14 @@ class PassportFiligraneApp:
             content=ft.Column(
                 controls=[
                     ft.Text("Preview", size=18, weight=ft.FontWeight.BOLD, color=TEXT_WHITE),
-                    ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
+                    ft.Stack(
+                        controls=[
+                            ft.Container(content=self.empty_state_container, expand=True),
+                            ft.Container(content=self.loading_indicator, expand=True),
+                            ft.Container(content=self.preview_image, expand=True, alignment=ft.alignment.center),
+                        ],
+                        expand=True,
+                    ),
                 ],
                 spacing=12,
             ),
@@ -345,6 +399,8 @@ class PassportFiligraneApp:
         self.page.update()
 
         if self.current_file_type is None:
+            self._set_preview_visibility(empty=True)
+            self.page.update()
             return
 
         if self.update_timer:
@@ -367,10 +423,15 @@ class PassportFiligraneApp:
                         self.watermarked_image_bytes = generate_pdf_preview(self.pdf_doc, params)
 
                     if self.watermarked_image_bytes:
-                        self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
-                        self.preview_image.visible = True
-                        self.save_button.disabled = False
-                        self.page.update()
+                        def update_ui():
+                            self.preview_image.src_base64 = base64.b64encode(self.watermarked_image_bytes).decode("utf-8")
+                            self._set_preview_visibility(ready=True)
+                            self.preview_image.opacity = 0
+                            self.preview_image.update()
+                            self.preview_image.animate_opacity(self._preview_fade_opacity, self._preview_fade_duration_ms)
+                            self.preview_image.opacity = 1
+                            self.save_button.disabled = False
+                        self.page.call_from_thread(update_ui)
                 except Exception as ex:
                     self._show_error(f"Preview update error: {ex}")
 
@@ -426,10 +487,9 @@ class PassportFiligraneApp:
     def _finalize_file_load(self) -> None:
         """Common finalization after a successful file load."""
         self.file_info_text.visible = True
+        self._set_preview_visibility(loading=True)
         self.set_controls_disabled(False)
         self.update_preview()
-        self.preview_image.visible = True
-        self.page.update()
 
     def on_file_result(self, e: ft.FilePickerResultEvent) -> None:
         if not e.files:
