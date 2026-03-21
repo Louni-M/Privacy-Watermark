@@ -227,6 +227,7 @@ class PassportFiligraneApp:
     def _create_export_controls(self) -> None:
         """Create file info display and preview image."""
         self.file_info_text = ft.Text("", size=12, color=TEXT_MUTED, italic=True, visible=False)
+        # preview_image.visible defaults to True; visibility is controlled by parent preview_container
         self.preview_image = ft.Image(src_base64="", fit="contain")
         self.preview_container = ft.Container(
             content=self.preview_image,
