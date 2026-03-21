@@ -40,15 +40,15 @@ Preview generation runs in a debounced background thread (`threading.Timer`) wit
 pip install -r requirements.txt
 
 # Run the application
-python main.py
+source venv/bin/activate && python3 main.py
 
-# Run tests (use venv python)
-venv/bin/python -m pytest
-venv/bin/python -m pytest tests/test_pdf_processing.py  # single test file
-venv/bin/python -m pytest tests/ -k "watermark"         # run tests matching pattern
+# Run tests
+source venv/bin/activate && python3 -m pytest
+python3 -m pytest tests/test_pdf_processing.py  # single test file
+python3 -m pytest tests/ -k "watermark"         # run tests matching pattern
 
 # Build macOS app
-pyinstaller "Passport Filigrane.spec" --clean
+python3 -m PyInstaller "Passport Filigrane.spec" --clean
 # Output: dist/Passport Filigrane.app
 ```
 
