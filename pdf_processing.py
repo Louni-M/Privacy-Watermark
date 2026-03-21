@@ -13,7 +13,7 @@ from constants import (
     JPEG_EXPORT_QUALITY,
     JPEG_SECURE_QUALITY,
 )
-from watermark import WatermarkParams, get_font, apply_watermark_to_pil_image  # noqa: F401 (re-exported)
+from watermark import WatermarkParams, apply_watermark_to_pil_image  # noqa: F401 (re-exported)
 
 
 def _pixmap_to_image(pix, alpha: bool = True) -> Image.Image:
@@ -157,8 +157,9 @@ def save_pdf_as_images(
         page = doc.load_page(i)
         img = _pixmap_to_image(page.get_pixmap(), alpha=False)
 
-        ext = "png" if img_format.upper() == "PNG" else "jpg"
-        pil_fmt = "PNG" if img_format.upper() == "PNG" else "JPEG"
+        is_png = img_format.upper() == "PNG"
+        ext = "png" if is_png else "jpg"
+        pil_fmt = "PNG" if is_png else "JPEG"
         output_path = os.path.join(output_dir, f"{base_name}_page_{i+1:03d}.{ext}")
 
         if pil_fmt == "JPEG":
