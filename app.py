@@ -269,6 +269,7 @@ class PassportFiligraneApp:
                     ),
                 ],
                 spacing=12,
+                expand=True,
             ),
             expand=True, bgcolor=BG_PRIMARY, padding=16,
         )
