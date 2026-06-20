@@ -26,6 +26,9 @@ def get_font(size: int) -> ImageFont.FreeTypeFont:
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
         "/Library/Fonts/Arial.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
     ]
     for path in font_paths:
         if os.path.exists(path):
@@ -33,7 +36,10 @@ def get_font(size: int) -> ImageFont.FreeTypeFont:
                 return ImageFont.truetype(path, size)
             except Exception:
                 continue
-    return ImageFont.load_default()
+    try:
+        return ImageFont.load_default(size=size)
+    except TypeError:
+        return ImageFont.load_default()
 
 
 def apply_watermark_to_pil_image(img: Image.Image, params: WatermarkParams) -> Image.Image:
