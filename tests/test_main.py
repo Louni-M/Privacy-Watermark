@@ -1,10 +1,11 @@
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, patch
 import pytest
 import flet as ft
 from PIL import Image
 import io
 from main import main
 from conftest import find_all_controls
+from sensitive_document_intake import IntakeRejected
 
 def test_main_page_setup():
     # Setup
@@ -275,23 +276,16 @@ def test_error_handling_invalid_file():
     # Find FilePicker
     file_picker = next(item for item in mock_page.overlay if isinstance(item, ft.FilePicker))
 
-    mock_pil_open = MagicMock()
-    mock_pil_open.side_effect = Exception("Invalid image")
-
-    with patch("builtins.open", mock_open(read_data=b"not an image")), \
-         patch("PIL.Image.open", mock_pil_open), \
-         patch("app.validate_file_size"):
+    with patch("app.intake_sensitive_document", return_value=IntakeRejected("Unable to read this image file.")):
 
         event = MagicMock(spec=ft.FilePickerResultEvent)
         event.files = [MagicMock(path="fake.jpg")]
 
-        try:
-            if hasattr(file_picker.on_result, "handler"):
-                file_picker.on_result.handler(event)
-            else:
-                file_picker.on_result(event)
-        except TypeError:
-            pass
+        handlers = getattr(file_picker.on_result, "_EventHandler__handlers")
+        next(iter(handlers))(event)
+
+    assert mock_page.snack_bar.open is True
+    assert mock_page.snack_bar.content.value == "Unable to read this image file."
 
 
 # --- Security vulnerability fix tests ---

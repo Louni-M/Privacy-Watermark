@@ -45,8 +45,10 @@ def load_pdf(file_path: str) -> tuple[fitz.Document, int]:
     try:
         doc = fitz.open(file_path)
         if doc.is_encrypted:
+            doc.close()
             raise ProtectedPdfError("This PDF is password-protected and cannot be opened.")
         if doc.page_count == 0:
+            doc.close()
             raise InvalidPdfError("Unable to read this PDF file (no pages).")
         return doc, doc.page_count
     except fitz.FileDataError:

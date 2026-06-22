@@ -1,7 +1,8 @@
 import pytest
 import flet as ft
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, patch
 from app import PassportFiligraneApp
+from sensitive_document_intake import AcceptedImage
 def test_integration_image_export_matrix(app):
     app.current_file_type = "image"
     app.save_file_picker.save_file = MagicMock()
@@ -47,16 +48,9 @@ def test_integration_pdf_export_matrix(app):
 
 def test_integration_backward_compatibility_on_file_result(app):
     # Verify existing flows (validation, type detection) aren't broken
-    mock_img = MagicMock()
-    mock_img.width = 100
-    mock_img.height = 100
-    mock_img.verify = MagicMock()
-
-    with patch("app.detect_file_type", return_value="image"), \
-         patch("app.validate_file_size"), \
-         patch("builtins.open", mock_open(read_data=b"fake-image-data")), \
-         patch("PIL.Image.open", return_value=mock_img):
-
+    result = AcceptedImage("test.jpg", "test.jpg", b"fake-image-data")
+    with patch("app.intake_sensitive_document", return_value=result), \
+         patch.object(app, "update_preview"):
         mock_event = MagicMock()
         mock_event.files = [MagicMock(path="test.jpg")]
 

@@ -2,27 +2,27 @@
 
 import flet as ft
 import base64
-import io
 import os
 import stat
 import threading
 import traceback
 
-from PIL import Image
 from watermark import WatermarkParams, apply_watermark
 from constants import (
-    MAX_PDF_PAGES,
     EXPORT_FILENAME_PREFIX,
     BG_PRIMARY, BG_SECONDARY,
     ACCENT_PINK, ACCENT_PINK_LIGHT, ACCENT_GREEN, ACCENT_YELLOW, ACCENT_PURPLE, ACCENT_CYAN,
     TEXT_WHITE, TEXT_MUTED, TEXT_WARNING,
 )
+from sensitive_document_intake import (
+    AcceptedImage,
+    AcceptedPdf,
+    IntakeRejected,
+    intake_sensitive_document,
+)
 from utils import (
     get_log_path,
     sanitize_path_for_log,
-    detect_file_type,
-    validate_file_size,
-    validate_image_dimensions,
 )
 
 LOG_PATH = get_log_path()
@@ -450,51 +450,55 @@ class PassportFiligraneApp:
         self.update_timer = threading.Timer(0.5, do_update)
         self.update_timer.start()
 
-    def _load_image(self, file_path: str) -> None:
-        """Load and validate an image file into state."""
-        with open(file_path, "rb") as f:
-            content = f.read()
-        try:
-            img = Image.open(io.BytesIO(content))
-            img.verify()
-            img = Image.open(io.BytesIO(content))
-            validate_image_dimensions(img)
-        except Exception:
-            self._show_error("Unable to read this image file.")
-            return
-        self.original_image_bytes = content
-        self.pdf_doc = None
-        self.file_info_text.value = "Image loaded"
-        self.update_export_options("image")
-        self._reset_pdf_controls()
+    def _cancel_pending_preview(self) -> None:
+        """Cancel any preview update that may still reference old document state."""
+        if self.update_timer:
+            self.update_timer.cancel()
+            self.update_timer = None
 
-    def _load_pdf(self, file_path: str) -> None:
-        """Load and validate a PDF file into state. Closes existing pdf_doc."""
-        # Close existing document before opening new one (fixes document leak)
+    def _close_current_pdf(self) -> None:
+        """Close the currently retained PDF document, if any."""
         if self.pdf_doc is not None:
             self.pdf_doc.close()
             self.pdf_doc = None
 
-        from pdf_processing import load_pdf
+    def _clear_loaded_document(self) -> None:
+        """Dispose the current app-owned document state before a new intake."""
+        self._cancel_pending_preview()
+        self._close_current_pdf()
+        self.original_image_bytes = None
+        self.watermarked_image_bytes = None
+        self.current_file_type = None
+        self.num_pages = 0
 
-        self.pdf_doc, self.num_pages = load_pdf(file_path)
+    def _apply_intake_image(self, result: AcceptedImage) -> None:
+        """Translate an accepted image intake result into UI state."""
+        self.current_file_type = "image"
+        self.current_filename = result.filename
+        self.original_image_bytes = result.image_bytes
+        self.file_info_text.value = "Image loaded"
+        self.update_export_options("image")
+        self._reset_pdf_controls()
 
-        if self.num_pages > MAX_PDF_PAGES:
-            self._show_error(
-                f"PDF too large ({self.num_pages} pages). "
-                f"Maximum allowed is {MAX_PDF_PAGES} pages."
-            )
-            self.pdf_doc.close()
-            self.pdf_doc = None
-            self.current_file_type = None
-            self.set_controls_disabled(True)
-            self.page.update()
-            return
-
+    def _apply_intake_pdf(self, result: AcceptedPdf) -> None:
+        """Translate an accepted PDF intake result into UI state."""
+        self.current_file_type = "pdf"
+        self.current_filename = result.filename
+        self.pdf_doc = result.document
+        self.num_pages = result.page_count
         self.dpi_container.visible = self.secure_mode_switch.value
         self.secure_mode_switch.visible = True
-        self.file_info_text.value = f"PDF loaded: {self.num_pages} page(s)"
+        self.file_info_text.value = f"PDF loaded: {result.page_count} page(s)"
         self.update_export_options("pdf")
+
+    def _apply_intake_rejection(self, result: IntakeRejected) -> None:
+        """Translate a rejected intake result into disabled UI state."""
+        self.file_info_text.visible = False
+        self.update_export_options("unknown")
+        self._reset_pdf_controls()
+        self._show_error(result.message)
+        self.set_controls_disabled(True)
+        self.page.update()
 
     def _finalize_file_load(self) -> None:
         """Common finalization after a successful file load."""
@@ -511,34 +515,25 @@ class PassportFiligraneApp:
         if not file_path:
             return
 
-        self.current_filename = os.path.basename(file_path)
-
         try:
-            validate_file_size(file_path)
-            self.current_file_type = detect_file_type(file_path)
+            self.current_filename = os.path.basename(file_path)
+            self._clear_loaded_document()
 
-            if self.current_file_type == "image":
-                self._load_image(file_path)
-            elif self.current_file_type == "pdf":
-                self._load_pdf(file_path)
+            result = intake_sensitive_document(file_path)
+            if isinstance(result, IntakeRejected):
+                self._apply_intake_rejection(result)
+                return
+            if isinstance(result, AcceptedImage):
+                self._apply_intake_image(result)
+            elif isinstance(result, AcceptedPdf):
+                self._apply_intake_pdf(result)
             else:
-                self.current_file_type = None
-                self.pdf_doc = None
-                self.update_export_options("unknown")
-                self._reset_pdf_controls()
-                self._show_error("Unsupported file format.")
-                self.set_controls_disabled(True)
-                self.page.update()
+                self._apply_intake_rejection(IntakeRejected("Unsupported file format."))
                 return
 
             self._finalize_file_load()
-        except ValueError as ve:
-            self._show_error(str(ve))
-            self.set_controls_disabled(True)
-            self.page.update()
         except Exception as ex:
-            self.current_file_type = None
-            self.pdf_doc = None
+            self._clear_loaded_document()
             self.update_export_options("unknown")
             self._reset_pdf_controls()
             self._show_error(str(ex))

@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 import flet as ft
 from app import PassportFiligraneApp
+from sensitive_document_intake import AcceptedPdf
 
 def test_secure_mode_visible_for_pdf():
     # Setup
@@ -16,9 +17,9 @@ def test_secure_mode_visible_for_pdf():
     mock_event = MagicMock(spec=ft.FilePickerResultEvent)
     mock_event.files = [mock_file]
 
-    # Patch external dependencies to avoid actual file I/O
-    with patch("os.path.getsize", return_value=1024), \
-         patch("pdf_processing.load_pdf", return_value=(MagicMock(), 5)):
+    result = AcceptedPdf("test_document.pdf", "test_document.pdf", MagicMock(), 5)
+    with patch("app.intake_sensitive_document", return_value=result), \
+         patch.object(app, "update_preview"):
         
         # Execute
         app.on_file_result(mock_event)
