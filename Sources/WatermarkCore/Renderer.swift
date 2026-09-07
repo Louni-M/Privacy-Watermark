@@ -14,7 +14,7 @@ enum Renderer {
               w * h * 4 <= CGFloat(Int.max) else { throw DocumentError.renderFailed }
         guard let context = CGContext(data: nil, width: Int(w), height: Int(h), bitsPerComponent: 8,
                                       bytesPerRow: 0, space: colorSpace,
-                                      bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)
+                                      bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue)
         else { throw DocumentError.renderFailed }
         context.setFillColor(CGColor(gray: 1, alpha: 1))
         context.fill(CGRect(x: 0, y: 0, width: w, height: h))
@@ -97,9 +97,13 @@ enum Renderer {
     static func renderPage(_ page: PDFPage, settings: WatermarkSettings, scale: CGFloat, raster: Bool) throws -> CGImage {
         let size = pageSize(page)
         let context = try bitmap(size: size, scale: scale)
-        context.interpolationQuality = .medium
         context.saveGState()
-        page.draw(with: .cropBox, to: context)
+        if page.annotations.isEmpty, let reference = page.pageRef {
+            context.concatenate(reference.getDrawingTransform(.cropBox, rect: CGRect(origin: .zero, size: size), rotate: 0, preserveAspectRatio: true))
+            context.drawPDFPage(reference)
+        } else {
+            page.draw(with: .cropBox, to: context)
+        }
         context.restoreGState()
         watermark(context, size: size, settings: settings, raster: raster)
         guard let image = context.makeImage() else { throw DocumentError.renderFailed }

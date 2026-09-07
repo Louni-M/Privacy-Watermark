@@ -112,12 +112,14 @@ final class Session {
             panel.canChooseFiles = false
             panel.canChooseDirectories = true
             panel.canCreateDirectories = true
+            panel.directoryURL = document.url.deletingLastPathComponent()
             panel.prompt = "Export here"
             panel.message = "Save one \(exportSettings.format.rawValue) image for each PDF page."
             guard await present(panel) == .OK, let url = panel.url else { return }
             destination = url
         } else {
             let panel = NSSavePanel()
+            panel.directoryURL = document.url.deletingLastPathComponent()
             panel.allowedContentTypes = [exportSettings.format == .pdf ? .pdf : exportSettings.format == .png ? .png : .jpeg]
             panel.nameFieldStringValue = "export_filigree.\(exportSettings.format.fileExtension)"
             panel.canCreateDirectories = true
@@ -141,7 +143,12 @@ final class Session {
         activePanel = panel
         defer { activePanel = nil }
         return await withCheckedContinuation { continuation in
-            panel.begin { response in continuation.resume(returning: response) }
+            let completion: (NSApplication.ModalResponse) -> Void = { response in continuation.resume(returning: response) }
+            if let window = NSApplication.shared.mainWindow {
+                panel.beginSheetModal(for: window, completionHandler: completion)
+            } else {
+                panel.begin(completionHandler: completion)
+            }
         }
     }
 

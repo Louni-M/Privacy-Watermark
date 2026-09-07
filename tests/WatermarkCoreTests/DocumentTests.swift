@@ -189,7 +189,10 @@ final class DocumentTests {
         let source = try SourceDocument.load(fixture("transparent.png"))
         var watermark = WatermarkSettings(); watermark.opacity = 0
         let clean = try Renderer.renderImage(source, settings: watermark)
-        let rgb = try require(clean.dataProvider?.data) as Data
+        let normalized = try require(CGContext(data: nil, width: clean.width, height: clean.height, bitsPerComponent: 8,
+            bytesPerRow: 0, space: Renderer.colorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue))
+        normalized.draw(clean, in: CGRect(x: 0, y: 0, width: clean.width, height: clean.height))
+        let rgb = try require(normalized.makeImage()?.dataProvider?.data) as Data
         checkEqual(Array(rgb.prefix(3)), [UInt8(90), 140, 180])
         let baseline = try Renderer.encoded(clean, format: .png)
         var results = Set<Data>()

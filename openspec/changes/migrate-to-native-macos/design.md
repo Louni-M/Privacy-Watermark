@@ -32,7 +32,7 @@ Retain the setting ranges and initial values specified in `native-watermark-work
 
 ### 4. Immutable inputs and a common watermark renderer
 
-Retain validated source bytes or an immutable source snapshot for the active document. Every preview or export constructs operation-local document objects and captures a value snapshot of current parameters. Never mutate a shared PDFDocument and never export cached preview bytes. This prevents repeated watermark accumulation and stale format output.
+Retain validated source bytes or an immutable source snapshot for the active document. Decode image input once into an immutable CGImage snapshot; preview/export reuses it without re-decoding the file. Every preview or export constructs operation-local document objects and captures a value snapshot of current parameters. Never mutate a shared PDFDocument and never export cached preview bytes. This prevents repeated watermark accumulation and stale format output.
 
 Use one watermark layout implementation with coordinate adapters: pixels for image input and PDF points for PDFs. Scale the PDF layout by DPI/72 for flattened output so watermark size and density do not change with quality. Use a native Helvetica-compatible system font and Core Text glyph rendering. Retain full diagonal tiling, including coverage at page edges. Differences in glyph metrics and antialiasing are accepted; changing the apparent opacity or scale substantially is not.
 
@@ -60,9 +60,9 @@ Use ImageIO to encode new destinations from rendered pixels rather than copying 
 
 Run rendering off the main actor, with a serial processing owner so non-thread-safe document objects do not cross concurrent operations. Debounce appearance changes briefly (initial tuning target 100–150 ms), cancel superseded work where possible, and attach a generation ID so stale completions are ignored. Render previews at display-appropriate resolution; export independently at required resolution. Disable conflicting export actions while preserving a responsive window.
 
-Validate file size before reading, dimensions before full image decode where possible, and PDF count/protection before page rendering. Render and release one high-DPI page at a time; use checked size calculations and handle allocation failure instead of adding an arbitrary lower product limit.
+Validate file size before reading, dimensions before full image decode where possible, and PDF count/protection before page rendering. Use native BGRA bitmap storage to avoid unnecessary channel conversion. For pages without annotations, draw the CGPDFPage with its crop/rotation transform directly; use PDFKit drawing when annotation appearances are needed. Render and release one high-DPI page at a time; use checked size calculations and handle allocation failure instead of adding an arbitrary lower product limit.
 
-Native save panels handle individual file replacement confirmation. For a page series, preflight destination names and obtain a single conflict confirmation if needed. Reject destinations resolving to the input file, including aliases through filesystem identity where practical. Stage outputs beside their destination and finalize only after successful rendering; retain pre-existing outputs until replacement succeeds and clean only temporary files created by the operation. This is necessary for the agreed preservation-of-originals standard.
+Native save panels open in the source folder, retain the existing export basename, and handle individual file replacement confirmation. Present panels as sheets when a main window is available. For a page series, preflight destination names and obtain a single conflict confirmation if needed. Reject destinations resolving to the input file, including aliases through filesystem identity where practical. Stage outputs beside their destination and finalize only after successful rendering; retain pre-existing outputs until replacement succeeds and clean only temporary files created by the operation. This is necessary for the agreed preservation-of-originals standard.
 
 ### 7. Evidence defines completion
 

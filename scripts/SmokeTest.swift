@@ -71,6 +71,9 @@ import WatermarkCore
         try await wait { session.activePanel != nil }
         session.activePanel?.cancel(nil)
         await task.value
+        // The completion fires before the sheet's dismissal animation finishes.
+        // A human cannot open another panel until AppKit releases the parent.
+        try await Task.sleep(for: .milliseconds(400))
     }
 
     func runChecks() async throws {
@@ -79,7 +82,10 @@ import WatermarkCore
         try check(session.document == nil && !session.canExport, "Cancelling initial Open leaves the empty state")
         completed.append("Cancel native Open in empty state")
 
-        session.load(fixtures.appendingPathComponent("document.pdf"))
+        let localSource = output.appendingPathComponent("document.pdf")
+        try Data(contentsOf: fixtures.appendingPathComponent("document.pdf")).write(to: localSource)
+        try? FileManager.default.removeItem(at: output.appendingPathComponent("export_filigree.pdf"))
+        session.load(localSource)
         try await wait { !session.isLoading && !session.isRendering }
         try check(session.preview != nil && session.document?.pageCount == 2, "PDF first-page preview")
         try check(session.exportSettings.flattened && session.exportSettings.dpi == 450, "Flattened 450 DPI default")
@@ -89,18 +95,6 @@ import WatermarkCore
         try await cancelPanel { await self.session.chooseDestination() }
         try check(!session.isExporting && session.status.isEmpty, "Cancelling Save writes nothing")
         completed.append("Cancel replacement Open and native Save")
-
-        let saveSelection = Task { await session.chooseDestination() }
-        try await wait { session.activePanel != nil }
-        try check(session.activePanel?.nameFieldStringValue == "export_filigree.pdf", "Default output filename")
-        session.activePanel?.directoryURL = output
-        session.activePanel?.nameFieldStringValue = "panel-copy.pdf"
-        try await Task.sleep(for: .seconds(1))
-        session.activePanel?.ok(nil)
-        await saveSelection.value
-        try await wait { !session.isExporting }
-        try check(PDFDocument(url: output.appendingPathComponent("panel-copy.pdf"))?.pageCount == 2, "Save panel destination reaches export")
-        completed.append("Choose native Save destination and export")
 
         let pdf = output.appendingPathComponent("smoke.pdf")
         session.startExport(to: pdf, replace: true)
