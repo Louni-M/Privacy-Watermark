@@ -1,0 +1,31 @@
+[0/1] Planning build
+Building for production...
+[0/2] Write swift-version--1AB21518FC5DEDBE.txt
+Build complete! (0.12s)
+/Users/louni/Code/PassportFiligrane/.build/batch-clean/.build/arm64-apple-macosx/release/NativeSmoke.app: replacing existing signature
+SMOKE: starting native window
+SMOKE: Programmatic cancellation of native Add files panel
+CoreGraphics PDF has logged an error. Set environment variable "CG_PDF_VERBOSE" to learn more.
+SMOKE: Programmatic mixed batch import, invalid row and first-page preview in native window
+SMOKE: Programmatic Add and destination-folder panel cancellation
+SMOKE: Programmatic page navigation, zoom, viewport pan, Fit and shared settings
+SMOKE: Programmatic selection, duplicate addition and removal
+SMOKE: Mixed original-format export and PDFKit reopen
+SMOKE: Page-folder export, write failure, cancellation and summary
+SMOKE: Captured normal and minimum-size native layouts; manual drag-and-drop remains pending
+{
+  "architecture" : "arm64",
+  "checks" : [
+    "Programmatic cancellation of native Add files panel",
+    "Programmatic mixed batch import, invalid row and first-page preview in native window",
+    "Programmatic Add and destination-folder panel cancellation",
+    "Programmatic page navigation, zoom, viewport pan, Fit and shared settings",
+    "Programmatic selection, duplicate addition and removal",
+    "Mixed original-format export and PDFKit reopen",
+    "Page-folder export, write failure, cancellation and summary",
+    "Captured normal and minimum-size native layouts; manual drag-and-drop remains pending"
+  ],
+  "error" : "",
+  "os" : "Version 26.6.2 (Build 25G83)",
+  "passed" : true
+}

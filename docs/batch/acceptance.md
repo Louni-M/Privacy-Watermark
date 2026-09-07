@@ -1,6 +1,6 @@
 # Batch implementation evidence
 
-Status: local verification in progress. Required manual interaction and macOS 14 Apple Silicon / Intel CI evidence remain pending; this change is not ready to archive.
+Status: local implementation and verification passed. Required manual Add-file selection, Finder drag-and-drop and keyboard interaction evidence remains pending; this change is not ready to archive.
 
 ## Environment and baseline
 
@@ -26,7 +26,7 @@ During implementation, the first settings mutation guard recursively entered the
 | Saved-output visual review | visual/ retains output PDFs/PNGs, fit previews, detailed panned previews and comparison sheets; first/middle/last pages, rotated/cropped geometry, annotations, both directions, black/gray and transparent image behavior |
 | Large-batch responsiveness and memory | measurement-10.json, measurement-100.json, workload-summary.json; native-generated corpus with hashes/geometry, raw UI/preview/import/export/cancellation timings and process peak RSS |
 | Export route regression and stress | route-comparison.json, paired-scan-comparison.json, current-stress.json; full release matrix and controlled follow-up on initially flagged routes; cancellation before page index 25 of a 50-page 600-DPI PDF |
-| Supported architectures and clean checkout | Universal build and fresh source snapshot checks recorded below; actual macOS 14 ARM and Intel runtime CI for this implementation remains pending |
+| Supported architectures and clean checkout | Universal build and fresh source snapshot checks recorded below; actual macOS 14 ARM and macOS 15 Intel runtime CI passed at e30389c70e8ed4904c1b62f2483f6740f142702c |
 
 ## Corpus and reproduction
 
@@ -68,3 +68,26 @@ The 50-page/600-DPI export completed in approximately 0.71 s on 400×280-point s
 No GitHub distribution, release packaging workflow, signing/notarization or installation wizard was added. Existing ARM/macOS 14 and Intel CI coverage is preserved. Local cross-compilation is not runtime CI evidence.
 
 The native migration was synced and archived before this batch change. When finalizing, synchronize/archive this batch delta after its required acceptance passes. Do not re-sync the historical migration over these new batch contracts.
+
+## Final local results
+
+The final workload observations, including ten cancellation acknowledgements per workload, all meet the design budgets:
+
+| Files | Selection p95 | Fit preview p95 | Cancel acknowledgement p95 | Import | Export | Peak RSS |
+|---|---|---|---|---|---|---|
+| 10 | 13.6 ms | 218.9 ms | 21.7 ms | 0.43 s | 1.18 s | 386.2 MiB |
+| 100 | 13.1 ms | 203.7 ms | 23.3 ms | 1.23 s | 5.81 s | 390.4 MiB |
+
+Memory allowance: 836.3 MiB. Both sizes pass selection/cancel ≤100 ms and Fit preview ≤500 ms. These synthetic-workload observations are not guarantees for every permitted input.
+
+The local universal build and built-bundle launch passed. A fresh native source snapshot without an inherited build cache also passed the behavior suite, both architecture builds, ad-hoc signature verification, built-app launch and native window/export smoke. See universal-build.txt, final-bundle-launch.json, final-smoke.json, clean-tests.txt, clean-build.txt and clean-smoke.txt. Native source hashes identify that snapshot. The original working branch and pre-existing planning/archive edits were not changed by the isolated CI branch.
+
+The first CI attempt exposed a Swift 6.0 Testing-macro incompatibility in one assertion (a throwing expression on its right-hand side). Reading the saved bytes before the assertion fixes compatibility without changing the comparison. The application compiled in that job. ci-first-arm.txt preserves the failed diagnostic; the final CI run passed after this fix.
+
+Measurement source reference: per-route rendering/export timings correspond to implementation commit 53c1a0de1a44af9b43834ebb773ae712736d04a9. Final workload measurements and clean-source verification use e30389c70e8ed4904c1b62f2483f6740f142702c, including the Swift 6.0 test fix, Fit zoom bounds and checking queued fingerprints before decoding corrupt replacement content. Rendering/export routes remain unchanged. Previous workload observations are retained as measurement-before-source-check-10.json and measurement-before-source-check-100.json.
+
+## Final runtime CI
+
+[CI run 34161507973](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34161507973) passed on macOS 14 Apple Silicon and macOS 15 Intel at e30389c70e8ed4904c1b62f2483f6740f142702c. Both fresh runner checkouts passed native behavior tests (including real interface capture), universal ARM/Intel builds and signature checks, built-app launch, and native window/panel/export smoke. Runtime and step results are retained in ci-run.json, macos-14-smoke.json, macos-14-bundle-launch.json, macos-15-intel-smoke.json and macos-15-intel-bundle-launch.json. The isolated verification branch is codex/add-batch-watermarking; no PR, merge or release was created.
+
+Overall progress: 25/26 tasks complete. Task 6.2 remains open for the requested manual interaction report. Programmatic window evidence is complete and is not substituted for that report.

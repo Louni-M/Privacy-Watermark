@@ -1,0 +1,278 @@
+﻿2026-09-07T20:52:02.2678240Z Current runner version: '2.337.0'
+2026-09-07T20:52:02.2692290Z ##[group]Runner Image Provisioner
+2026-09-07T20:52:02.2692800Z Hosted Compute Agent
+2026-09-07T20:52:02.2693160Z Version: 20260828.587
+2026-09-07T20:52:02.2693560Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-07T20:52:02.2694020Z Build Date: 2026-08-28T16:44:25Z
+2026-09-07T20:52:02.2694450Z Worker ID: {7fdf7475-f61e-4c84-ba86-070465a77dab}
+2026-09-07T20:52:02.2694890Z Azure Region: westus
+2026-09-07T20:52:02.2695250Z ##[endgroup]
+2026-09-07T20:52:02.2696040Z ##[group]Operating System
+2026-09-07T20:52:02.2696420Z macOS
+2026-09-07T20:52:02.2696730Z 14.8.9
+2026-09-07T20:52:02.2697180Z 23J631
+2026-09-07T20:52:02.2697510Z ##[endgroup]
+2026-09-07T20:52:02.2697860Z ##[group]Runner Image
+2026-09-07T20:52:02.2698230Z Image: macos-14-arm64
+2026-09-07T20:52:02.2698600Z Version: 20260831.0302.1
+2026-09-07T20:52:02.2699390Z Included Software: https://github.com/actions/runner-images/blob/macos-14-arm64/20260831.0302/images/macos/macos-14-arm64-Readme.md
+2026-09-07T20:52:02.2700390Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-14-arm64%2F20260831.0302
+2026-09-07T20:52:02.2701040Z ##[endgroup]
+2026-09-07T20:52:02.2701730Z ##[group]GITHUB_TOKEN Permissions
+2026-09-07T20:52:02.2702700Z Contents: read
+2026-09-07T20:52:02.2703060Z Metadata: read
+2026-09-07T20:52:02.2703400Z ##[endgroup]
+2026-09-07T20:52:02.2704680Z Secret source: Actions
+2026-09-07T20:52:02.2705300Z Prepare workflow directory
+2026-09-07T20:52:02.2914700Z Prepare all required actions
+2026-09-07T20:52:02.2948440Z Getting action download info
+2026-09-07T20:52:02.5826020Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-07T20:52:02.9618490Z Download action repository 'actions/upload-artifact@v7' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-07T20:52:03.0985890Z Complete job name: Native macOS (macos-14)
+2026-09-07T20:52:03.1392100Z ##[group]Run actions/checkout@v7
+2026-09-07T20:52:03.1392650Z with:
+2026-09-07T20:52:03.1393030Z   persist-credentials: false
+2026-09-07T20:52:03.1393430Z   repository: Louni-M/Privacy-Watermark
+2026-09-07T20:52:03.1396130Z   token: ***
+2026-09-07T20:52:03.1396450Z   ssh-strict: true
+2026-09-07T20:52:03.1396780Z   ssh-user: git
+2026-09-07T20:52:03.1397090Z   clean: true
+2026-09-07T20:52:03.1397420Z   sparse-checkout-cone-mode: true
+2026-09-07T20:52:03.1397800Z   fetch-depth: 1
+2026-09-07T20:52:03.1398130Z   fetch-tags: false
+2026-09-07T20:52:03.1398470Z   show-progress: true
+2026-09-07T20:52:03.1398810Z   lfs: false
+2026-09-07T20:52:03.1399130Z   submodules: false
+2026-09-07T20:52:03.1399470Z   set-safe-directory: true
+2026-09-07T20:52:03.1399850Z   allow-unsafe-pr-checkout: false
+2026-09-07T20:52:03.1400340Z ##[endgroup]
+2026-09-07T20:52:03.3963800Z Syncing repository: Louni-M/Privacy-Watermark
+2026-09-07T20:52:03.3965480Z ##[group]Getting Git version info
+2026-09-07T20:52:03.3966330Z Working directory is '/Users/runner/work/Privacy-Watermark/Privacy-Watermark'
+2026-09-07T20:52:03.3967680Z [command]/opt/homebrew/bin/git version
+2026-09-07T20:52:03.4172520Z git version 2.55.0
+2026-09-07T20:52:03.4189970Z ##[endgroup]
+2026-09-07T20:52:03.4198570Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/af2bb15a-8fce-4884-8fb1-2bd8e482c1f4/.gitconfig'
+2026-09-07T20:52:03.4209580Z Temporarily overriding HOME='/Users/runner/work/_temp/af2bb15a-8fce-4884-8fb1-2bd8e482c1f4' before making global git config changes
+2026-09-07T20:52:03.4210890Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T20:52:03.4212040Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/Privacy-Watermark/Privacy-Watermark
+2026-09-07T20:52:03.4309460Z Deleting the contents of '/Users/runner/work/Privacy-Watermark/Privacy-Watermark'
+2026-09-07T20:52:03.4311000Z ##[group]Determining repository object format
+2026-09-07T20:52:03.4311940Z ##[endgroup]
+2026-09-07T20:52:03.4312750Z ##[group]Initializing the repository
+2026-09-07T20:52:03.4325150Z [command]/opt/homebrew/bin/git init /Users/runner/work/Privacy-Watermark/Privacy-Watermark
+2026-09-07T20:52:03.4470100Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-07T20:52:03.4485900Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-07T20:52:03.4523640Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-07T20:52:03.4529550Z hint: call:
+2026-09-07T20:52:03.4529950Z hint:
+2026-09-07T20:52:03.4530560Z hint: 	git config --global init.defaultBranch <name>
+2026-09-07T20:52:03.4531120Z hint:
+2026-09-07T20:52:03.4531610Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-07T20:52:03.4532410Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-07T20:52:03.4533100Z hint:
+2026-09-07T20:52:03.4533440Z hint: 	git branch -m <name>
+2026-09-07T20:52:03.4548370Z hint:
+2026-09-07T20:52:03.4548990Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-07T20:52:03.4550090Z Initialized empty Git repository in /Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git/
+2026-09-07T20:52:03.4551700Z [command]/opt/homebrew/bin/git remote add origin https://github.com/Louni-M/Privacy-Watermark
+2026-09-07T20:52:03.4553180Z ##[endgroup]
+2026-09-07T20:52:03.4553790Z ##[group]Disabling automatic garbage collection
+2026-09-07T20:52:03.4554350Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-09-07T20:52:03.4585860Z ##[endgroup]
+2026-09-07T20:52:03.4586560Z ##[group]Setting up auth
+2026-09-07T20:52:03.4587010Z Removing SSH command configuration
+2026-09-07T20:52:03.4589950Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T20:52:03.4633830Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T20:52:03.5340280Z Removing HTTP extra header
+2026-09-07T20:52:03.5343850Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T20:52:03.5383320Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T20:52:03.5897780Z Removing includeIf entries pointing to credentials config files
+2026-09-07T20:52:03.5900310Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T20:52:03.5938880Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T20:52:03.6555770Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-07T20:52:03.6558670Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git.path /Users/runner/work/_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:03.6562100Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:03.6564920Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:03.6602540Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:03.6637720Z ##[endgroup]
+2026-09-07T20:52:03.6638370Z ##[group]Fetching the repository
+2026-09-07T20:52:03.6641770Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +53c1a0de1a44af9b43834ebb773ae712736d04a9:refs/remotes/origin/codex/add-batch-watermarking
+2026-09-07T20:52:04.3427870Z From https://github.com/Louni-M/Privacy-Watermark
+2026-09-07T20:52:04.3429710Z  * [new ref]         53c1a0de1a44af9b43834ebb773ae712736d04a9 -> origin/codex/add-batch-watermarking
+2026-09-07T20:52:04.3433280Z [command]/opt/homebrew/bin/git branch --list --remote origin/codex/add-batch-watermarking
+2026-09-07T20:52:04.3481010Z   origin/codex/add-batch-watermarking
+2026-09-07T20:52:04.3486240Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/codex/add-batch-watermarking
+2026-09-07T20:52:04.3519600Z 53c1a0de1a44af9b43834ebb773ae712736d04a9
+2026-09-07T20:52:04.3522070Z ##[endgroup]
+2026-09-07T20:52:04.3522910Z ##[group]Determining the checkout info
+2026-09-07T20:52:04.3524040Z ##[endgroup]
+2026-09-07T20:52:04.3525060Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-09-07T20:52:04.3577040Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-07T20:52:04.3624900Z ##[group]Checking out the ref
+2026-09-07T20:52:04.3627120Z [command]/opt/homebrew/bin/git checkout --progress --force -B codex/add-batch-watermarking refs/remotes/origin/codex/add-batch-watermarking
+2026-09-07T20:52:04.4306240Z Switched to a new branch 'codex/add-batch-watermarking'
+2026-09-07T20:52:04.4311890Z branch 'codex/add-batch-watermarking' set up to track 'origin/codex/add-batch-watermarking'.
+2026-09-07T20:52:04.4318600Z ##[endgroup]
+2026-09-07T20:52:04.4374470Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-09-07T20:52:04.4411850Z 53c1a0de1a44af9b43834ebb773ae712736d04a9
+2026-09-07T20:52:04.4417110Z ##[group]Removing auth
+2026-09-07T20:52:04.4418080Z Removing SSH command configuration
+2026-09-07T20:52:04.4420040Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T20:52:04.4456940Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T20:52:04.4920060Z Removing HTTP extra header
+2026-09-07T20:52:04.4921910Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T20:52:04.4958400Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T20:52:04.5439110Z Removing includeIf entries pointing to credentials config files
+2026-09-07T20:52:04.5441040Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T20:52:04.5474910Z includeif.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git.path
+2026-09-07T20:52:04.5477100Z includeif.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git/worktrees/*.path
+2026-09-07T20:52:04.5478790Z includeif.gitdir:/github/workspace/.git.path
+2026-09-07T20:52:04.5479950Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T20:52:04.5483360Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git.path
+2026-09-07T20:52:04.5510590Z /Users/runner/work/_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:04.5517150Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-d0b15605\-7d9a\-49f4\-8d34\-74666df57a35\.config
+2026-09-07T20:52:04.5554040Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git/worktrees/*.path
+2026-09-07T20:52:04.5593770Z /Users/runner/work/_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:04.5599830Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/Privacy-Watermark/Privacy-Watermark/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-d0b15605\-7d9a\-49f4\-8d34\-74666df57a35\.config
+2026-09-07T20:52:04.5645720Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-07T20:52:04.5695150Z /github/runner_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:04.5708820Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-d0b15605\-7d9a\-49f4\-8d34\-74666df57a35\.config
+2026-09-07T20:52:04.5761330Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T20:52:04.5798590Z /github/runner_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config
+2026-09-07T20:52:04.5803250Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-d0b15605\-7d9a\-49f4\-8d34\-74666df57a35\.config
+2026-09-07T20:52:04.5841460Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T20:52:04.6285720Z Removing credentials config '/Users/runner/work/_temp/git-credentials-d0b15605-7d9a-49f4-8d34-74666df57a35.config'
+2026-09-07T20:52:04.6289210Z ##[endgroup]
+2026-09-07T20:52:04.6459230Z ##[group]Run sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+2026-09-07T20:52:04.6460730Z [36;1msudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer[0m
+2026-09-07T20:52:04.6515690Z shell: /bin/bash -e {0}
+2026-09-07T20:52:04.6516350Z ##[endgroup]
+2026-09-07T20:52:04.7090370Z ##[group]Run sw_vers
+2026-09-07T20:52:04.7091360Z [36;1msw_vers[0m
+2026-09-07T20:52:04.7092080Z [36;1muname -m[0m
+2026-09-07T20:52:04.7092730Z [36;1mswift --version[0m
+2026-09-07T20:52:04.7142490Z shell: /bin/bash -e {0}
+2026-09-07T20:52:04.7143150Z ##[endgroup]
+2026-09-07T20:52:04.7467990Z ProductName:		macOS
+2026-09-07T20:52:04.7468960Z ProductVersion:		14.8.9
+2026-09-07T20:52:04.7469690Z BuildVersion:		23J631
+2026-09-07T20:52:04.7481130Z arm64
+2026-09-07T20:52:08.4400010Z Apple Swift version 6.0.3 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
+2026-09-07T20:52:08.4400710Z Target: arm64-apple-macosx14.0
+2026-09-07T20:52:08.4445380Z swift-driver version: 1.115.1
+2026-09-07T20:52:08.4482830Z ##[group]Run scripts/test.sh
+2026-09-07T20:52:08.4483100Z [36;1mscripts/test.sh[0m
+2026-09-07T20:52:08.4532470Z shell: /bin/bash -e {0}
+2026-09-07T20:52:08.4532690Z env:
+2026-09-07T20:52:08.4532870Z   PASSPORT_TEST_OUTPUT: .build/verification
+2026-09-07T20:52:08.4533100Z ##[endgroup]
+2026-09-07T20:52:11.0143540Z Building for debugging...
+2026-09-07T20:52:11.0197630Z [0/14] Write sources
+2026-09-07T20:52:11.0202600Z [0/14] /Users/runner/work/Privacy-Watermark/Privacy-Watermark/.build/arm64-apple-macosx/debug/PassportFiligranePackageTests.derived/runner.swift
+2026-09-07T20:52:11.0208370Z [0/14] Write sources
+2026-09-07T20:52:11.0208830Z [0/14] Write PassportFiligrane-entitlement.plist
+2026-09-07T20:52:11.0209330Z [6/14] Write sources
+2026-09-07T20:52:11.0209610Z [7/14] Copying Fixtures
+2026-09-07T20:52:11.1626530Z [8/14] Write swift-version-4657CCE4B953477C.txt
+2026-09-07T20:52:17.6883380Z [10/22] Emitting module WatermarkCore
+2026-09-07T20:52:21.4951010Z [11/25] Compiling WatermarkCore Processing.swift
+2026-09-07T20:52:21.5052340Z [12/25] Compiling WatermarkCore Renderer.swift
+2026-09-07T20:52:21.5153920Z [13/25] Compiling WatermarkCore SourceValidation.swift
+2026-09-07T20:52:21.5255390Z [14/25] Compiling WatermarkCore ImagePDFWriter.swift
+2026-09-07T20:52:21.5356850Z [15/25] Compiling WatermarkCore OutputTransaction.swift
+2026-09-07T20:52:21.5456810Z [16/25] Compiling WatermarkCore PreviewRendering.swift
+2026-09-07T20:52:21.5557680Z [17/25] Compiling WatermarkCore Batch.swift
+2026-09-07T20:52:21.5659020Z [18/25] Compiling WatermarkCore BatchExport.swift
+2026-09-07T20:52:21.5760350Z [19/25] Compiling WatermarkCore Document.swift
+2026-09-07T20:52:21.5861630Z [20/25] Compiling WatermarkCore ImageMetadata.swift
+2026-09-07T20:52:24.1094850Z [21/38] Compiling WatermarkCoreTests DocumentTests.swift
+2026-09-07T20:52:24.1195660Z macro expansion #expect:3:13: error: call can throw, but it is executed in a non-throwing autoclosure
+2026-09-07T20:52:24.1297380Z `- /Users/runner/work/Privacy-Watermark/Privacy-Watermark/Tests/WatermarkCoreTests/PagePreviewTests.swift:44:75: note: expanded code originates here
+2026-09-07T20:52:24.1398940Z 42 |             for index in 0..<source.pageCount {
+2026-09-07T20:52:24.1499090Z 43 |                 let preview = try Processing.preview(source, watermark: WatermarkSettings(), export: settings, pageIndex: index)
+2026-09-07T20:52:24.1599550Z 44 |                 #expect(preview == (try Data(contentsOf: outputs[index])))
+2026-09-07T20:52:24.1700680Z    +--- macro expansion #expect ----------------------------------------
+2026-09-07T20:52:24.1801180Z    |1 | Testing.__checkBinaryOperation(preview, {
+2026-09-07T20:52:24.1902240Z    |2 |         $0 == $1()
+2026-09-07T20:52:24.2003280Z    |3 |     }, (try Data(contentsOf: outputs[index])), expression: .__fromBinaryOperation(.__fromSyntaxNode("preview"), "==", .__fromSyntaxNode("(try Data(contentsOf: outputs[index]))")), comments: [], isRequired: false, sourceLocation: Testing.SourceLocation.__here()).__expected()
+2026-09-07T20:52:24.2102870Z    |  |             `- error: call can throw, but it is executed in a non-throwing autoclosure
+2026-09-07T20:52:24.2203460Z    +--------------------------------------------------------------------
+2026-09-07T20:52:24.2304280Z 45 |             }
+2026-09-07T20:52:24.2404780Z 46 |         }
+2026-09-07T20:52:24.2505520Z [22/38] Compiling WatermarkCoreTests PagePreviewTests.swift
+2026-09-07T20:52:24.2606270Z macro expansion #expect:3:13: error: call can throw, but it is executed in a non-throwing autoclosure
+2026-09-07T20:52:24.2707310Z `- /Users/runner/work/Privacy-Watermark/Privacy-Watermark/Tests/WatermarkCoreTests/PagePreviewTests.swift:44:75: note: expanded code originates here
+2026-09-07T20:52:24.2807650Z 42 |             for index in 0..<source.pageCount {
+2026-09-07T20:52:24.2909000Z 43 |                 let preview = try Processing.preview(source, watermark: WatermarkSettings(), export: settings, pageIndex: index)
+2026-09-07T20:52:24.3010150Z 44 |                 #expect(preview == (try Data(contentsOf: outputs[index])))
+2026-09-07T20:52:24.3110220Z    +--- macro expansion #expect ----------------------------------------
+2026-09-07T20:52:24.3210620Z    |1 | Testing.__checkBinaryOperation(preview, {
+2026-09-07T20:52:24.3311740Z    |2 |         $0 == $1()
+2026-09-07T20:52:24.3413010Z    |3 |     }, (try Data(contentsOf: outputs[index])), expression: .__fromBinaryOperation(.__fromSyntaxNode("preview"), "==", .__fromSyntaxNode("(try Data(contentsOf: outputs[index]))")), comments: [], isRequired: false, sourceLocation: Testing.SourceLocation.__here()).__expected()
+2026-09-07T20:52:24.3512620Z    |  |             `- error: call can throw, but it is executed in a non-throwing autoclosure
+2026-09-07T20:52:24.3613380Z    +--------------------------------------------------------------------
+2026-09-07T20:52:24.3714210Z 45 |             }
+2026-09-07T20:52:24.3815270Z 46 |         }
+2026-09-07T20:52:24.3915850Z [23/38] Compiling WatermarkCoreTests PerformanceTests.swift
+2026-09-07T20:52:24.4016660Z macro expansion #expect:3:13: error: call can throw, but it is executed in a non-throwing autoclosure
+2026-09-07T20:52:24.4117680Z `- /Users/runner/work/Privacy-Watermark/Privacy-Watermark/Tests/WatermarkCoreTests/PagePreviewTests.swift:44:75: note: expanded code originates here
+2026-09-07T20:52:24.4218060Z 42 |             for index in 0..<source.pageCount {
+2026-09-07T20:52:24.4318780Z 43 |                 let preview = try Processing.preview(source, watermark: WatermarkSettings(), export: settings, pageIndex: index)
+2026-09-07T20:52:24.4419450Z 44 |                 #expect(preview == (try Data(contentsOf: outputs[index])))
+2026-09-07T20:52:24.4519620Z    +--- macro expansion #expect ----------------------------------------
+2026-09-07T20:52:24.4620840Z    |1 | Testing.__checkBinaryOperation(preview, {
+2026-09-07T20:52:24.4728260Z    |2 |         $0 == $1()
+2026-09-07T20:52:24.4830130Z    |3 |     }, (try Data(contentsOf: outputs[index])), expression: .__fromBinaryOperation(.__fromSyntaxNode("preview"), "==", .__fromSyntaxNode("(try Data(contentsOf: outputs[index]))")), comments: [], isRequired: false, sourceLocation: Testing.SourceLocation.__here()).__expected()
+2026-09-07T20:52:24.4930360Z    |  |             `- error: call can throw, but it is executed in a non-throwing autoclosure
+2026-09-07T20:52:24.5029930Z    +--------------------------------------------------------------------
+2026-09-07T20:52:24.5131080Z 45 |             }
+2026-09-07T20:52:24.5231710Z 46 |         }
+2026-09-07T20:52:24.7136550Z [24/41] Compiling PassportFiligrane PreviewHost.swift
+2026-09-07T20:52:24.7237830Z [25/41] Compiling PassportFiligrane PreviewWorker.swift
+2026-09-07T20:52:25.0346390Z [26/42] Compiling WatermarkCoreTests ViewportTests.swift
+2026-09-07T20:52:25.0446580Z [27/42] Compiling WatermarkCoreTests VisualReviewTests.swift
+2026-09-07T20:52:25.0547670Z [28/42] Compiling WatermarkCoreTests resource_bundle_accessor.swift
+2026-09-07T20:52:25.2358960Z [29/42] Compiling PassportFiligrane ContentView.swift
+2026-09-07T20:52:25.2460180Z [30/42] Compiling PassportFiligrane PassportFiligraneApp.swift
+2026-09-07T20:52:25.2560370Z [31/42] Emitting module PassportFiligrane
+2026-09-07T20:52:25.5779740Z [32/42] Compiling PassportFiligrane Session.swift
+2026-09-07T20:52:25.5881490Z [32/42] Write Objects.LinkFileList
+2026-09-07T20:52:25.7011210Z [34/42] Emitting module WatermarkCoreTests
+2026-09-07T20:52:25.7097900Z [38/42] Linking PassportFiligrane
+2026-09-07T20:52:25.7193060Z error: fatalError
+2026-09-07T20:52:25.7225910Z ##[error]Process completed with exit code 1.
+2026-09-07T20:52:25.7337750Z ##[group]Run actions/upload-artifact@v7
+2026-09-07T20:52:25.7338020Z with:
+2026-09-07T20:52:25.7338280Z   name: native-verification-macos-14
+2026-09-07T20:52:25.7338580Z   path: .build/verification/
+.build/smoke-output/
+
+2026-09-07T20:52:25.7338900Z   include-hidden-files: true
+2026-09-07T20:52:25.7339270Z   if-no-files-found: warn
+2026-09-07T20:52:25.7339510Z   retention-days: 7
+2026-09-07T20:52:25.7339810Z   compression-level: 6
+2026-09-07T20:52:25.7340010Z   overwrite: false
+2026-09-07T20:52:25.7340150Z   archive: true
+2026-09-07T20:52:25.7340290Z ##[endgroup]
+2026-09-07T20:52:25.9844850Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-09-07T20:52:25.9846230Z The least common ancestor is /Users/runner/work/Privacy-Watermark/Privacy-Watermark/.build. This will be the root directory of the artifact
+2026-09-07T20:52:25.9858210Z ##[warning]No files were found with the provided path: .build/verification/
+.build/smoke-output/. No artifacts will be uploaded.
+2026-09-07T20:52:25.9974820Z Post job cleanup.
+2026-09-07T20:52:26.0769370Z [command]/opt/homebrew/bin/git version
+2026-09-07T20:52:26.0913950Z git version 2.55.0
+2026-09-07T20:52:26.0967080Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/4aedd4b1-33b1-4ecb-8a80-930bda3bbcf2/.gitconfig'
+2026-09-07T20:52:26.0967920Z Temporarily overriding HOME='/Users/runner/work/_temp/4aedd4b1-33b1-4ecb-8a80-930bda3bbcf2' before making global git config changes
+2026-09-07T20:52:26.0968640Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T20:52:26.0969330Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/Privacy-Watermark/Privacy-Watermark
+2026-09-07T20:52:26.1016940Z Removing SSH command configuration
+2026-09-07T20:52:26.1021100Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T20:52:26.1066180Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T20:52:26.1582420Z Removing HTTP extra header
+2026-09-07T20:52:26.1585890Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T20:52:26.1630320Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T20:52:26.2130100Z Removing includeIf entries pointing to credentials config files
+2026-09-07T20:52:26.2134710Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T20:52:26.2168870Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T20:52:26.2709300Z Cleaning up orphan processes

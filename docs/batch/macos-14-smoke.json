@@ -1,0 +1,16 @@
+{
+  "architecture" : "arm64",
+  "checks" : [
+    "Programmatic cancellation of native Add files panel",
+    "Programmatic mixed batch import, invalid row and first-page preview in native window",
+    "Programmatic Add and destination-folder panel cancellation",
+    "Programmatic page navigation, zoom, viewport pan, Fit and shared settings",
+    "Programmatic selection, duplicate addition and removal",
+    "Mixed original-format export and PDFKit reopen",
+    "Page-folder export, write failure, cancellation and summary",
+    "Captured normal and minimum-size native layouts; manual drag-and-drop remains pending"
+  ],
+  "error" : "",
+  "os" : "Version 14.8.9 (Build 23J631)",
+  "passed" : true
+}

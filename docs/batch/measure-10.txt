@@ -1,12 +1,7 @@
 [0/1] Planning build
 Building for production...
-[0/4] Write sources
-[1/4] Write swift-version--1AB21518FC5DEDBE.txt
-[3/5] Compiling WatermarkCore Batch.swift
-[4/6] Compiling PassportFiligrane ContentView.swift
-[4/6] Write Objects.LinkFileList
-[5/6] Linking PassportFiligrane
-Build complete! (4.45s)
+[0/2] Write swift-version--1AB21518FC5DEDBE.txt
+Build complete! (0.12s)
 /Users/louni/Code/PassportFiligrane/.build/arm64-apple-macosx/release/NativeSmoke.app: replacing existing signature
 SMOKE: starting native window
 SMOKE: Measured 10-file native-window workload

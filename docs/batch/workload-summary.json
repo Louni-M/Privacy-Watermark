@@ -1,23 +1,23 @@
 {
   "10": {
-    "selection_ack_p95": 0.010316708,
-    "preview_p95": 0.201663208,
-    "cancel_ack_p95": 0.020721041,
-    "import": 0.40817,
-    "export": 1.13791025,
-    "rss": 548061184,
-    "per_input_median": 0.066988333
+    "selection_ack_p95": 0.013558375,
+    "preview_p95": 0.218855666,
+    "cancel_ack_p95": 0.021736792,
+    "import": 0.432159917,
+    "export": 1.175070416,
+    "rss": 404914176,
+    "per_input_median": 0.06907477100000001
   },
   "100": {
-    "selection_ack_p95": 0.01193075,
-    "preview_p95": 0.189172709,
-    "cancel_ack_p95": 0.022011541,
-    "import": 1.189238459,
-    "export": 5.6149175,
-    "rss": 472907776,
-    "per_input_median": 0.0083827915
+    "selection_ack_p95": 0.013088167,
+    "preview_p95": 0.203739083,
+    "cancel_ack_p95": 0.023254458,
+    "import": 1.2338409160000001,
+    "export": 5.811733375,
+    "rss": 409403392,
+    "per_input_median": 0.009137646
   },
-  "memory_budget": 1163231232,
+  "memory_budget": 876937216,
   "memory_pass": true,
   "timings_pass": true
 }
