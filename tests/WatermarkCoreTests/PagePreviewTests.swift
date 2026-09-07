@@ -41,7 +41,8 @@ struct PagePreviewTests {
                 destination: root, replaceExisting: true)
             for index in 0..<source.pageCount {
                 let preview = try Processing.preview(source, watermark: WatermarkSettings(), export: settings, pageIndex: index)
-                #expect(preview == (try Data(contentsOf: outputs[index])))
+                let saved = try Data(contentsOf: outputs[index])
+                #expect(preview == saved)
             }
         }
     }
