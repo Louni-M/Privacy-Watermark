@@ -29,6 +29,9 @@ htmlcov/
 test_fixtures/
 
 # Build artifacts
+.build/
+.swiftpm/
+.migration/
 build/
 dist/
 *.egg-info/

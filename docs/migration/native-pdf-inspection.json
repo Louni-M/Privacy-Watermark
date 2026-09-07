@@ -1,0 +1,186 @@
+{
+  "standard.pdf": {
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC DOCUMENT - PAGE 1\nSelectable source text. For testing only.\nExample link\nVISIBLE NOTE\nFORM VALUE\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "links": [
+          {
+            "kind": 2,
+            "xref": 12,
+            "from": "Rect(25.0, 200.0, 220.0, 230.0)",
+            "uri": "https://example.com",
+            "id": ""
+          }
+        ],
+        "images": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          320.0,
+          260.0
+        ],
+        "text": "ROTATED PAGE 2\nCOPY\nCOPY\nC\nPY\nCOPY\nCOPY\n",
+        "links": [],
+        "images": []
+      }
+    ]
+  },
+  "flat-600.pdf": {
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "links": [],
+        "images": [
+          [
+            5,
+            0,
+            3334,
+            2334,
+            8,
+            "ICCBased",
+            "",
+            "Im1",
+            "DCTDecode"
+          ]
+        ]
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          320.0,
+          260.0
+        ],
+        "text": "",
+        "links": [],
+        "images": [
+          [
+            11,
+            0,
+            2667,
+            2167,
+            8,
+            "ICCBased",
+            "",
+            "Im2",
+            "DCTDecode"
+          ]
+        ]
+      }
+    ]
+  },
+  "flat-300.pdf": {
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "links": [],
+        "images": [
+          [
+            5,
+            0,
+            1667,
+            1167,
+            8,
+            "ICCBased",
+            "",
+            "Im1",
+            "DCTDecode"
+          ]
+        ]
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          320.0,
+          260.0
+        ],
+        "text": "",
+        "links": [],
+        "images": [
+          [
+            11,
+            0,
+            1334,
+            1084,
+            8,
+            "ICCBased",
+            "",
+            "Im2",
+            "DCTDecode"
+          ]
+        ]
+      }
+    ]
+  },
+  "flat-450.pdf": {
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "links": [],
+        "images": [
+          [
+            5,
+            0,
+            2500,
+            1750,
+            8,
+            "ICCBased",
+            "",
+            "Im1",
+            "DCTDecode"
+          ]
+        ]
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          320.0,
+          260.0
+        ],
+        "text": "",
+        "links": [],
+        "images": [
+          [
+            11,
+            0,
+            2000,
+            1625,
+            8,
+            "ICCBased",
+            "",
+            "Im2",
+            "DCTDecode"
+          ]
+        ]
+      }
+    ]
+  }
+}

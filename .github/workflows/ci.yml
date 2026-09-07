@@ -14,6 +14,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  native:
+    name: Native macOS (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Record runtime and compiler
+        run: |
+          sw_vers
+          uname -m
+          swift --version
+      - name: Test native behavior
+        env:
+          PASSPORT_TEST_OUTPUT: .build/verification
+        run: scripts/test.sh
+      - name: Build and verify universal app
+        run: scripts/build-app.sh
+      - name: Exercise native window and file dialogs
+        env:
+          PASSPORT_SMOKE_OUTPUT: .build/smoke-output
+        run: scripts/smoke-test.sh
+      - name: Upload native verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-verification-${{ matrix.os }}
+          path: |
+            .build/verification/
+            .build/smoke-output/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+
   test:
     name: Test Python 3.12
     runs-on: ubuntu-latest

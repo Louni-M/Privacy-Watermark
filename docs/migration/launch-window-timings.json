@@ -1,0 +1,36 @@
+{
+  "method" : "Alternating release bundles; first observation and 10 repeats; process start to visible window >=300x200; 5ms polling. Window appearance is a launch proxy, not independently verified interaction readiness.",
+  "os" : "Version 26.6.2 (Build 25G83)",
+  "seconds" : {
+    "legacy-first" : [
+      0.52598654099999997
+    ],
+    "legacy-repeat" : [
+      0.70775449999999995,
+      0.51278420800000002,
+      0.71868654099999996,
+      0.71020412499999996,
+      0.70532637499999995,
+      0.51375525,
+      0.71829891700000004,
+      0.69251816700000002,
+      0.72258549999999999,
+      0.71637499999999998
+    ],
+    "native-first" : [
+      0.21881800000000001
+    ],
+    "native-repeat" : [
+      0.205929167,
+      0.22848558299999999,
+      0.231500083,
+      0.23952183299999999,
+      0.23452149999999999,
+      0.21350008300000001,
+      0.25673249999999997,
+      0.242064792,
+      0.23557879200000001,
+      0.23755166599999999
+    ]
+  }
+}

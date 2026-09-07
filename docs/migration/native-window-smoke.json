@@ -1,0 +1,14 @@
+{
+  "architecture" : "arm64",
+  "checks" : [
+    "Cancel native Open in empty state",
+    "Load and preview PDF with native default",
+    "Cancel replacement Open and native Save",
+    "Export and reopen flattened PDF",
+    "Cancel folder panel and export page images",
+    "Load, preview, and export image"
+  ],
+  "error" : "",
+  "os" : "Version 26.6.2 (Build 25G83)",
+  "passed" : true
+}
