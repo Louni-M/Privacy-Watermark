@@ -1,0 +1,48 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--1AB21518FC5DEDBE.txt
+[4/13] Compiling WatermarkCore Processing.swift
+[5/13] Compiling WatermarkCore SourceValidation.swift
+[6/13] Compiling WatermarkCore BatchExport.swift
+[7/13] Emitting module WatermarkCore
+[8/13] Compiling WatermarkCore Document.swift
+[9/18] Compiling WatermarkCore PreviewRendering.swift
+[10/18] Compiling WatermarkCore ImagePDFWriter.swift
+[11/18] Compiling WatermarkCore OutputTransaction.swift
+[12/18] Compiling WatermarkCore ImageMetadata.swift
+[13/18] Compiling WatermarkCore Renderer.swift
+[14/30] Compiling WatermarkCoreTests ViewportTests.swift
+[15/30] Compiling WatermarkCoreTests PerformanceTests.swift
+[16/30] Compiling WatermarkCoreTests PagePreviewTests.swift
+[17/30] Compiling PassportFiligrane PassportFiligraneApp.swift
+[18/30] Emitting module PassportFiligrane
+[19/30] Compiling PassportFiligrane ContentView.swift
+[20/30] Compiling PassportFiligrane Session.swift
+[20/30] Write Objects.LinkFileList
+[22/30] Emitting module WatermarkCoreTests
+[23/30] Compiling WatermarkCoreTests BatchCorpusTests.swift
+[24/30] Compiling WatermarkCoreTests BatchContractTests.swift
+[25/30] Compiling WatermarkCoreTests BatchExportTests.swift
+[26/30] Compiling WatermarkCoreTests DocumentTests.swift
+[26/30] Linking PassportFiligrane
+[27/30] Applying PassportFiligrane
+[29/32] Emitting module PassportFiligraneTests
+[30/32] Compiling PassportFiligraneTests SessionTests.swift
+[30/32] Write Objects.LinkFileList
+[31/32] Linking PassportFiligranePackageTests
+Build complete! (3.14s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite BatchExportTests started.
+◇ Test identityAndChangedSourceRecovery() started.
+✔ Test identityAndChangedSourceRecovery() passed after 0.022 seconds.
+◇ Test safeNamesAndLateCollision() started.
+✔ Test safeNamesAndLateCollision() passed after 0.026 seconds.
+◇ Test wholePageSeriesCancellationBoundaries() started.
+✔ Test wholePageSeriesCancellationBoundaries() passed after 0.094 seconds.
+◇ Test runContinuesAfterFailureAndCountsExcludedRows() started.
+✔ Test runContinuesAfterFailureAndCountsExcludedRows() passed after 0.037 seconds.
+✔ Suite BatchExportTests passed after 0.181 seconds.
+✔ Test run with 4 tests in 1 suite passed after 0.181 seconds.

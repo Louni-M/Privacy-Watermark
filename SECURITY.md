@@ -21,13 +21,13 @@ These limits reduce resource use but do not make arbitrary files safe or guarant
 
 ## Files and diagnostics
 
-Exports use immutable source bytes and the current settings rather than reusing preview output. Source path and file identity checks reject attempts to overwrite the original, including known symbolic and hard links. Existing output files require replacement confirmation.
+Exports use immutable source bytes and a snapshot of shared settings rather than reusing preview output. Rows retain metadata and SHA-256 content fingerprints, not every decoded document. Reuse verifies identity and content, with checks across the read. Changed or unreadable sources require re-addition; the app does not silently substitute new content. Filesystem identity deduplicates symbolic/hard links while keeping distinct, content-identical files.
 
-Output is staged in a private directory beside the destination, then committed after every page succeeds. Failed commits attempt to restore replaced files. Temporary files are removed on ordinary completion or failure; a crash, forced termination or failed restoration can leave a staging directory for recovery. A filesystem concurrently changed by another process is outside the transactional guarantee.
+Each input is staged in a private directory beside the destination. After every page succeeds, an exclusive filesystem rename publishes the complete file or whole page-series folder. Existing files, directories and batch sources are never replaced. A competing writer taking a name causes allocation of the next numeric suffix without re-rendering. Unfinished staging is removed on normal failure or cancellation; completed copies remain. A crash or forced termination can leave a private `.passport-batch-…` or `.passport-export-…` staging directory; persistent crash recovery is not implemented.
 
 The app presents safe error messages and does not create a diagnostic file log or record document contents, watermark text or private paths. macOS frameworks may emit their own system diagnostics. The app is ad-hoc signed, not notarized or App Sandbox enabled.
 
-Preview generation and export run through a serial background worker. Settings and document generations prevent outdated work from replacing the latest preview. Failed operations leave the app available for another attempt.
+Progressive validation and sequential export are separate from the interactive preview worker. Only active operations retain full sources. Preview requests identify the item, fingerprint, page, settings revision and viewport; cancelled or stale requests cannot replace the current view. The preview cache has a 96-MiB budget and rendered preview buffers are capped at 16 megapixels. Large zoom requests render the visible region with bounded scratch buffers. Export still renders full-resolution pages and can require substantial memory. Cancellation is cooperative between safe processing boundaries; system decoding may finish before cancellation completes. Failed operations leave the app available for another attempt.
 
 ## Reporting a problem
 

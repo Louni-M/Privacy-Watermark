@@ -1,0 +1,24 @@
+[0/1] Planning build
+Building for production...
+[0/7] Write sources
+[2/7] Write swift-version--1AB21518FC5DEDBE.txt
+[4/8] Compiling WatermarkCore Batch.swift
+[5/10] Compiling PassportFiligrane ContentView.swift
+[5/10] Write Objects.LinkFileList
+[6/10] Linking PassportFiligrane
+[8/11] Compiling PassportFiligraneTests PreviewWorkerTests.swift
+[9/11] Compiling WatermarkCoreTests BatchContractTests.swift
+[10/12] Compiling PassportFiligranePackageTests runner.swift
+[10/12] Write Objects.LinkFileList
+[11/12] Linking PassportFiligranePackageTests
+Build complete! (8.94s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite PerformanceTests started.
+◇ Test recordProcessingMatrix() started.
+✔ Test recordProcessingMatrix() passed after 15.757 seconds.
+◇ Test recordFiftyPageStress() started.
+✔ Test recordFiftyPageStress() passed after 1.070 seconds.
+✔ Suite PerformanceTests passed after 16.828 seconds.
+✔ Test run with 2 tests in 1 suite passed after 16.828 seconds.

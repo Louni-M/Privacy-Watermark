@@ -4,7 +4,7 @@ import PDFKit
 
 public enum DocumentError: Error, LocalizedError, Equatable, Sendable {
     case unsupported, tooLarge, imageDimensions, pageLimit, protectedPDF, invalidImage, invalidPDF
-    case invalidSettings, renderFailed, writeFailed, sourceDestination, destinationExists
+    case invalidSettings, invalidPage, sourceChanged, sourceUnavailable, renderFailed, writeFailed, sourceDestination, destinationExists
 
     public var errorDescription: String? {
         switch self {
@@ -16,6 +16,9 @@ public enum DocumentError: Error, LocalizedError, Equatable, Sendable {
         case .invalidImage: "Unable to read this image file."
         case .invalidPDF: "Unable to read this PDF file, or it has no pages."
         case .invalidSettings: "Check the watermark settings. Text must be at most 200 characters."
+        case .invalidPage: "This page is unavailable. Select a page within the document."
+        case .sourceChanged: "This file changed. Remove and add this file again to review the new content."
+        case .sourceUnavailable: "This file is unavailable or unreadable. Restore access, then remove and add this file again."
         case .renderFailed: "Unable to render this document. Try a lower export quality or a smaller file."
         case .writeFailed: "Unable to save the output. Check the destination and available disk space."
         case .sourceDestination: "Choose a different destination to keep your original file unchanged."

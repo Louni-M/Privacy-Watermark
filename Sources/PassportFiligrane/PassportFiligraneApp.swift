@@ -12,7 +12,7 @@ struct PassportFiligraneApp: App {
         .defaultSize(width: 1040, height: 720)
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button("Open…") { Task { await session.chooseFile() } }.keyboardShortcut("o").disabled(session.isExporting)
+                Button("Add files…") { Task { await session.chooseFiles() } }.keyboardShortcut("o").disabled(session.isExporting)
             }
         }
     }

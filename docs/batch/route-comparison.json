@@ -1,0 +1,359 @@
+{
+  "document.pdf/300/JPG": {
+    "baseline_median": 0.013483791,
+    "current_median": 0.012746667,
+    "ratio": 0.9453325848791337,
+    "baseline_first": 0.013514875,
+    "current_first": 0.012886084
+  },
+  "document.pdf/300/PDF": {
+    "baseline_median": 0.00889125,
+    "current_median": 0.008612708,
+    "ratio": 0.9686723464079854,
+    "baseline_first": 0.008877375,
+    "current_first": 0.009385209
+  },
+  "document.pdf/300/PNG": {
+    "baseline_median": 0.015009208,
+    "current_median": 0.014129417,
+    "ratio": 0.9413832495358849,
+    "baseline_first": 0.014362041,
+    "current_first": 0.013540208
+  },
+  "document.pdf/450/JPG": {
+    "baseline_median": 0.024027125,
+    "current_median": 0.02344825,
+    "ratio": 0.9759074379477362,
+    "baseline_first": 0.023899417,
+    "current_first": 0.023162417
+  },
+  "document.pdf/450/PDF": {
+    "baseline_median": 0.017995875,
+    "current_median": 0.016995375,
+    "ratio": 0.9444039258996852,
+    "baseline_first": 0.017533958,
+    "current_first": 0.016379208
+  },
+  "document.pdf/450/PNG": {
+    "baseline_median": 0.025609792,
+    "current_median": 0.024634334,
+    "ratio": 0.9619107410165613,
+    "baseline_first": 0.025683917,
+    "current_first": 0.024593208
+  },
+  "document.pdf/600/JPG": {
+    "baseline_median": 0.036005458,
+    "current_median": 0.035164375,
+    "ratio": 0.9766401249499451,
+    "baseline_first": 0.036468125,
+    "current_first": 0.034932791
+  },
+  "document.pdf/600/PDF": {
+    "baseline_median": 0.029564375,
+    "current_median": 0.028686958,
+    "ratio": 0.970321814684058,
+    "baseline_first": 0.028930375,
+    "current_first": 0.028148333
+  },
+  "document.pdf/600/PNG": {
+    "baseline_median": 0.037656708,
+    "current_median": 0.036523916,
+    "ratio": 0.9699179227244187,
+    "baseline_first": 0.037241041,
+    "current_first": 0.03654725
+  },
+  "document.pdf/preview": {
+    "baseline_median": 0.004823625,
+    "current_median": 0.004488083,
+    "ratio": 0.9304377931534894,
+    "baseline_first": 0.008820459,
+    "current_first": 0.008369709
+  },
+  "document.pdf/standard/JPG": {
+    "baseline_median": 0.002865417,
+    "current_median": 0.002529833,
+    "ratio": 0.8828847598796267,
+    "baseline_first": 0.002874291,
+    "current_first": 0.002751958
+  },
+  "document.pdf/standard/PDF": {
+    "baseline_median": 0.002394417,
+    "current_median": 0.002513958,
+    "ratio": 1.0499248877701755,
+    "baseline_first": 0.003441625,
+    "current_first": 0.003361666
+  },
+  "document.pdf/standard/PNG": {
+    "baseline_median": 0.004080167,
+    "current_median": 0.003838417,
+    "ratio": 0.9407499742044871,
+    "baseline_first": 0.003842708,
+    "current_first": 0.003581833
+  },
+  "opaque.png/JPG": {
+    "baseline_median": 0.002339458,
+    "current_median": 0.002224125,
+    "ratio": 0.9507009743282419,
+    "baseline_first": 0.002568625,
+    "current_first": 0.002397792
+  },
+  "opaque.png/PDF": {
+    "baseline_median": 0.002426709,
+    "current_median": 0.0023835,
+    "ratio": 0.9821944040261936,
+    "baseline_first": 0.002600875,
+    "current_first": 0.002315208
+  },
+  "opaque.png/PNG": {
+    "baseline_median": 0.006908125,
+    "current_median": 0.006387583,
+    "ratio": 0.9246478603094181,
+    "baseline_first": 0.006740583,
+    "current_first": 0.006401083
+  },
+  "oriented.jpg/JPG": {
+    "baseline_median": 0.002466292,
+    "current_median": 0.002194625,
+    "ratio": 0.8898479985338313,
+    "baseline_first": 0.002697875,
+    "current_first": 0.002235708
+  },
+  "oriented.jpg/PDF": {
+    "baseline_median": 0.002410791,
+    "current_median": 0.002322875,
+    "ratio": 0.9635323012239552,
+    "baseline_first": 0.002491584,
+    "current_first": 0.002340208
+  },
+  "oriented.jpg/PNG": {
+    "baseline_median": 0.008355541,
+    "current_median": 0.008139958,
+    "ratio": 0.9741987981388638,
+    "baseline_first": 0.008653792,
+    "current_first": 0.008263917
+  },
+  "pages-10.pdf/300/JPG": {
+    "baseline_median": 0.061233125,
+    "current_median": 0.05885825,
+    "ratio": 0.9612158451818358,
+    "baseline_first": 0.061476958,
+    "current_first": 0.058398208
+  },
+  "pages-10.pdf/300/PDF": {
+    "baseline_median": 0.039410459,
+    "current_median": 0.036707583,
+    "ratio": 0.9314172920442262,
+    "baseline_first": 0.041541167,
+    "current_first": 0.039005583
+  },
+  "pages-10.pdf/300/PNG": {
+    "baseline_median": 0.069124167,
+    "current_median": 0.065384958,
+    "ratio": 0.9459059087106252,
+    "baseline_first": 0.067266125,
+    "current_first": 0.064481959
+  },
+  "pages-10.pdf/450/JPG": {
+    "baseline_median": 0.118170792,
+    "current_median": 0.115205375,
+    "ratio": 0.9749056687374998,
+    "baseline_first": 0.117689458,
+    "current_first": 0.113551625
+  },
+  "pages-10.pdf/450/PDF": {
+    "baseline_median": 0.084181667,
+    "current_median": 0.081394041,
+    "ratio": 0.9668855927977763,
+    "baseline_first": 0.084297208,
+    "current_first": 0.082627625
+  },
+  "pages-10.pdf/450/PNG": {
+    "baseline_median": 0.126919584,
+    "current_median": 0.12334225,
+    "ratio": 0.9718141685683432,
+    "baseline_first": 0.12550925,
+    "current_first": 0.120847833
+  },
+  "pages-10.pdf/600/JPG": {
+    "baseline_median": 0.183032333,
+    "current_median": 0.176658792,
+    "ratio": 0.9651780595508227,
+    "baseline_first": 0.18227,
+    "current_first": 0.177365916
+  },
+  "pages-10.pdf/600/PDF": {
+    "baseline_median": 0.147469458,
+    "current_median": 0.144792333,
+    "ratio": 0.9818462410026624,
+    "baseline_first": 0.149030333,
+    "current_first": 0.150199542
+  },
+  "pages-10.pdf/600/PNG": {
+    "baseline_median": 0.190950625,
+    "current_median": 0.191551917,
+    "ratio": 1.0031489396800872,
+    "baseline_first": 0.187890291,
+    "current_first": 0.22459975
+  },
+  "pages-10.pdf/preview": {
+    "baseline_median": 0.004095375,
+    "current_median": 0.003816,
+    "ratio": 0.9317828037725483,
+    "baseline_first": 0.004336166,
+    "current_first": 0.004053583
+  },
+  "pages-10.pdf/standard/JPG": {
+    "baseline_median": 0.009199584,
+    "current_median": 0.008643334,
+    "ratio": 0.939535309422687,
+    "baseline_first": 0.007903583,
+    "current_first": 0.007354125
+  },
+  "pages-10.pdf/standard/PDF": {
+    "baseline_median": 0.003380833,
+    "current_median": 0.003336291,
+    "ratio": 0.9868251404313669,
+    "baseline_first": 0.003712,
+    "current_first": 0.003562041
+  },
+  "pages-10.pdf/standard/PNG": {
+    "baseline_median": 0.016204083,
+    "current_median": 0.016406333,
+    "ratio": 1.0124814221205851,
+    "baseline_first": 0.015098875,
+    "current_first": 0.014419833
+  },
+  "photo.jpg/JPG": {
+    "baseline_median": 0.00296375,
+    "current_median": 0.002236125,
+    "ratio": 0.7544917756221003,
+    "baseline_first": 0.0087305,
+    "current_first": 0.005134666
+  },
+  "photo.jpg/PDF": {
+    "baseline_median": 0.002685709,
+    "current_median": 0.002334875,
+    "ratio": 0.8693700620581009,
+    "baseline_first": 0.003038416,
+    "current_first": 0.00260975
+  },
+  "photo.jpg/PNG": {
+    "baseline_median": 0.008689666,
+    "current_median": 0.0082285,
+    "ratio": 0.9469293756514922,
+    "baseline_first": 0.00981675,
+    "current_first": 0.008149917
+  },
+  "scan.pdf/300/JPG": {
+    "baseline_median": 0.016602792,
+    "current_median": 0.017247083,
+    "ratio": 1.0388061839237641,
+    "baseline_first": 0.016333125,
+    "current_first": 0.017146542
+  },
+  "scan.pdf/300/PDF": {
+    "baseline_median": 0.014295375,
+    "current_median": 0.014005417,
+    "ratio": 0.9797166566109667,
+    "baseline_first": 0.014081917,
+    "current_first": 0.013893292
+  },
+  "scan.pdf/300/PNG": {
+    "baseline_median": 0.017954167,
+    "current_median": 0.018438792,
+    "ratio": 1.0269923411094481,
+    "baseline_first": 0.017569333,
+    "current_first": 0.018435916
+  },
+  "scan.pdf/450/JPG": {
+    "baseline_median": 0.021665334,
+    "current_median": 0.021116667,
+    "ratio": 0.9746753500315295,
+    "baseline_first": 0.0218,
+    "current_first": 0.0211995
+  },
+  "scan.pdf/450/PDF": {
+    "baseline_median": 0.017319792,
+    "current_median": 0.017316917,
+    "ratio": 0.9998340049349322,
+    "baseline_first": 0.017507541,
+    "current_first": 0.016781541
+  },
+  "scan.pdf/450/PNG": {
+    "baseline_median": 0.022354542,
+    "current_median": 0.02205225,
+    "ratio": 0.9864773789594973,
+    "baseline_first": 0.022105333,
+    "current_first": 0.02238925
+  },
+  "scan.pdf/600/JPG": {
+    "baseline_median": 0.052018208,
+    "current_median": 0.051906292,
+    "ratio": 0.9978485225788631,
+    "baseline_first": 0.051572,
+    "current_first": 0.059369209
+  },
+  "scan.pdf/600/PDF": {
+    "baseline_median": 0.047462708,
+    "current_median": 0.047058208,
+    "ratio": 0.9914775195717868,
+    "baseline_first": 0.047230833,
+    "current_first": 0.04683525
+  },
+  "scan.pdf/600/PNG": {
+    "baseline_median": 0.052898417,
+    "current_median": 0.052130458,
+    "ratio": 0.9854823822043672,
+    "baseline_first": 0.052861041,
+    "current_first": 0.052388792
+  },
+  "scan.pdf/preview": {
+    "baseline_median": 0.009230667,
+    "current_median": 0.008976834,
+    "ratio": 0.972501120449909,
+    "baseline_first": 0.009636709,
+    "current_first": 0.009282584
+  },
+  "scan.pdf/standard/JPG": {
+    "baseline_median": 0.002854458,
+    "current_median": 0.002701334,
+    "ratio": 0.9463561909126007,
+    "baseline_first": 0.003244042,
+    "current_first": 0.003128875
+  },
+  "scan.pdf/standard/PDF": {
+    "baseline_median": 0.002568584,
+    "current_median": 0.003215042,
+    "ratio": 1.2516787459549696,
+    "baseline_first": 0.003573625,
+    "current_first": 0.003838042
+  },
+  "scan.pdf/standard/PNG": {
+    "baseline_median": 0.003780167,
+    "current_median": 0.004242458,
+    "ratio": 1.1222938034219123,
+    "baseline_first": 0.003713084,
+    "current_first": 0.003554834
+  },
+  "transparent.png/JPG": {
+    "baseline_median": 0.000987875,
+    "current_median": 0.001077167,
+    "ratio": 1.090387953941541,
+    "baseline_first": 0.001019458,
+    "current_first": 0.000902291
+  },
+  "transparent.png/PDF": {
+    "baseline_median": 0.001081208,
+    "current_median": 0.001153208,
+    "ratio": 1.0665921820778241,
+    "baseline_first": 0.0009795,
+    "current_first": 0.000941875
+  },
+  "transparent.png/PNG": {
+    "baseline_median": 0.001328166,
+    "current_median": 0.001399959,
+    "ratio": 1.0540542371962542,
+    "baseline_first": 0.001406417,
+    "current_first": 0.001618958
+  }
+}

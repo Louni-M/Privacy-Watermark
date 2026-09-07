@@ -1,0 +1,26 @@
+Building for production...
+[0/12] Write sources
+[0/12] /Users/louni/Code/PassportFiligrane/.build/arm64-apple-macosx/release/PassportFiligranePackageTests.derived/runner.swift
+[0/12] Write sources
+[6/12] Copying Fixtures
+[7/12] Write swift-version--1AB21518FC5DEDBE.txt
+[9/13] Compiling WatermarkCore Document.swift
+[10/15] Compiling PassportFiligrane ContentView.swift
+[10/15] Write Objects.LinkFileList
+[11/15] Linking PassportFiligrane
+[13/16] Compiling WatermarkCoreTests DocumentTests.swift
+[14/16] Compiling PassportFiligraneTests SessionTests.swift
+[15/17] Compiling PassportFiligranePackageTests runner.swift
+[15/17] Write Objects.LinkFileList
+[16/17] Linking PassportFiligranePackageTests
+Build complete! (39.66s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite PerformanceTests started.
+◇ Test recordProcessingMatrix() started.
+✔ Test recordProcessingMatrix() passed after 16.109 seconds.
+◇ Test recordFiftyPageStress() started.
+✔ Test recordFiftyPageStress() passed after 1.379 seconds.
+✔ Suite PerformanceTests passed after 17.489 seconds.
+✔ Test run with 2 tests in 1 suite passed after 17.489 seconds.

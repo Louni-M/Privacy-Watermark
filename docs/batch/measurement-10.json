@@ -1,0 +1,556 @@
+{
+  "add_ack_seconds" : 0.060316000000000002,
+  "architecture" : "arm64",
+  "backing_scale" : 2,
+  "cancel_ack_seconds" : [
+    0.0064752079999999997,
+    0.0055502080000000001,
+    0.019858500000000001,
+    0.020721040999999999,
+    0.0053866249999999999,
+    0.0052530830000000004,
+    0.019748124999999998,
+    0.018962333000000001,
+    0.0055686249999999998,
+    0.019545750000000001
+  ],
+  "cancel_completion_seconds" : [
+    0.053458582999999997,
+    0.081194749999999996,
+    0.090880374999999999,
+    0.078014582999999998,
+    0.050346584,
+    0.068449999999999997,
+    0.096206125000000003,
+    0.073767417000000002,
+    0.075750334000000002,
+    0.095318749999999994
+  ],
+  "cold_first_preview_seconds" : 0.30519595900000002,
+  "count" : 10,
+  "dpi" : 450,
+  "export_seconds" : 1.13791025,
+  "flattened" : true,
+  "import_seconds" : 0.40816999999999998,
+  "max_rss_bytes" : 548061184,
+  "method" : "Separate release native-window process for each workload. UI acknowledgements include synchronous layout\/displayIfNeeded. Preview completion polled at 10ms; ten selected-file changes include debounce, validation of reused bytes, rendering and display. First\/cold preview retained separately. RSS is process high-water memory.",
+  "os" : "Version 26.6.2 (Build 25G83)",
+  "per_input_seconds" : [
+    0.076317708999999997,
+    0.070145874999999996,
+    0.063017291000000003,
+    0.063830790999999998,
+    0.15878679100000001,
+    0.157292083,
+    0.010013375,
+    0.017884750000000001,
+    0.017708667000000001,
+    0.40012808399999999
+  ],
+  "policy" : "Keep original format",
+  "selected_indices" : [
+    1,
+    9,
+    0,
+    5,
+    2,
+    8,
+    3,
+    6,
+    0,
+    7
+  ],
+  "selected_preview_seconds" : [
+    0.17485170899999999,
+    0.12739241700000001,
+    0.15628370899999999,
+    0.20166320800000001,
+    0.18327533400000001,
+    0.1348065,
+    0.18150408300000001,
+    0.120927375,
+    0.15165616700000001,
+    0.13746958300000001
+  ],
+  "selection_ack_seconds" : [
+    0.0066483749999999998,
+    0.010316708000000001,
+    0.0084662090000000006,
+    0.0080510410000000001,
+    0.0070577499999999998,
+    0.0096690839999999997,
+    0.0084010830000000002,
+    0.007463,
+    0.008596167,
+    0.010021250000000001
+  ],
+  "source_files" : [
+    {
+      "bytes" : 346803,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 3000,
+          "width" : 4000
+        }
+      ],
+      "inode" : 53671130,
+      "name" : "000.jpg",
+      "origin" : "native-12mp",
+      "pages" : 1,
+      "sha256" : "68aa597d8bc8eb3dddb79616052a0a3d1fb3c754f2299c8a675b4125979e83e2",
+      "subset" : true
+    },
+    {
+      "bytes" : 346803,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 3000,
+          "width" : 4000
+        }
+      ],
+      "inode" : 53671131,
+      "name" : "001.jpeg",
+      "origin" : "native-12mp",
+      "pages" : 1,
+      "sha256" : "68aa597d8bc8eb3dddb79616052a0a3d1fb3c754f2299c8a675b4125979e83e2",
+      "subset" : true
+    },
+    {
+      "bytes" : 346803,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 3000,
+          "width" : 4000
+        }
+      ],
+      "inode" : 53671132,
+      "name" : "002.jpg",
+      "origin" : "native-12mp",
+      "pages" : 1,
+      "sha256" : "68aa597d8bc8eb3dddb79616052a0a3d1fb3c754f2299c8a675b4125979e83e2",
+      "subset" : true
+    },
+    {
+      "bytes" : 346803,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 3000,
+          "width" : 4000
+        }
+      ],
+      "inode" : 53671133,
+      "name" : "003.jpeg",
+      "origin" : "native-12mp",
+      "pages" : 1,
+      "sha256" : "68aa597d8bc8eb3dddb79616052a0a3d1fb3c754f2299c8a675b4125979e83e2",
+      "subset" : true
+    },
+    {
+      "bytes" : 312920,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 3000,
+          "width" : 4000
+        }
+      ],
+      "inode" : 53671170,
+      "name" : "040.png",
+      "origin" : "native-12mp",
+      "pages" : 1,
+      "sha256" : "72286209b78f90aa01c7e89888caa010567befc6d8cbf8209f1a15c8cc043a02",
+      "subset" : true
+    },
+    {
+      "bytes" : 312920,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 3000,
+          "width" : 4000
+        }
+      ],
+      "inode" : 53671171,
+      "name" : "041.png",
+      "origin" : "native-12mp",
+      "pages" : 1,
+      "sha256" : "72286209b78f90aa01c7e89888caa010567befc6d8cbf8209f1a15c8cc043a02",
+      "subset" : true
+    },
+    {
+      "bytes" : 29605,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "height" : 640,
+          "width" : 1000
+        }
+      ],
+      "inode" : 53671172,
+      "name" : "042.png",
+      "origin" : "opaque.png",
+      "pages" : 1,
+      "sha256" : "d9fbb478f2979e22c2a7c8eefffe2f91b3ceee9ed791b22665987f32d8774b31",
+      "subset" : true
+    },
+    {
+      "bytes" : 3004,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{20, 50}, {260, 320}}",
+          "height" : 260,
+          "rotation" : 90,
+          "width" : 320
+        }
+      ],
+      "inode" : 53671200,
+      "name" : "070.pdf",
+      "origin" : "document.pdf",
+      "pages" : 2,
+      "sha256" : "13bb7ac06644eb115273fc4cf11c66a16dd8eef1ff13fecacc402243e9e22149",
+      "subset" : true
+    },
+    {
+      "bytes" : 78313,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "crop" : "{{0, 0}, {400, 256}}",
+          "height" : 256,
+          "rotation" : 0,
+          "width" : 400
+        }
+      ],
+      "inode" : 53671201,
+      "name" : "071.pdf",
+      "origin" : "scan.pdf",
+      "pages" : 1,
+      "sha256" : "4102aae72c4fcc076bc922758255885e604670e6e1c8bf3997366e86d3b713a8",
+      "subset" : true
+    },
+    {
+      "bytes" : 23904,
+      "device" : 16777231,
+      "geometry" : [
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        },
+        {
+          "crop" : "{{0, 0}, {400, 280}}",
+          "height" : 280,
+          "rotation" : 0,
+          "width" : 400
+        }
+      ],
+      "inode" : 53671203,
+      "name" : "073.pdf",
+      "origin" : "pages-50.pdf",
+      "pages" : 50,
+      "sha256" : "3e998b127b753c165915f3882754eaba6cbfc91097042966be028a37f585a192",
+      "subset" : true
+    }
+  ],
+  "window_points" : "{1040, 752}"
+}

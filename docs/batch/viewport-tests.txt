@@ -1,0 +1,38 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--1AB21518FC5DEDBE.txt
+[4/11] Emitting module WatermarkCore
+[5/11] Compiling WatermarkCore PreviewRendering.swift
+[6/11] Compiling WatermarkCore Renderer.swift
+[7/13] Compiling WatermarkCore Document.swift
+[8/13] Compiling WatermarkCore Processing.swift
+[9/24] Compiling PassportFiligrane PassportFiligraneApp.swift
+[10/24] Compiling WatermarkCoreTests ViewportTests.swift
+[11/24] Compiling WatermarkCoreTests PerformanceTests.swift
+[12/24] Compiling PassportFiligrane Session.swift
+[13/24] Compiling PassportFiligrane ContentView.swift
+[14/24] Emitting module PassportFiligrane
+[14/24] Write Objects.LinkFileList
+[16/24] Compiling WatermarkCoreTests PagePreviewTests.swift
+[17/24] Compiling WatermarkCoreTests BatchContractTests.swift
+[18/24] Emitting module WatermarkCoreTests
+[19/24] Compiling WatermarkCoreTests BatchCorpusTests.swift
+[20/24] Compiling WatermarkCoreTests DocumentTests.swift
+[20/24] Linking PassportFiligrane
+[21/24] Applying PassportFiligrane
+[23/26] Compiling PassportFiligraneTests SessionTests.swift
+[24/26] Emitting module PassportFiligraneTests
+[24/26] Write Objects.LinkFileList
+[25/26] Linking PassportFiligranePackageTests
+Build complete! (2.87s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite ViewportTests started.
+◇ Test fitZoomAndBufferBounds() started.
+◇ Test panningPreservesDocumentOrigin() started.
+✔ Test fitZoomAndBufferBounds() passed after 0.040 seconds.
+✔ Test panningPreservesDocumentOrigin() passed after 0.053 seconds.
+✔ Suite ViewportTests passed after 0.053 seconds.
+✔ Test run with 2 tests in 1 suite passed after 0.053 seconds.

@@ -1,0 +1,33 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--1AB21518FC5DEDBE.txt
+[4/10] Emitting module WatermarkCore
+[5/10] Compiling WatermarkCore Batch.swift
+[6/19] Compiling PassportFiligrane PassportFiligraneApp.swift
+[7/19] Compiling PassportFiligrane Session.swift
+[8/19] Emitting module PassportFiligrane
+[9/19] Compiling PassportFiligrane ContentView.swift
+[9/19] Write Objects.LinkFileList
+[11/19] Compiling WatermarkCoreTests BatchCorpusTests.swift
+[12/19] Compiling WatermarkCoreTests PerformanceTests.swift
+[13/19] Emitting module WatermarkCoreTests
+[14/19] Compiling WatermarkCoreTests BatchContractTests.swift
+[15/19] Compiling WatermarkCoreTests DocumentTests.swift
+[15/19] Linking PassportFiligrane
+[16/19] Applying PassportFiligrane
+[18/21] Emitting module PassportFiligraneTests
+[19/21] Compiling PassportFiligraneTests SessionTests.swift
+[19/21] Write Objects.LinkFileList
+[20/21] Linking PassportFiligranePackageTests
+Build complete! (3.46s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite BatchContractTests started.
+◇ Test orderedSelectionAndIndependentStates() started.
+◇ Test sharedPolicyAndDefaults() started.
+✔ Test sharedPolicyAndDefaults() passed after 0.001 seconds.
+✔ Test orderedSelectionAndIndependentStates() passed after 0.001 seconds.
+✔ Suite BatchContractTests passed after 0.001 seconds.
+✔ Test run with 2 tests in 1 suite passed after 0.001 seconds.

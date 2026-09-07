@@ -58,7 +58,7 @@ struct PerformanceTests {
         try bytes.write(to: output.appendingPathComponent("native-processing.json"))
     }
 
-    @Test func recordFiftyPageStress() throws {
+    @Test func recordFiftyPageStress() async throws {
         let output = URL(fileURLWithPath: ProcessInfo.processInfo.environment["PASSPORT_BENCHMARK_OUTPUT"]!)
         try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
         let source = try SourceDocument.load(Bundle.module.url(forResource: "pages-50", withExtension: "pdf", subdirectory: "Fixtures")!)
@@ -71,8 +71,43 @@ struct PerformanceTests {
         #expect(pdf.pageCount == 50)
         #expect((pdf.string ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         var usage = rusage(); getrusage(RUSAGE_SELF, &usage)
+        var item = BatchItem(url: source.url)
+        item.validation = .ready(try SourceValidation.inspect(item))
+        let snapshot = item
+        let snapshotSettings = settings
+        let cancellation = CancellationObservation()
+        let cancelStart = ContinuousClock.now
+        let task = Task.detached {
+            await BatchExport.run(items: [snapshot], watermark: WatermarkSettings(), policy: .pdf,
+                settings: snapshotSettings, destination: output, boundary: { _, boundary in
+                    if case .beforePage(25) = boundary {
+                        cancellation.record()
+                        withUnsafeCurrentTask { $0?.cancel() }
+                    }
+                }, update: { _, _, _ in })
+        }
+        let cancelled = await task.value
+        #expect(cancelled.cancelled && cancelled.saved == 0 && cancelled.unprocessed == 1)
+        let cancelElapsed = cancelStart.duration(to: .now).components
         let report: [String: Any] = ["pages": 50, "dpi": 600, "seconds": Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18,
+            "cancellation_boundary": "Before page index 25 of 50, 600 DPI",
+            "cancelled_run_seconds": Double(cancelElapsed.seconds) + Double(cancelElapsed.attoseconds) / 1e18,
+            "cancellation_completion_seconds": cancellation.elapsed(),
+            "cancelled_saved": cancelled.saved, "cancelled_unprocessed": cancelled.unprocessed,
             "max_rss_bytes": usage.ru_maxrss, "output_bytes": (try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber) ?? 0]
         try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]).write(to: output.appendingPathComponent("native-stress.json"))
+    }
+}
+
+private final class CancellationObservation: @unchecked Sendable {
+    private let lock = NSLock()
+    private var requested: ContinuousClock.Instant?
+    func record() { lock.withLock { requested = .now } }
+    func elapsed() -> Double {
+        lock.withLock {
+            guard let requested else { return -1 }
+            let value = requested.duration(to: .now).components
+            return Double(value.seconds) + Double(value.attoseconds) / 1e18
+        }
     }
 }

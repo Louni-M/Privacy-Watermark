@@ -1,0 +1,12 @@
+{
+  "cancellation_boundary" : "Before page index 25 of 50, 600 DPI",
+  "cancellation_completion_seconds" : 0.001555833,
+  "cancelled_run_seconds" : 0.35345420900000002,
+  "cancelled_saved" : 0,
+  "cancelled_unprocessed" : 1,
+  "dpi" : 600,
+  "max_rss_bytes" : 114802688,
+  "output_bytes" : 10389962,
+  "pages" : 50,
+  "seconds" : 0.71349233400000001
+}

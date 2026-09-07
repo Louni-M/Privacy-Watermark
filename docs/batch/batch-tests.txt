@@ -1,0 +1,98 @@
+Building for debugging...
+[0/7] Write sources
+[2/7] Write swift-version--1AB21518FC5DEDBE.txt
+[4/9] Compiling PassportFiligraneTests PreviewWorkerTests.swift
+[5/9] Emitting module PassportFiligraneTests
+[6/9] Compiling WatermarkCoreTests BatchExportTests.swift
+[7/9] Emitting module WatermarkCoreTests
+[7/9] Write Objects.LinkFileList
+[8/9] Linking PassportFiligranePackageTests
+Build complete! (0.98s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite PreviewWorkerTests started.
+◇ Suite BatchExportTests started.
+◇ Suite PagePreviewTests started.
+◇ Suite SessionTests started.
+◇ Suite DocumentTests started.
+◇ Suite ViewportTests started.
+◇ Suite BatchContractTests started.
+➜ Suite PerformanceTests skipped.
+◇ Test cacheBoundRevisionAndSourceOwnership() started.
+◇ Suite BatchCorpusTests started.
+◇ Test pageImagePreviewMatchesSavedPNG() started.
+◇ Test pageBoundsAndGeometry() started.
+◇ Test panningPreservesDocumentOrigin() started.
+◇ Test defaultsAppendSelectionAndNavigation() started.
+➜ Test recordFiftyPageStress() skipped.
+➜ Test recordProcessingMatrix() skipped.
+◇ Test sharedPolicyAndDefaults() started.
+◇ Test fitZoomAndBufferBounds() started.
+◇ Test identityAndChangedSourceRecovery() started.
+◇ Test orderedSelectionAndIndependentStates() started.
+◇ Test deterministicMixedCorpus() started.
+◇ Test testDefaults() started.
+✔ Test sharedPolicyAndDefaults() passed after 0.001 seconds.
+✔ Test orderedSelectionAndIndependentStates() passed after 0.001 seconds.
+✔ Test testDefaults() passed after 0.001 seconds.
+✔ Suite BatchContractTests passed after 0.001 seconds.
+◇ Test testSupportedInputsAndLimits() started.
+CoreGraphics PDF has logged an error. Set environment variable "CG_PDF_VERBOSE" to learn more.
+✔ Test testSupportedInputsAndLimits() passed after 0.026 seconds.
+◇ Test testImageFormatMatrixAndMetadata() started.
+✔ Test identityAndChangedSourceRecovery() passed after 0.030 seconds.
+◇ Test safeNamesAndLateCollision() started.
+✔ Test fitZoomAndBufferBounds() passed after 0.066 seconds.
+✔ Test panningPreservesDocumentOrigin() passed after 0.067 seconds.
+✔ Suite ViewportTests passed after 0.067 seconds.
+✔ Test safeNamesAndLateCollision() passed after 0.040 seconds.
+◇ Test wholePageSeriesCancellationBoundaries() started.
+✔ Test pageBoundsAndGeometry() passed after 0.080 seconds.
+✔ Test pageImagePreviewMatchesSavedPNG() passed after 0.117 seconds.
+✔ Suite PagePreviewTests passed after 0.117 seconds.
+✔ Test testImageFormatMatrixAndMetadata() passed after 0.107 seconds.
+◇ Test testStandardPDFPreservesTextGeometryAndLinks() started.
+✔ Test testStandardPDFPreservesTextGeometryAndLinks() passed after 0.005 seconds.
+◇ Test testFlattenedPDFAndPageSeriesMatrix() started.
+✔ Test wholePageSeriesCancellationBoundaries() passed after 0.112 seconds.
+◇ Test allocatorRespectsFilesystemCollisionsAndReservations() started.
+✔ Test allocatorRespectsFilesystemCollisionsAndReservations() passed after 0.001 seconds.
+◇ Test runContinuesAfterFailureAndCountsExcludedRows() started.
+✔ Test runContinuesAfterFailureAndCountsExcludedRows() passed after 0.055 seconds.
+✔ Suite BatchExportTests passed after 0.240 seconds.
+✔ Test defaultsAppendSelectionAndNavigation() passed after 0.356 seconds.
+◇ Test staleWorkAndRemovalDuringValidation() started.
+✔ Test testFlattenedPDFAndPageSeriesMatrix() passed after 0.248 seconds.
+◇ Test testRepeatExportUsesOriginalAndLatestSettings() started.
+✔ Test testRepeatExportUsesOriginalAndLatestSettings() passed after 0.015 seconds.
+◇ Test testDestinationsProtectSourceAndExistingFiles() started.
+✔ Test testDestinationsProtectSourceAndExistingFiles() passed after 0.001 seconds.
+◇ Test testInvalidWatermarkAndInvisiblePreview() started.
+✔ Test cacheBoundRevisionAndSourceOwnership() passed after 0.413 seconds.
+✔ Suite PreviewWorkerTests passed after 0.413 seconds.
+✔ Test testInvalidWatermarkAndInvisiblePreview() passed after 0.016 seconds.
+◇ Test testExactFileAndImageDimensionBoundaries() started.
+✔ Test testExactFileAndImageDimensionBoundaries() passed after 0.043 seconds.
+◇ Test testAllWatermarkAdjustmentsAndAlphaDiscard() started.
+✔ Test staleWorkAndRemovalDuringValidation() passed after 0.312 seconds.
+◇ Test exportSnapshotsMutationGuardsCancellationAndRecovery() started.
+✔ Test testAllWatermarkAdjustmentsAndAlphaDiscard() passed after 0.213 seconds.
+◇ Test testTransactionRollsBackAllFilesWhenCommitFails() started.
+✔ Test testTransactionRollsBackAllFilesWhenCommitFails() passed after 0.001 seconds.
+◇ Test testSymlinkDestinationCannotReplaceSource() started.
+✔ Test testSymlinkDestinationCannotReplaceSource() passed after 0.003 seconds.
+◇ Test testMetadataRemovalRejectsBrokenEncodedContainers() started.
+✔ Test testMetadataRemovalRejectsBrokenEncodedContainers() passed after 0.001 seconds.
+✔ Suite DocumentTests passed after 0.687 seconds.
+✔ Test exportSnapshotsMutationGuardsCancellationAndRecovery() passed after 0.264 seconds.
+◇ Test changedSourceNeverUsesCachedPreview() started.
+✔ Test deterministicMixedCorpus() passed after 1.110 seconds.
+➜ Test recordCorpus() skipped.
+✔ Suite BatchCorpusTests passed after 1.110 seconds.
+✔ Test changedSourceNeverUsesCachedPreview() passed after 0.301 seconds.
+◇ Test previewCompletesWhileExportWorkerIsBlocked() started.
+✔ Test previewCompletesWhileExportWorkerIsBlocked() passed after 0.211 seconds.
+➜ Test renderNativeInterface() skipped.
+✔ Suite SessionTests passed after 1.447 seconds.
+✔ Test run with 35 tests in 9 suites passed after 1.447 seconds.

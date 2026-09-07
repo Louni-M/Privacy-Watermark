@@ -1,0 +1,8 @@
+Building for production...
+[0/5] Write sources
+[2/5] Write swift-version--1AB21518FC5DEDBE.txt
+[4/6] Compiling WatermarkCore Document.swift
+[5/7] Compiling PassportFiligrane ContentView.swift
+[5/7] Write Objects.LinkFileList
+[6/7] Linking PassportFiligrane
+Build complete! (35.30s)

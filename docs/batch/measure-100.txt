@@ -1,0 +1,16 @@
+[0/1] Planning build
+Building for production...
+[0/2] Write swift-version--1AB21518FC5DEDBE.txt
+Build complete! (0.12s)
+/Users/louni/Code/PassportFiligrane/.build/arm64-apple-macosx/release/NativeSmoke.app: replacing existing signature
+SMOKE: starting native window
+SMOKE: Measured 100-file native-window workload
+{
+  "architecture" : "arm64",
+  "checks" : [
+    "Measured 100-file native-window workload"
+  ],
+  "error" : "",
+  "os" : "Version 26.6.2 (Build 25G83)",
+  "passed" : true
+}

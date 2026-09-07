@@ -14,6 +14,7 @@ mkdir -p "$smoke_app/Contents/MacOS"
 swiftc -O -parse-as-library -swift-version 6 -target "$architecture-apple-macosx14.0" \
     -I "$binary_dir/Modules" \
     Sources/PassportFiligrane/Session.swift Sources/PassportFiligrane/ContentView.swift \
+    Sources/PassportFiligrane/PreviewWorker.swift Sources/PassportFiligrane/PreviewHost.swift \
     scripts/SmokeTest.swift "$binary_dir/WatermarkCore.build/"*.o \
     -o "$smoke_app/Contents/MacOS/NativeSmoke"
 cp scripts/Info.plist "$smoke_app/Contents/Info.plist"

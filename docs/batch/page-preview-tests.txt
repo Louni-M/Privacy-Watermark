@@ -1,0 +1,88 @@
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[2/7] Write swift-version--1AB21518FC5DEDBE.txt
+[4/10] Compiling WatermarkCore Document.swift
+[5/10] Emitting module WatermarkCore
+[6/10] Compiling WatermarkCore Processing.swift
+[7/14] Compiling WatermarkCore OutputTransaction.swift
+[8/14] Compiling WatermarkCore ImagePDFWriter.swift
+[9/14] Compiling WatermarkCore ImageMetadata.swift
+[10/14] Compiling WatermarkCore Renderer.swift
+[11/22] Compiling PassportFiligrane Session.swift
+[12/22] Emitting module PassportFiligrane
+[12/22] Write Objects.LinkFileList
+[14/22] Emitting module WatermarkCoreTests
+[15/22] Compiling WatermarkCoreTests PerformanceTests.swift
+[16/22] Compiling WatermarkCoreTests BatchCorpusTests.swift
+[17/22] Compiling WatermarkCoreTests PagePreviewTests.swift
+[18/22] Compiling WatermarkCoreTests DocumentTests.swift
+[18/22] Linking PassportFiligrane
+[19/22] Applying PassportFiligrane
+[20/22] Write Objects.LinkFileList
+[21/22] Linking PassportFiligranePackageTests
+Build complete! (2.08s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite SessionTests started.
+◇ Suite BatchCorpusTests started.
+◇ Suite BatchContractTests started.
+➜ Suite PerformanceTests skipped.
+◇ Suite PagePreviewTests started.
+◇ Suite DocumentTests started.
+◇ Test orderedSelectionAndIndependentStates() started.
+◇ Test defaultsAndFileSwitching() started.
+➜ Test recordProcessingMatrix() skipped.
+◇ Test sharedPolicyAndDefaults() started.
+◇ Test deterministicMixedCorpus() started.
+➜ Test recordFiftyPageStress() skipped.
+◇ Test pageBoundsAndGeometry() started.
+◇ Test testDefaults() started.
+◇ Test pageImagePreviewMatchesSavedPNG() started.
+✔ Test testDefaults() passed after 0.001 seconds.
+◇ Test testSupportedInputsAndLimits() started.
+✔ Test sharedPolicyAndDefaults() passed after 0.001 seconds.
+✔ Test orderedSelectionAndIndependentStates() passed after 0.001 seconds.
+✔ Suite BatchContractTests passed after 0.001 seconds.
+CoreGraphics PDF has logged an error. Set environment variable "CG_PDF_VERBOSE" to learn more.
+✔ Test testSupportedInputsAndLimits() passed after 0.020 seconds.
+◇ Test testImageFormatMatrixAndMetadata() started.
+✔ Test pageBoundsAndGeometry() passed after 0.053 seconds.
+✔ Test pageImagePreviewMatchesSavedPNG() passed after 0.084 seconds.
+✔ Suite PagePreviewTests passed after 0.084 seconds.
+✔ Test testImageFormatMatrixAndMetadata() passed after 0.103 seconds.
+◇ Test testStandardPDFPreservesTextGeometryAndLinks() started.
+✔ Test testStandardPDFPreservesTextGeometryAndLinks() passed after 0.005 seconds.
+◇ Test testFlattenedPDFAndPageSeriesMatrix() started.
+✔ Test defaultsAndFileSwitching() passed after 0.291 seconds.
+◇ Test staleLoadsAndPreviewsDoNotReplaceLatestState() started.
+✔ Test testFlattenedPDFAndPageSeriesMatrix() passed after 0.229 seconds.
+◇ Test testRepeatExportUsesOriginalAndLatestSettings() started.
+✔ Test testRepeatExportUsesOriginalAndLatestSettings() passed after 0.014 seconds.
+◇ Test testDestinationsProtectSourceAndExistingFiles() started.
+✔ Test testDestinationsProtectSourceAndExistingFiles() passed after 0.002 seconds.
+◇ Test testInvalidWatermarkAndInvisiblePreview() started.
+✔ Test testInvalidWatermarkAndInvisiblePreview() passed after 0.017 seconds.
+◇ Test testExactFileAndImageDimensionBoundaries() started.
+✔ Test testExactFileAndImageDimensionBoundaries() passed after 0.029 seconds.
+◇ Test testAllWatermarkAdjustmentsAndAlphaDiscard() started.
+✔ Test staleLoadsAndPreviewsDoNotReplaceLatestState() passed after 0.289 seconds.
+◇ Test invalidReplacementPreservesUsableDocumentAndRecovers() started.
+✔ Test testAllWatermarkAdjustmentsAndAlphaDiscard() passed after 0.212 seconds.
+◇ Test testTransactionRollsBackAllFilesWhenCommitFails() started.
+✔ Test testTransactionRollsBackAllFilesWhenCommitFails() passed after 0.002 seconds.
+◇ Test testSymlinkDestinationCannotReplaceSource() started.
+✔ Test testSymlinkDestinationCannotReplaceSource() passed after 0.004 seconds.
+◇ Test testMetadataRemovalRejectsBrokenEncodedContainers() started.
+✔ Test testMetadataRemovalRejectsBrokenEncodedContainers() passed after 0.001 seconds.
+✔ Suite DocumentTests passed after 0.641 seconds.
+✔ Test invalidReplacementPreservesUsableDocumentAndRecovers() passed after 0.410 seconds.
+◇ Test exportLatestSettingsAndRecoverAfterFailure() started.
+✔ Test deterministicMixedCorpus() passed after 1.016 seconds.
+➜ Test recordCorpus() skipped.
+✔ Suite BatchCorpusTests passed after 1.016 seconds.
+✔ Test exportLatestSettingsAndRecoverAfterFailure() passed after 0.190 seconds.
+➜ Test renderNativeInterface() skipped.
+✔ Suite SessionTests passed after 1.182 seconds.
+✔ Test run with 26 tests in 6 suites passed after 1.182 seconds.

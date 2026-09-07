@@ -1,0 +1,23 @@
+{
+  "10": {
+    "selection_ack_p95": 0.010316708,
+    "preview_p95": 0.201663208,
+    "cancel_ack_p95": 0.020721041,
+    "import": 0.40817,
+    "export": 1.13791025,
+    "rss": 548061184,
+    "per_input_median": 0.066988333
+  },
+  "100": {
+    "selection_ack_p95": 0.01193075,
+    "preview_p95": 0.189172709,
+    "cancel_ack_p95": 0.022011541,
+    "import": 1.189238459,
+    "export": 5.6149175,
+    "rss": 472907776,
+    "per_input_median": 0.0083827915
+  },
+  "memory_budget": 1163231232,
+  "memory_pass": true,
+  "timings_pass": true
+}

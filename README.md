@@ -1,16 +1,21 @@
 # Passport Filigrane
 
-A native macOS app for adding a watermark to a document before sharing a copy. Built with SwiftUI, PDFKit, Core Graphics and ImageIO; all processing stays on your Mac.
+A native macOS app for watermarking images and PDFs together before sharing copies. Built with SwiftUI, PDFKit, Core Graphics and ImageIO; all processing stays on your Mac.
 
 Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
 ## Use
 
-1. Choose **Open** or press **⌘O** to select a JPG, JPEG, PNG or PDF.
-2. Enter the watermark text. Expand **Appearance** to adjust opacity, size, spacing, color and diagonal direction.
-3. Choose an output format and **Export copy…**. Your original stays unchanged.
+1. Choose **Add files** or press **⌘O** to select JPG, JPEG, PNG and PDF files, or drag files into the window. Later additions append to the list; repeated additions of the same file are ignored.
+2. Enter the shared watermark text. Expand **Appearance** to adjust opacity, size, spacing, color and diagonal direction for every file.
+3. Select a file to inspect it. PDF arrows navigate every page; use zoom and scrolling for details, or **Fit to window** for the whole page.
+4. Keep each input's original format, or choose PDF, JPG or PNG for the batch. Choose **Export all…** and one destination folder. Your originals stay unchanged.
 
-The preview shows the image or first PDF page; export processes every page. Settings persist while switching documents during the session.
+Remove individual files or choose **Clear all** to empty the list. Shared settings survive additions, removals and selection changes; restarting restores defaults and an empty batch. Selecting another file resets page and view to the first page and Fit. Changing PDF page preserves your zoom.
+
+Copies use `<name>_watermarked.ext`, adding ` (2)`, ` (3)` and so on when names are already used. PDFs converted to images get a separate `<name>_watermarked` folder containing numbered `<name>_page_001.jpg` or `.png` files. Inputs are never merged, existing destinations are never replaced, and another export creates new copies. This folder workflow also applies to one file; PNG input defaults to PNG.
+
+Files validate progressively. Invalid files stay visible and do not prevent valid files from exporting once checking finishes. During export, you can browse previews or **Cancel**; collection and shared settings are locked. Cancellation keeps completed copies and removes unfinished output. The summary distinguishes saved, failed and unprocessed files. If a queued source changes or becomes unavailable, restore access and remove/add it again to review its current content.
 
 | Input | Output |
 |---|---|
@@ -50,7 +55,7 @@ scripts/build-app.sh
 scripts/smoke-test.sh
 ```
 
-CI runs native tests, universal builds, built-app launch and window/export smoke checks on macOS 14 Apple Silicon and macOS 15 Intel. The [migration acceptance record](docs/migration/acceptance.md) contains measured performance and retained validation evidence.
+CI is configured for native tests, universal builds, built-app launch and window/export smoke checks on macOS 14 Apple Silicon and macOS 15 Intel. See the [batch acceptance record](docs/batch/acceptance.md) for current results and pending checks; the [migration record](docs/migration/acceptance.md) retains historical evidence.
 
 ## Source layout
 

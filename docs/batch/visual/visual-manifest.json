@@ -1,0 +1,238 @@
+{
+  "comparisons": [
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "document.pdf",
+      "mode": "standard",
+      "page_index": 0,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "document.pdf-standard/0-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "document.pdf",
+      "mode": "standard",
+      "page_index": 1,
+      "pan": "{{80, 65}, {160, 130}}",
+      "sheet": "document.pdf-standard/1-comparison.png",
+      "size": "{320, 260}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "document.pdf",
+      "mode": "flattened",
+      "page_index": 0,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "document.pdf-flattened/0-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "document.pdf",
+      "mode": "flattened",
+      "page_index": 1,
+      "pan": "{{80, 65}, {160, 130}}",
+      "sheet": "document.pdf-flattened/1-comparison.png",
+      "size": "{320, 260}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "document.pdf",
+      "mode": "pages",
+      "page_index": 0,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "document.pdf-pages/0-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "document.pdf",
+      "mode": "pages",
+      "page_index": 1,
+      "pan": "{{80, 65}, {160, 130}}",
+      "sheet": "document.pdf-pages/1-comparison.png",
+      "size": "{320, 260}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "standard",
+      "page_index": 0,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-standard/0-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "standard",
+      "page_index": 5,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-standard/5-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "standard",
+      "page_index": 9,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-standard/9-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "flattened",
+      "page_index": 0,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-flattened/0-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "flattened",
+      "page_index": 5,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-flattened/5-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "flattened",
+      "page_index": 9,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-flattened/9-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "pages",
+      "page_index": 0,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-pages/0-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "pages",
+      "page_index": 5,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-pages/5-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "pages-10.pdf",
+      "mode": "pages",
+      "page_index": 9,
+      "pan": "{{100, 70}, {200, 140}}",
+      "sheet": "pages-10.pdf-pages/9-comparison.png",
+      "size": "{400, 280}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "transparent.png",
+      "mode": "standard",
+      "page_index": 0,
+      "pan": "{{80, 50}, {160, 100}}",
+      "sheet": "transparent.png-standard/0-comparison.png",
+      "size": "{320, 200}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "transparent.png",
+      "mode": "flattened",
+      "page_index": 0,
+      "pan": "{{80, 50}, {160, 100}}",
+      "sheet": "transparent.png-flattened/0-comparison.png",
+      "size": "{320, 200}"
+    },
+    {
+      "columns": [
+        "saved",
+        "fit preview",
+        "zoomed/panned preview"
+      ],
+      "file": "transparent.png",
+      "mode": "pages",
+      "page_index": 0,
+      "pan": "{{80, 50}, {160, 100}}",
+      "sheet": "transparent.png-pages/0-comparison.png",
+      "size": "{320, 200}"
+    }
+  ]
+}

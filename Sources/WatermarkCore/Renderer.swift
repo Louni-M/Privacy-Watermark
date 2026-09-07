@@ -85,11 +85,14 @@ enum Renderer {
         }
     }
 
-    static func renderImage(_ source: SourceDocument, settings: WatermarkSettings, maxDimension: CGFloat? = nil) throws -> CGImage {
+    static func renderImage(_ source: SourceDocument, settings: WatermarkSettings, maxDimension: CGFloat? = nil,
+                            region: CGRect? = nil, renderScale: CGFloat? = nil) throws -> CGImage {
         let image = try imageSource(source)
         let size = CGSize(width: image.width, height: image.height)
-        let scale = maxDimension.map { min(1, $0 / max(size.width, size.height)) } ?? 1
-        let context = try bitmap(size: size, scale: scale)
+        let scale = renderScale ?? (maxDimension.map { min(1, $0 / max(size.width, size.height)) } ?? 1)
+        let region = region ?? CGRect(origin: .zero, size: size)
+        let context = try bitmap(size: region.size, scale: scale)
+        context.translateBy(x: -region.minX, y: -region.minY)
         context.draw(image, in: CGRect(origin: .zero, size: size))
         if let transparent = source.transparentImage, !settings.text.isEmpty, settings.opacity > 0 {
             // Match RGBA compositing followed by alpha removal. Keep hidden source
@@ -101,6 +104,7 @@ enum Renderer {
                 let output = context.data?.assumingMemoryBound(to: UInt8.self)
             else { throw DocumentError.renderFailed }
             overlay.scaleBy(x: scale, y: scale)
+            overlay.translateBy(x: -region.minX, y: -region.minY)
             overlay.draw(transparent, in: CGRect(origin: .zero, size: size))
             watermark(overlay, size: size, settings: settings, raster: true)
             for y in 0..<context.height {
@@ -121,9 +125,12 @@ enum Renderer {
         return result
     }
 
-    static func renderPage(_ page: PDFPage, settings: WatermarkSettings, scale: CGFloat, raster: Bool) throws -> CGImage {
+    static func renderPage(_ page: PDFPage, settings: WatermarkSettings, scale: CGFloat, raster: Bool,
+                           region: CGRect? = nil) throws -> CGImage {
         let size = pageSize(page)
-        let context = try bitmap(size: size, scale: scale)
+        let region = region ?? CGRect(origin: .zero, size: size)
+        let context = try bitmap(size: region.size, scale: scale)
+        context.translateBy(x: -region.minX, y: -region.minY)
         context.saveGState()
         if page.annotations.isEmpty, let reference = page.pageRef {
             context.concatenate(reference.getDrawingTransform(.cropBox, rect: CGRect(origin: .zero, size: size), rotate: 0, preserveAspectRatio: true))
