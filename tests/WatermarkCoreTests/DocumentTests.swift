@@ -194,6 +194,15 @@ final class DocumentTests {
         normalized.draw(clean, in: CGRect(x: 0, y: 0, width: clean.width, height: clean.height))
         let rgb = try require(normalized.makeImage()?.dataProvider?.data) as Data
         checkEqual(Array(rgb.prefix(3)), [UInt8(90), 140, 180])
+        watermark.opacity = 30
+        let marked = try Renderer.renderImage(source, settings: watermark)
+        normalized.draw(marked, in: CGRect(x: 0, y: 0, width: clean.width, height: clean.height))
+        let markedRGB = try require(normalized.makeImage()?.dataProvider?.data) as Data
+        // On a fully transparent background the watermark retains its own RGB
+        // after alpha is discarded, even when its opacity is below 100%.
+        checkTrue(stride(from: 0, to: normalized.bytesPerRow * 30, by: 4).contains {
+            markedRGB[$0] > 240 && markedRGB[$0 + 1] > 240 && markedRGB[$0 + 2] > 240
+        })
         let baseline = try Renderer.encoded(clean, format: .png)
         var results = Set<Data>()
         for color in WatermarkColor.allCases {

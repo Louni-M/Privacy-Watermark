@@ -3,6 +3,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 configuration="${CONFIGURATION:-release}"
 smoke_output="${PASSPORT_SMOKE_OUTPUT:-.build/smoke-output}"
+if [[ -d 'dist/Passport Filigrane.app' ]]; then
+    swift scripts/LaunchCheck.swift "$PWD/dist/Passport Filigrane.app" "$smoke_output"
+fi
 swift build -c "$configuration"
 binary_dir="$(swift build -c "$configuration" --show-bin-path)"
 architecture="$(uname -m)"

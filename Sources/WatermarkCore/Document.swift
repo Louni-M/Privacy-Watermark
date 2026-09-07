@@ -71,6 +71,7 @@ public struct SourceDocument: Sendable {
     public let pixelWidth: Int
     public let pixelHeight: Int
     let decodedImage: CGImage?
+    let transparentImage: CGImage?
     public static let maximumBytes = 100 * 1024 * 1024
 
     public static func load(_ url: URL) throws -> SourceDocument {
@@ -85,7 +86,7 @@ public struct SourceDocument: Sendable {
             guard !pdf.isEncrypted else { throw DocumentError.protectedPDF }
             guard pdf.pageCount > 0 else { throw DocumentError.invalidPDF }
             guard pdf.pageCount <= 50 else { throw DocumentError.pageLimit }
-            return SourceDocument(url: url, data: data, kind: .pdf, pageCount: pdf.pageCount, pixelWidth: 0, pixelHeight: 0, decodedImage: nil)
+            return SourceDocument(url: url, data: data, kind: .pdf, pageCount: pdf.pageCount, pixelWidth: 0, pixelHeight: 0, decodedImage: nil, transparentImage: nil)
         }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil),
               CGImageSourceGetCount(source) > 0,
@@ -100,6 +101,7 @@ public struct SourceDocument: Sendable {
         let context = try Renderer.bitmap(size: CGSize(width: width, height: height))
         context.draw(Renderer.opaqueImage(image), in: CGRect(x: 0, y: 0, width: width, height: height))
         guard let decoded = context.makeImage() else { throw DocumentError.invalidImage }
-        return SourceDocument(url: url, data: data, kind: .image, pageCount: 1, pixelWidth: width, pixelHeight: height, decodedImage: decoded)
+        let hasAlpha = [.first, .last, .premultipliedFirst, .premultipliedLast].contains(image.alphaInfo)
+        return SourceDocument(url: url, data: data, kind: .image, pageCount: 1, pixelWidth: width, pixelHeight: height, decodedImage: decoded, transparentImage: hasAlpha ? image : nil)
     }
 }

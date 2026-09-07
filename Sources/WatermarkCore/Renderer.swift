@@ -91,7 +91,32 @@ enum Renderer {
         let scale = maxDimension.map { min(1, $0 / max(size.width, size.height)) } ?? 1
         let context = try bitmap(size: size, scale: scale)
         context.draw(image, in: CGRect(origin: .zero, size: size))
-        watermark(context, size: size, settings: settings, raster: true)
+        if let transparent = source.transparentImage, !settings.text.isEmpty, settings.opacity > 0 {
+            // Match RGBA compositing followed by alpha removal. Keep hidden source
+            // RGB where both source and watermark are completely transparent.
+            guard let overlay = CGContext(data: nil, width: context.width, height: context.height,
+                bitsPerComponent: 8, bytesPerRow: context.bytesPerRow, space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue),
+                let input = overlay.data?.assumingMemoryBound(to: UInt8.self),
+                let output = context.data?.assumingMemoryBound(to: UInt8.self)
+            else { throw DocumentError.renderFailed }
+            overlay.scaleBy(x: scale, y: scale)
+            overlay.draw(transparent, in: CGRect(origin: .zero, size: size))
+            watermark(overlay, size: size, settings: settings, raster: true)
+            for y in 0..<context.height {
+                for x in 0..<context.width {
+                    let offset = y * context.bytesPerRow + x * 4
+                    let alpha = Int(input[offset + 3])
+                    if alpha > 0 {
+                        for channel in 0..<3 {
+                            output[offset + channel] = UInt8(min(255, (Int(input[offset + channel]) * 255 + alpha / 2) / alpha))
+                        }
+                    }
+                }
+            }
+        } else {
+            watermark(context, size: size, settings: settings, raster: true)
+        }
         guard let result = context.makeImage() else { throw DocumentError.renderFailed }
         return result
     }

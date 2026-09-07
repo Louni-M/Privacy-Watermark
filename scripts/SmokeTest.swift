@@ -84,7 +84,6 @@ import WatermarkCore
 
         let localSource = output.appendingPathComponent("document.pdf")
         try Data(contentsOf: fixtures.appendingPathComponent("document.pdf")).write(to: localSource)
-        try? FileManager.default.removeItem(at: output.appendingPathComponent("export_filigree.pdf"))
         session.load(localSource)
         try await wait { !session.isLoading && !session.isRendering }
         try check(session.preview != nil && session.document?.pageCount == 2, "PDF first-page preview")
