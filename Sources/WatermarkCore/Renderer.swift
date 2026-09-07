@@ -97,6 +97,7 @@ enum Renderer {
     static func renderPage(_ page: PDFPage, settings: WatermarkSettings, scale: CGFloat, raster: Bool) throws -> CGImage {
         let size = pageSize(page)
         let context = try bitmap(size: size, scale: scale)
+        context.interpolationQuality = .medium
         context.saveGState()
         page.draw(with: .cropBox, to: context)
         context.restoreGState()

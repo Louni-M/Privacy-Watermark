@@ -9,6 +9,8 @@ import WatermarkCore
         let delegate = SmokeDelegate()
         app.delegate = delegate
         app.setActivationPolicy(.regular)
+        DispatchQueue.main.async { delegate.start() }
+        DispatchQueue.global().asyncAfter(deadline: .now() + 60) { exit(124) }
         withExtendedLifetime(delegate) { app.run() }
     }
 }
@@ -16,13 +18,25 @@ import WatermarkCore
 @MainActor final class SmokeDelegate: NSObject, NSApplicationDelegate {
     let session = Session()
     var window: NSWindow!
-    var completed: [String] = []
+    var completed: [String] = [] {
+        didSet {
+            FileHandle.standardError.write(Data("SMOKE: \(completed.last ?? "")\n".utf8))
+        }
+    }
+    var started = false
     let fixtures = URL(fileURLWithPath: CommandLine.arguments[1])
     let output = URL(fileURLWithPath: CommandLine.arguments[2])
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        start()
+    }
+
+    func start() {
+        guard !started else { return }
+        started = true
+        FileHandle.standardError.write(Data("SMOKE: starting native window\n".utf8))
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 720),
                           styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
@@ -81,7 +95,7 @@ import WatermarkCore
         try check(session.activePanel?.nameFieldStringValue == "export_filigree.pdf", "Default output filename")
         session.activePanel?.directoryURL = output
         session.activePanel?.nameFieldStringValue = "panel-copy.pdf"
-        try await Task.sleep(for: .milliseconds(250))
+        try await Task.sleep(for: .seconds(1))
         session.activePanel?.ok(nil)
         await saveSelection.value
         try await wait { !session.isExporting }
@@ -109,6 +123,28 @@ import WatermarkCore
         try await wait { !session.isExporting }
         try check(session.errorMessage == nil, "Image export")
         completed.append("Load, preview, and export image")
+
+        if ProcessInfo.processInfo.environment["PASSPORT_MEASURE_PREVIEW"] == "1" {
+            var timings: [String: [Double]] = [:]
+            for file in ["document.pdf", "scan.pdf", "pages-10.pdf"] {
+                session.load(fixtures.appendingPathComponent(file))
+                try await wait { !session.isLoading && !session.isRendering }
+                var samples: [Double] = []
+                for index in 0..<10 {
+                    let start = ContinuousClock.now
+                    session.watermark.text = "COPY \(index)"
+                    try await wait { !session.isRendering }
+                    window.contentView?.layoutSubtreeIfNeeded()
+                    window.displayIfNeeded()
+                    let elapsed = start.duration(to: .now).components
+                    samples.append(Double(elapsed.seconds) + Double(elapsed.attoseconds) / 1e18)
+                }
+                timings[file] = samples
+            }
+            let report: [String: Any] = ["seconds": timings, "method": "Native release engine and optimized session/view sources in a real NSApplication window; setting change to correct preview state and displayIfNeeded; polling every 10ms includes debounce."]
+            try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]).write(to: output.appendingPathComponent("preview-timings.json"))
+            completed.append("Measure end-to-end preview updates")
+        }
 
         try await Task.sleep(for: .milliseconds(200))
         if let view = window.contentView, let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) {

@@ -26,6 +26,9 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+      - name: Select Swift 6 on macOS 14
+        if: matrix.os == 'macos-14'
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
       - name: Record runtime and compiler
         run: |
           sw_vers
