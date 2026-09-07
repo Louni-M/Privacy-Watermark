@@ -181,10 +181,10 @@ struct ContentView: View {
                 }
                 HStack {
                     Button("Zoom out", systemImage: "minus.magnifyingglass") { session.setZoom(session.effectiveScale / 1.25) }
-                        .labelStyle(.iconOnly).disabled(session.zoom == 0.25)
+                        .labelStyle(.iconOnly).disabled(session.effectiveScale <= 0.25)
                     Text("\(Int(session.effectiveScale * 100))%").font(.caption).monospacedDigit()
                     Button("Zoom in", systemImage: "plus.magnifyingglass") { session.setZoom(session.effectiveScale * 1.25) }
-                        .labelStyle(.iconOnly).disabled(session.zoom == 4)
+                        .labelStyle(.iconOnly).disabled(session.effectiveScale >= 4)
                     Button("Fit to window") { session.setZoom(nil) }
                     Spacer(minLength: 0)
                 }
