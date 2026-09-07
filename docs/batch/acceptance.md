@@ -1,6 +1,6 @@
 # Batch implementation evidence
 
-Status: local implementation and verification passed. Required manual Add-file selection, Finder drag-and-drop and keyboard interaction evidence remains pending; this change is not ready to archive.
+Status: complete. Local verification and runtime CI passed; the user accepted the implementation and closed the remaining manual acceptance item.
 
 ## Environment and baseline
 
@@ -53,7 +53,7 @@ Comparison-sheet columns are saved output, full-page Fit preview, and detailed z
 
 The standard and flattened rotated/cropped two-page PDFs and flattened ten-page PDF were opened with macOS Preview. Its open-file descriptors confirmed all three were loaded. PDFKit independently reopens every PDF produced by the matrix. The comparison images are generated test renders, not screenshots from Preview.
 
-Window smoke runs in a real native window, and panel cancellation calls the real native panel. Import/navigation/settings/removal/pan/export actions are programmatic. They are not evidence that a human used the Add panel or physically dragged files from Finder. Manual mixed drag-and-drop, keyboard interaction and Add-panel multi-selection remain pending. Window captures at 1040×720 and 860×600 were inspected; a capture readability issue in the Clear button was corrected.
+Window smoke runs in a real native window, and panel cancellation calls the real native panel. Import/navigation/settings/removal/pan/export actions are programmatic. They are not evidence that a human used the Add panel or physically dragged files from Finder. The user subsequently accepted the implementation with “it's amazing. you can consider it done for me,” closing the outstanding manual acceptance item. This is user sign-off, not an agent-observed or itemized manual test report. Window captures at 1040×720 and 860×600 were inspected; a capture readability issue in the Clear button was corrected.
 
 ## Performance interpretation
 
@@ -63,11 +63,11 @@ The full per-route comparison excludes each first observation from the repeated 
 
 The 50-page/600-DPI export completed in approximately 0.71 s on 400×280-point synthetic pages. Cancellation injected before page index 25 discarded the unfinished source, saved zero files and completed cleanup approximately 1.6 ms after the cancellation boundary. This is core boundary timing, separate from native UI cancellation acknowledgement. It does not predict arbitrary large-page decoder latency.
 
-## Finalization and pending checks
+## Finalization
 
 No GitHub distribution, release packaging workflow, signing/notarization or installation wizard was added. Existing ARM/macOS 14 and Intel CI coverage is preserved. Local cross-compilation is not runtime CI evidence.
 
-The native migration was synced and archived before this batch change. When finalizing, synchronize/archive this batch delta after its required acceptance passes. Do not re-sync the historical migration over these new batch contracts.
+The native migration was synced and archived before this batch change. After acceptance, the batch delta was synced to the main specs and archived at `openspec/changes/archive/2026-09-07-add-batch-watermarking/`. All three delta capabilities were verified against the merged main specs, and all four main specs passed strict validation. The historical migration was not re-synced over the new batch contracts.
 
 ## Final local results
 
@@ -90,4 +90,4 @@ Measurement source reference: per-route rendering/export timings correspond to i
 
 [CI run 34161507973](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34161507973) passed on macOS 14 Apple Silicon and macOS 15 Intel at e30389c70e8ed4904c1b62f2483f6740f142702c. Both fresh runner checkouts passed native behavior tests (including real interface capture), universal ARM/Intel builds and signature checks, built-app launch, and native window/panel/export smoke. Runtime and step results are retained in ci-run.json, macos-14-smoke.json, macos-14-bundle-launch.json, macos-15-intel-smoke.json and macos-15-intel-bundle-launch.json. The isolated verification branch is codex/add-batch-watermarking; no PR, merge or release was created.
 
-Overall progress: 25/26 tasks complete. Task 6.2 remains open for the requested manual interaction report. Programmatic window evidence is complete and is not substituted for that report.
+Overall progress: 26/26 tasks complete. Task 6.2 is closed by the user's explicit acceptance. Recorded programmatic evidence remains distinguished from user sign-off. The change was archived on 2026-09-07 at the user's request.
