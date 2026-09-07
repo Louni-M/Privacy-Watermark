@@ -150,10 +150,15 @@ enum Renderer {
         return try ImageMetadata.removingAncillaryMetadata(data as Data, format: format)
     }
 
-    static func jpegImage(_ image: CGImage, quality: Double) throws -> CGImage {
+    static func jpegImage(_ image: CGImage, quality: Double, maximumDimension: CGFloat) throws -> CGImage {
         let data = try encoded(image, format: .jpg, quality: quality)
-        guard let provider = CGDataProvider(data: data as CFData),
-              let result = CGImage(jpegDataProviderSource: provider, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+        // Decode at the page-series output size instead of expanding a 600-DPI
+        // JPEG only to immediately shrink it to 72 DPI.
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let result = CGImageSourceCreateThumbnailAtIndex(source, 0, [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceThumbnailMaxPixelSize: Int(ceil(maximumDimension))
+              ] as CFDictionary)
         else { throw DocumentError.renderFailed }
         return result
     }

@@ -81,8 +81,9 @@ public enum Processing {
                         if settings.flattened {
                             let highResolution = try Renderer.renderPage(page, settings: watermark,
                                 scale: CGFloat(settings.dpi) / 72, raster: true)
-                            let compressed = try Renderer.jpegImage(highResolution, quality: 0.95)
                             let size = Renderer.pageSize(page)
+                            let compressed = try Renderer.jpegImage(highResolution, quality: 0.95,
+                                maximumDimension: max(size.width, size.height))
                             let downsample = try Renderer.bitmap(size: size)
                             downsample.draw(compressed, in: CGRect(origin: .zero, size: size))
                             guard let result = downsample.makeImage() else { throw DocumentError.renderFailed }
