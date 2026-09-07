@@ -1,6 +1,6 @@
 # Native migration acceptance record
 
-Status: behavior, performance and compatibility acceptance passed. Final cleanup verification is in progress.
+Status: complete. All 30 migration tasks passed, including mandatory legacy retirement and final clean native verification.
 
 ## Environment and reference
 
@@ -63,3 +63,10 @@ Historical reference and paired comparison helpers are intentionally temporary a
 ## Compatibility and final cleanup
 
 [Acceptance CI run](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34149501070) passed native behavior tests, universal builds, packaged launch and window/export smoke on macOS 14.8.9 ARM and macOS 15.7.9 Intel. JSON runtime reports are retained beside this record. Earlier failed runs exposed and helped fix lazy PNG decoding and unreliable test-only panel automation. Final clean-checkout results follow after cleanup. Cross-compilation alone is not runtime evidence. Developer ID signing, notarization and a public release are outside this migration; the local app is ad-hoc signed.
+
+
+The final native-only source revision `4d4ac97269d9ee8ded4326f792fc1975b5acf363` was exported into a fresh temporary checkout with no virtual environment or legacy files. Native tests, both release architecture builds, ad-hoc signing verification, built-bundle launch, and real window/export smoke passed. See `clean-native-tests.txt`, `clean-native-build.txt`, `clean-native-smoke.json`, `clean-bundle-launch.json`, and `clean-bundle-audit.txt`. The ordinary local test invocation skips opt-in benchmarks and the optional interface capture; the standalone window smoke runs separately, and CI also runs the interface capture.
+
+[Native-only cleanup CI](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34149803544) passed on macOS 14 ARM and macOS 15 Intel after removal of the Python job. The final universal bundle is approximately 2.4 MiB and links only system frameworks and Swift libraries. Its contents are the native executable, icon, Info.plist and ad-hoc signature; no bundled external runtime remains.
+
+Removed application modules, dependency manifests, PyInstaller packaging, obsolete pytest tests, stale UI illustrations, temporary comparison tests/tools, the reference environment, and migration scratch exports. The local Swift build cache and temporary clean checkout were cleared after retaining the evidence and final app in `dist/Passport Filigrane.app`. Historical dependency inventories remain as archival migration evidence; no legacy executable code or dependency installation steps remain. Existing unrelated `.agents/` and `openspec/config.yaml` files were preserved.

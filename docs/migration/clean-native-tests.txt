@@ -1,0 +1,80 @@
+Building for debugging...
+[0/14] Write sources
+[0/14] /private/tmp/passport-native-clean.XvmLsW/.build/arm64-apple-macosx/debug/PassportFiligranePackageTests.derived/runner.swift
+[0/14] Write sources
+[5/14] Write PassportFiligrane-entitlement.plist
+[6/14] Write sources
+[7/14] Copying Fixtures
+[8/14] Write swift-version--1AB21518FC5DEDBE.txt
+[10/21] Compiling WatermarkCore OutputTransaction.swift
+[11/21] Compiling WatermarkCore Renderer.swift
+[12/21] Compiling WatermarkCore Processing.swift
+[13/21] Emitting module WatermarkCore
+[14/21] Compiling WatermarkCore ImagePDFWriter.swift
+[15/21] Compiling WatermarkCore Document.swift
+[16/21] Compiling WatermarkCore ImageMetadata.swift
+[17/29] Compiling WatermarkCoreTests resource_bundle_accessor.swift
+[18/29] Compiling WatermarkCoreTests PerformanceTests.swift
+[19/29] Emitting module WatermarkCoreTests
+[20/29] Compiling WatermarkCoreTests DocumentTests.swift
+[21/29] Compiling PassportFiligrane PassportFiligraneApp.swift
+[22/29] Compiling PassportFiligrane Session.swift
+[23/29] Emitting module PassportFiligrane
+[24/29] Compiling PassportFiligrane ContentView.swift
+[24/29] Write Objects.LinkFileList
+[25/29] Linking PassportFiligrane
+[26/29] Applying PassportFiligrane
+[28/31] Compiling PassportFiligraneTests SessionTests.swift
+[29/31] Emitting module PassportFiligraneTests
+[30/33] Emitting module PassportFiligranePackageTests
+[31/33] Compiling PassportFiligranePackageTests runner.swift
+[31/33] Write Objects.LinkFileList
+[32/33] Linking PassportFiligranePackageTests
+Build complete! (41.53s)
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite DocumentTests started.
+➜ Suite PerformanceTests skipped.
+◇ Suite SessionTests started.
+➜ Test recordFiftyPageStress() skipped.
+➜ Test recordProcessingMatrix() skipped.
+◇ Test defaultsAndFileSwitching() started.
+◇ Test testDefaults() started.
+✔ Test testDefaults() passed after 0.001 seconds.
+◇ Test testSupportedInputsAndLimits() started.
+CoreGraphics PDF has logged an error. Set environment variable "CG_PDF_VERBOSE" to learn more.
+✔ Test testSupportedInputsAndLimits() passed after 0.027 seconds.
+◇ Test testImageFormatMatrixAndMetadata() started.
+✔ Test testImageFormatMatrixAndMetadata() passed after 0.108 seconds.
+◇ Test testStandardPDFPreservesTextGeometryAndLinks() started.
+✔ Test testStandardPDFPreservesTextGeometryAndLinks() passed after 0.015 seconds.
+◇ Test testFlattenedPDFAndPageSeriesMatrix() started.
+✔ Test defaultsAndFileSwitching() passed after 0.295 seconds.
+◇ Test staleLoadsAndPreviewsDoNotReplaceLatestState() started.
+✔ Test testFlattenedPDFAndPageSeriesMatrix() passed after 0.220 seconds.
+◇ Test testRepeatExportUsesOriginalAndLatestSettings() started.
+✔ Test testRepeatExportUsesOriginalAndLatestSettings() passed after 0.015 seconds.
+◇ Test testDestinationsProtectSourceAndExistingFiles() started.
+✔ Test testDestinationsProtectSourceAndExistingFiles() passed after 0.002 seconds.
+◇ Test testInvalidWatermarkAndInvisiblePreview() started.
+✔ Test testInvalidWatermarkAndInvisiblePreview() passed after 0.017 seconds.
+◇ Test testExactFileAndImageDimensionBoundaries() started.
+✔ Test testExactFileAndImageDimensionBoundaries() passed after 0.017 seconds.
+◇ Test testAllWatermarkAdjustmentsAndAlphaDiscard() started.
+✔ Test staleLoadsAndPreviewsDoNotReplaceLatestState() passed after 0.272 seconds.
+◇ Test invalidReplacementPreservesUsableDocumentAndRecovers() started.
+✔ Test testAllWatermarkAdjustmentsAndAlphaDiscard() passed after 0.210 seconds.
+◇ Test testTransactionRollsBackAllFilesWhenCommitFails() started.
+✔ Test testTransactionRollsBackAllFilesWhenCommitFails() passed after 0.002 seconds.
+◇ Test testSymlinkDestinationCannotReplaceSource() started.
+✔ Test testSymlinkDestinationCannotReplaceSource() passed after 0.004 seconds.
+◇ Test testMetadataRemovalRejectsBrokenEncodedContainers() started.
+✔ Test testMetadataRemovalRejectsBrokenEncodedContainers() passed after 0.001 seconds.
+✔ Suite DocumentTests passed after 0.643 seconds.
+✔ Test invalidReplacementPreservesUsableDocumentAndRecovers() passed after 0.431 seconds.
+◇ Test exportLatestSettingsAndRecoverAfterFailure() started.
+✔ Test exportLatestSettingsAndRecoverAfterFailure() passed after 0.188 seconds.
+➜ Test renderNativeInterface() skipped.
+✔ Suite SessionTests passed after 1.188 seconds.
+✔ Test run with 20 tests in 3 suites passed after 1.188 seconds.
