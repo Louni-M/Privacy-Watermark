@@ -135,6 +135,13 @@ struct SessionTests {
         session.add([url])
         try await wait { !session.isLoading && !session.isRendering }
         #expect(session.canExport && session.preview != nil)
+        try Data("corrupt replacement".utf8).write(to: url)
+        session.setZoom(1)
+        try await wait { !session.isRendering }
+        #expect(session.preview == nil && !session.canExport)
+        if case .invalid(let message) = session.selected?.validation {
+            #expect(message == DocumentError.sourceChanged.localizedDescription)
+        } else { Issue.record("Corrupt replacement should require re-addition") }
     }
 
     @Test func previewCompletesWhileExportWorkerIsBlocked() async throws {

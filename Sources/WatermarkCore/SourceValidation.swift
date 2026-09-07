@@ -24,7 +24,16 @@ public enum SourceValidation {
         try Task.checkCancellation()
         let before = try Stamp(url)
         guard before.identity == identity else { throw DocumentError.sourceChanged }
-        let source = try SourceDocument.load(url)
+        // Check reviewed bytes before decoding: a replacement that is corrupt
+        // must still be reported as a changed queued source, not a fresh import
+        // decoder error. Repeat the consistency check across the actual load.
+        if let validated { try verify(url, identity: identity, validated: validated) }
+        let source: SourceDocument
+        do { source = try SourceDocument.load(url) }
+        catch {
+            if let validated { try verify(url, identity: identity, validated: validated) }
+            throw error
+        }
         try Task.checkCancellation()
         let after = try Stamp(url)
         guard before == after else { throw DocumentError.sourceChanged }
