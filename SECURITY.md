@@ -1,169 +1,34 @@
-# Security Policy 
+# Security and privacy
 
-This document describes the security measures implemented,
-known limitations, and guidelines for users.
+Passport Filigrane processes documents locally using macOS frameworks. It has no account, upload service, telemetry or application network client. Keep macOS updated to receive fixes to its image and PDF parsers.
 
-## Table of Contents
+## What watermarking protects
 
-1. [Dependency Security](#dependency-security)
-2. [Input Validation](#input-validation)
-3. [File Handling & Privacy](#file-handling--privacy)
-4. [Error Logging](#error-logging)
-5. [Thread Safety](#thread-safety)
-6. [Watermark Security Model](#watermark-security-model)
+Flattened PDF output, the default at 450 DPI, combines each page and watermark into an image. The generated PDF contains no separate watermark or embedded selectable source-text layer. Image editing and later OCR remain possible; watermarking is not encryption, redaction or a guarantee against removal.
 
----
+Selectable-text PDF output retains visible source content and vector text, with the watermark as separate editable text. It is not a general PDF sanitization feature. Visible annotations and form appearances are retained; the app is not a form editor.
 
-## Dependency Security
+Image exports and newly encoded images in flattened/image PDFs discard source EXIF, GPS, camera and timestamp metadata. Visible information in the document remains visible. Transparent inputs become opaque, matching the existing export behavior.
 
-### Pinned Versions
+## Input and resource limits
 
-All dependencies are pinned to minimum versions that address known CVEs:
+- Accepted extensions: case-insensitive JPG, JPEG, PNG and PDF, followed by decoder validation.
+- Maximum input size: 100 MiB, checked before and after reading.
+- Maximum PDF pages: 50, checked after parsing; encrypted and empty PDFs are rejected.
+- Maximum image dimensions: 20,000 pixels per side, checked before full decoding.
 
-| Package | Minimum Version | Rationale |
-|---------|----------------|-----------|
-| `pillow` | `>=10.3.0` | Fixes CVE-2023-50447 (CRITICAL, CVSS 9.0, arbitrary code execution) and CVE-2024-28219 (HIGH, CVSS 8.1, buffer overflow) |
-| `pymupdf` | `>=1.25.0` | Mitigates inherited MuPDF DoS vulnerabilities (CVE-2024-46657) |
-| `pyinstaller` | `>=6.0.0` | Fixes CVE-2025-59042 (HIGH, CVSS 7.0, arbitrary code injection via sys.path) |
-| `flet` | `==0.21.2` | No known CVEs. Pinned for compatibility; upgrade planned. |
+These limits reduce resource use but do not make arbitrary files safe or guarantee that every large document fits in memory. Flattened PDF rendering processes one page at a time; unusually large page dimensions or high DPI can still require substantial memory.
 
-### Updating Dependencies
+## Files and diagnostics
 
-When updating dependencies:
+Exports use immutable source bytes and the current settings rather than reusing preview output. Source path and file identity checks reject attempts to overwrite the original, including known symbolic and hard links. Existing output files require replacement confirmation.
 
-1. Check for new CVEs at [Snyk Vulnerability DB](https://security.snyk.io/)
-2. Run `pip audit` (install with `pip install pip-audit`) to scan for known issues
-3. Test thoroughly after any update -- PyMuPDF and Pillow are C-extension libraries
-   where version changes can alter behavior
+Output is staged in a private directory beside the destination, then committed after every page succeeds. Failed commits attempt to restore replaced files. Temporary files are removed on ordinary completion or failure; a crash, forced termination or failed restoration can leave a staging directory for recovery. A filesystem concurrently changed by another process is outside the transactional guarantee.
 
-### Future Work
+The app presents safe error messages and does not create a diagnostic file log or record document contents, watermark text or private paths. macOS frameworks may emit their own system diagnostics. The app is ad-hoc signed, not notarized or App Sandbox enabled.
 
-- Migrate from `flet==0.21.2` to the latest stable release (0.80.x+). This is a
-  breaking change that requires a code migration.
+Preview generation and export run through a serial background worker. Settings and document generations prevent outdated work from replacing the latest preview. Failed operations leave the app available for another attempt.
 
----
+## Reporting a problem
 
-## Input Validation
-
-The application enforces the following limits to prevent resource exhaustion and
-denial-of-service conditions:
-
-| Limit | Value | Defined In |
-|-------|-------|------------|
-| Maximum file size | 100 MB | `main.py` -- `MAX_FILE_SIZE_BYTES` |
-| Maximum PDF pages | 50 | `main.py` -- `MAX_PDF_PAGES` |
-| Maximum image dimension | 20,000 px per side | `main.py` -- `MAX_IMAGE_DIMENSION` |
-
-These limits are checked **before** the file is loaded into memory or processed.
-
-### Why These Limits Exist
-
-- **File size**: Loading a multi-GB file into memory can crash the application
-  or the system.
-- **Page count**: In secure raster mode, each page is rendered at up to 600 DPI.
-  A 50-page PDF at 600 DPI generates ~50 images of ~6600x4950 pixels each.
-- **Image dimension**: Pillow can consume excessive memory for very large images
-  (e.g., a 100,000 x 100,000 px image would require ~30 GB of RAM).
-
-### PDF-Specific Risks
-
-PyMuPDF wraps the MuPDF C library. Maliciously crafted PDF files can trigger:
-- Segmentation faults (CVE-2024-46657)
-- Infinite recursion (CVE-2023-31794)
-- Divide-by-zero exceptions
-
-These are DoS vectors, not code execution. The input size limits reduce exposure,
-but cannot fully prevent exploitation via crafted files. Keep PyMuPDF updated.
-
----
-
-## File Handling & Privacy
-
-### EXIF Metadata Stripping
-
-When the user exports watermarked images (JPEG), all EXIF metadata is stripped
-from the output. This prevents leaking:
-
-- GPS coordinates (where the photo was taken)
-- Camera/phone model and serial number
-- Timestamps
-- Software identifiers
-
-**Implementation**: `strip_image_metadata()` in `main.py` creates a new image from
-raw pixel data, discarding all metadata from the source.
-
-### Allowed File Types
-
-Only the following file types are accepted:
-- Images: `.jpg`, `.jpeg`, `.png`
-- Documents: `.pdf`
-
-File type detection uses extension matching. The file is then validated by
-attempting to open it with Pillow (images) or PyMuPDF (PDFs).
-
----
-
-## Error Logging
-
-### Log Location
-
-Error logs are written to a platform-appropriate directory:
-
-| Platform | Path |
-|----------|------|
-| macOS | `~/Library/Logs/PassportFiligrane/error_log.txt` |
-| Windows | `%APPDATA%/PassportFiligrane/Logs/error_log.txt` |
-| Linux | `~/.local/state/PassportFiligrane/error_log.txt` (or `$XDG_STATE_HOME`) |
-
-### Privacy Protections
-
-- The log directory is created with permissions `0o700` (owner-only access)
-- The log file is set to `0o600` after each write (owner read/write only)
-- File paths in error messages are sanitized: the user's home directory is
-  replaced with `~USER` before writing to the log
-- Stack traces are logged for debugging but do not contain user document content
-
-### What Is NOT Logged
-
-- File contents or document text
-- Watermark text configured by the user
-- Slider positions or UI state
-
----
-
-## Thread Safety
-
-The preview generation runs in a debounced background thread (`threading.Timer`)
-to avoid blocking the UI. A `threading.Lock` (`_preview_lock`) protects shared
-state during preview generation to prevent race conditions when:
-
-- The user loads a new file while a preview is still rendering
-- Rapid slider adjustments trigger overlapping preview updates
-
----
-
-## Watermark Security Model
-
-### Vector Mode (Default)
-
-- The watermark is added as a PDF text overlay using `page.insert_text()`
-- The watermark text is **selectable** and **extractable** (`page.get_text()`)
-- The watermark **can be removed** with any PDF editor (Adobe Acrobat, Preview, etc.)
-- Suitable for **internal use** where removability is acceptable
-
-**A visible warning is displayed in the UI when vector mode is active on PDFs.**
-
-### Secure Raster Mode
-
-- Each page is rendered to a bitmap at the selected DPI (300/450/600)
-- The watermark is composited into the pixel data
-- The result is a flat image inserted into a new PDF -- no selectable text remains
-- The watermark **cannot be removed** without visibly damaging the document
-- Suitable for **public-facing documents** and identity document protection
-
-### Recommendation for Sensitive Documents
-
-For identity documents (passports, ID cards, etc.), **always use Secure Raster
-Mode**. Vector mode should only be used for internal drafts where document
-quality and selectability are priorities.
-
+Report reproducible issues through the repository's issue tracker using synthetic examples. Do not attach identity documents, private watermark text or other personal data to a public report.

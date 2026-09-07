@@ -1,0 +1,35 @@
+{
+  "method": "Same host, alternating packaged release copies with readiness-only instrumentation. External process launch to initial native view layout/display in a visible main-capable window; legacy marker after original PassportFiligraneApp constructor and synchronous client page updates. 5ms polling. First launch separated; no cache flushing. Not a hardware input latency measurement.",
+  "seconds": {
+    "native": [
+      0.6832927079994988,
+      0.251450207999369,
+      0.248720208001032,
+      0.26356783300070674,
+      0.25163195800087124,
+      0.2722252080002363,
+      0.26527345800059265,
+      0.23788191700077732,
+      0.2521107499997015,
+      0.2919218330007425,
+      0.22774550000031013
+    ],
+    "legacy": [
+      1.339370042000155,
+      0.4793179999996937,
+      0.48008116699929815,
+      0.509142458999122,
+      0.4979864999986603,
+      0.48065370800031815,
+      0.48874562500168395,
+      0.4853363330003049,
+      0.48153895899849886,
+      0.4741718330005824,
+      0.48714187500081607
+    ]
+  },
+  "repeat_median_seconds": {
+    "native": 0.2518713540002864,
+    "legacy": 0.48343764599940187
+  }
+}

@@ -1,5 +1,6 @@
 {
-  "standard.pdf": {
+  "document/standard": {
+    "sha256": "d9ae48cb2bc2ce12a927c415a01bff6a11a2daa556225ee3b746b3e892806d07",
     "pages": [
       {
         "size": [
@@ -9,6 +10,7 @@
           280.0
         ],
         "text": "SYNTHETIC DOCUMENT - PAGE 1\nSelectable source text. For testing only.\nExample link\nVISIBLE NOTE\nFORM VALUE\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
         "links": [
           {
             "kind": 2,
@@ -17,8 +19,7 @@
             "uri": "https://example.com",
             "id": ""
           }
-        ],
-        "images": []
+        ]
       },
       {
         "size": [
@@ -28,12 +29,26 @@
           260.0
         ],
         "text": "ROTATED PAGE 2\nCOPY\nCOPY\nC\nPY\nCOPY\nCOPY\n",
-        "links": [],
-        "images": []
+        "images": [],
+        "links": []
       }
-    ]
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "macOS Version 26.6.2 (Build 25G83) Quartz PDFContext",
+      "creationDate": "D:20260907175426Z00'00'",
+      "modDate": "D:20260907175426Z00'00'",
+      "trapped": "",
+      "encryption": null
+    }
   },
-  "flat-600.pdf": {
+  "document/300": {
+    "sha256": "51ec7f83f0ee9725351727650b9a5f59988d585cf517649f51e7574b6c42858d",
     "pages": [
       {
         "size": [
@@ -43,20 +58,13 @@
           280.0
         ],
         "text": "",
-        "links": [],
         "images": [
-          [
-            5,
-            0,
-            3334,
-            2334,
-            8,
-            "ICCBased",
-            "",
-            "Im1",
-            "DCTDecode"
-          ]
-        ]
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
       },
       {
         "size": [
@@ -66,24 +74,31 @@
           260.0
         ],
         "text": "",
-        "links": [],
         "images": [
-          [
-            11,
-            0,
-            2667,
-            2167,
-            8,
-            "ICCBased",
-            "",
-            "Im2",
-            "DCTDecode"
-          ]
-        ]
+          {
+            "width": 1334,
+            "height": 1084
+          }
+        ],
+        "links": []
       }
-    ]
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
   },
-  "flat-300.pdf": {
+  "document/450": {
+    "sha256": "ba5ea4cbbe96457d814881fa63fc4171d52f584a746186e8f72b80ae8edb7693",
     "pages": [
       {
         "size": [
@@ -93,20 +108,13 @@
           280.0
         ],
         "text": "",
-        "links": [],
         "images": [
-          [
-            5,
-            0,
-            1667,
-            1167,
-            8,
-            "ICCBased",
-            "",
-            "Im1",
-            "DCTDecode"
-          ]
-        ]
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
       },
       {
         "size": [
@@ -116,24 +124,31 @@
           260.0
         ],
         "text": "",
-        "links": [],
         "images": [
-          [
-            11,
-            0,
-            1334,
-            1084,
-            8,
-            "ICCBased",
-            "",
-            "Im2",
-            "DCTDecode"
-          ]
-        ]
+          {
+            "width": 2000,
+            "height": 1625
+          }
+        ],
+        "links": []
       }
-    ]
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
   },
-  "flat-450.pdf": {
+  "document/600": {
+    "sha256": "d9a77433947e86769393042b0b5e879d1a06c4cd073666912088b8b2034069c7",
     "pages": [
       {
         "size": [
@@ -143,20 +158,13 @@
           280.0
         ],
         "text": "",
-        "links": [],
         "images": [
-          [
-            5,
-            0,
-            2500,
-            1750,
-            8,
-            "ICCBased",
-            "",
-            "Im1",
-            "DCTDecode"
-          ]
-        ]
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
       },
       {
         "size": [
@@ -166,21 +174,825 @@
           260.0
         ],
         "text": "",
-        "links": [],
         "images": [
-          [
-            11,
-            0,
-            2000,
-            1625,
-            8,
-            "ICCBased",
-            "",
-            "Im2",
-            "DCTDecode"
-          ]
-        ]
+          {
+            "width": 2667,
+            "height": 2167
+          }
+        ],
+        "links": []
       }
-    ]
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "scan/standard": {
+    "sha256": "567882222f62593353e74effb302b5bee29586bb217f01b9acb80c8e68063b51",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          256.0
+        ],
+        "text": "COPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [
+          {
+            "width": 1000,
+            "height": 640
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "macOS Version 26.6.2 (Build 25G83) Quartz PDFContext",
+      "creationDate": "D:20260907175428Z00'00'",
+      "modDate": "D:20260907175428Z00'00'",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "scan/300": {
+    "sha256": "ed88f0a363036083647b2d8c0c908fce5ee9b8daef17a2ca767e16d476ad09c3",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          256.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1067
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "scan/450": {
+    "sha256": "f8b31e6d40e8f0895d0630af68bb8801aa085530a65e0d36301ce579d414cc9c",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          256.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1600
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "scan/600": {
+    "sha256": "85dc94fc96b3e229b1bb4930d073797b24ef079ea12531c9a75e2f2a2ecc0412",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          256.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2134
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "pages-10/standard": {
+    "sha256": "e0b3a73158f22a614c92af0c5932725f2c425719148e9c6a13cfd914259a5cba",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 1\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 2\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 3\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 4\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 5\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 6\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 7\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 8\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 9\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "SYNTHETIC PAGE 10\nCOPY\nCOPY\nCOPY\nPY\nCOPY\nCOPY\nC\n",
+        "images": [],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "macOS Version 26.6.2 (Build 25G83) Quartz PDFContext",
+      "creationDate": "D:20260907175431Z00'00'",
+      "modDate": "D:20260907175431Z00'00'",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "pages-10/300": {
+    "sha256": "a134600b96edf23a9fc739707de415b261859721d8708dcee94b2239976c2f41",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 1667,
+            "height": 1167
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "pages-10/450": {
+    "sha256": "1d036fe85dd9d5b3fdad08e9c966dc284f5bcddfc65a90eac191bacc647107ac",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 2500,
+            "height": 1750
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
+  },
+  "pages-10/600": {
+    "sha256": "afe4dd7a9b94e6684a8cf9f589c2c73c6f64d7c218168997a67373734b24b3e0",
+    "pages": [
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      },
+      {
+        "size": [
+          0.0,
+          0.0,
+          400.0,
+          280.0
+        ],
+        "text": "",
+        "images": [
+          {
+            "width": 3334,
+            "height": 2334
+          }
+        ],
+        "links": []
+      }
+    ],
+    "metadata": {
+      "format": "PDF 1.4",
+      "title": "",
+      "author": "",
+      "subject": "",
+      "keywords": "",
+      "creator": "",
+      "producer": "",
+      "creationDate": "",
+      "modDate": "",
+      "trapped": "",
+      "encryption": null
+    }
   }
 }

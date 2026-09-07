@@ -1,0 +1,5 @@
+{
+  "passed": true,
+  "embedded_images_checked": 93,
+  "method": "Independent PyMuPDF extraction and Pillow EXIF inspection of embedded images in final image/flattened PDFs including 50-page stress. Standard PDFs are explicitly outside the metadata-removal guarantee; a source JPEG EXIF block survives in standard scan export."
+}

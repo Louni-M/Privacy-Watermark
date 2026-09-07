@@ -29,7 +29,7 @@ enum Renderer {
     }
 
     static func opaqueImage(_ image: CGImage) -> CGImage {
-        // Pillow's RGBA -> RGB output discards alpha without compositing a white
+        // Opaque RGB output discards alpha without compositing a white
         // background. ImageIO exposes straight-alpha PNG pixels; keep those RGB
         // values, including hidden pixels, for the same opaque output behavior.
         if image.alphaInfo == .last || image.alphaInfo == .first {
