@@ -35,7 +35,9 @@ enum Renderer {
         if image.alphaInfo == .last || image.alphaInfo == .first {
             let alpha = image.alphaInfo == .last ? CGImageAlphaInfo.noneSkipLast : .noneSkipFirst
             let bitmapInfo = CGBitmapInfo(rawValue: (image.bitmapInfo.rawValue & ~CGBitmapInfo.alphaInfoMask.rawValue) | alpha.rawValue)
-            if let provider = image.dataProvider, let opaque = CGImage(width: image.width, height: image.height,
+            // Materialize the bytes: forwarding ImageIO's lazy provider can keep
+            // its original alpha-compositing behavior despite the new bitmap info.
+            if let bytes = image.dataProvider?.data, let provider = CGDataProvider(data: bytes), let opaque = CGImage(width: image.width, height: image.height,
                 bitsPerComponent: image.bitsPerComponent, bitsPerPixel: image.bitsPerPixel,
                 bytesPerRow: image.bytesPerRow, space: image.colorSpace ?? colorSpace, bitmapInfo: bitmapInfo,
                 provider: provider, decode: image.decode, shouldInterpolate: true, intent: image.renderingIntent) { return opaque }
