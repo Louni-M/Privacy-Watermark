@@ -4,6 +4,18 @@ A native macOS app for watermarking images and PDFs together before sharing copi
 
 Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
+## Download for Mac
+
+**The new drag-to-Applications installer is being prepared and is not yet available as a public download.**
+
+Once the DMG release is available:
+
+1. Download `Passport-Filigrane.dmg` and double-click it.
+2. Drag **Passport Filigrane** onto **Applications** in the installation window.
+3. Wait for copying to finish, eject the disk image, and open the app from Applications.
+
+This free release is **ad-hoc signed and not notarized by Apple**. If macOS blocks the first launch because the developer cannot be verified, open **System Settings → Privacy & Security → Open Anyway**, then confirm and authenticate if asked. Only approve a download you trust. The approval button is available for about an hour after attempting to open the app. See [installation help](assets/dmg/Install.txt), also included in the DMG, for missing approval controls or other warnings.
+
 ## Use
 
 1. Choose **Add files** or press **⌘O** to select JPG, JPEG, PNG and PDF files, or drag files into the window. Later additions append to the list; repeated additions of the same file are ignored.
@@ -41,6 +53,8 @@ The script builds and verifies a universal app containing both `arm64` and `x86_
 
 The local bundle is **ad-hoc signed**, not Developer ID signed or notarized. A notarized public release is not produced by this script. macOS may require approval in Privacy & Security for a downloaded copy.
 
+To build the drag-to-Applications installer, see [DMG packaging and release instructions](docs/releases/README.md). Packaging tools are needed only on the build Mac and are not included in the downloaded app.
+
 For development without bundling:
 
 ```sh
@@ -56,6 +70,12 @@ scripts/smoke-test.sh
 ```
 
 CI is configured for native tests, universal builds, built-app launch and window/export smoke checks on macOS 14 Apple Silicon and macOS 15 Intel. See the [batch acceptance record](docs/batch/acceptance.md) for current results and pending checks; the [migration record](docs/migration/acceptance.md) retains historical evidence.
+
+Watermark size and spacing now scale relative to each document's shorter side,
+using A4 as the baseline. Images and non-A4 PDFs intentionally differ from older
+exports. PDFs scroll continuously; pinch or Command + wheel zooms around the
+pointer. See the [preview acceptance record](docs/preview/acceptance.md) for tests,
+screenshots, and user acceptance.
 
 ## Source layout
 

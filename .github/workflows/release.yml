@@ -1,0 +1,50 @@
+name: Prepare DMG release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'App version from scripts/Info.plist (for example 2.0.0)'
+        required: true
+        type: string
+      revision:
+        description: 'Full 40-character source commit SHA containing the release tooling'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepare-dmg-release
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    # Standard hosted runners are free for public repos. Until visibility is
+    # resolved, use the documented local build; do not consume paid minutes.
+    if: github.event.repository.private == false
+    runs-on: macos-14
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.revision }}
+          persist-credentials: false
+      - name: Select Swift 6
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+      - name: Install isolated packaging tools
+        run: |
+          python3 -m venv .build/dmg-tools
+          .build/dmg-tools/bin/pip install -r scripts/dmg-requirements.txt
+      - name: Test release failure boundaries
+        run: python3 scripts/test-release.py
+      - name: Build, verify, and prepare draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_REVISION: ${{ inputs.revision }}
+        run: python3 scripts/prepare-release.py "$RELEASE_VERSION" "$RELEASE_REVISION"
