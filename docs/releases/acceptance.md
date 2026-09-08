@@ -54,4 +54,4 @@ The agent cannot capture the local security prompt or operate its controls: loca
 - [ ] Separate manual Intel browser/Gatekeeper and detailed manual export/reopen observations remain unrecorded. Both architectures have automated installation, launch and export/reopen evidence; this is not represented as manual browser coverage.
 - [x] Published v2.0.0 as latest after maintainer acceptance, activated the README download link, and downloaded the public asset without authentication. Its SHA-256 exactly matches `25b1f3f37fbe531ab25798c0ea0f94584644c7bc48554afa130e6ce826788893`.
 
-The release is public. OpenSpec task 5.3 retains the broader manual-coverage follow-up; publication does not turn missing observations into completed tests.
+The release is public. The maintainer requested archival on 2026-09-08 with 14 of 15 tasks complete. [Archived OpenSpec task 5.3](../../openspec/changes/archive/2026-09-08-add-dmg-distribution/tasks.md) retains the broader manual-coverage follow-up; publication and archival do not turn missing observations into completed tests.

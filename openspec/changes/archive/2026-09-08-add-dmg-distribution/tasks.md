@@ -29,3 +29,5 @@
 - [x] 5.4 Hand off the accepted draft for the maintainer's manual publication. Record the publication/link activation checklist; once the maintainer publishes, verify anonymous README download access to the intended DMG. Keep publication and its dependent checks explicitly pending until performed.
 
 Implementation evidence and remaining release prerequisites are recorded in `docs/releases/acceptance.md`. The committed draft was built through GitHub Actions and its actual uploaded DMG passed visual Finder review, package verification, copying/ejection, and installed launch on macOS 14 Apple Silicon and macOS 15 Intel. The maintainer confirmed the documented first-launch approval works, and v2.0.0 is published with a verified anonymous download and active README link. Task 5.3 remains open for the broader manual Intel browser/export observations, which were not supplied; automated evidence is not represented as manual coverage.
+
+Archived on 2026-09-08 at the maintainer's explicit request, with specifications synchronized and 14 of 15 tasks complete. Task 5.3 remains unchecked; archival does not satisfy the missing manual acceptance evidence.
