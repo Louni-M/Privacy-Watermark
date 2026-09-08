@@ -1,0 +1,71 @@
+name: Verify uploaded DMG
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag to verify (drafts supported)'
+        default: v2.0.0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  installed:
+    if: github.event.repository.private == false
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Select Swift 6 on macOS 14
+        if: matrix.os == 'macos-14'
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+      - name: Install isolated verification tools
+        run: |
+          python3 -m venv .build/dmg-tools
+          .build/dmg-tools/bin/pip install -r scripts/dmg-requirements.txt
+      - name: Download exact uploaded candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          mkdir -p dist/candidate .build/dmg-evidence
+          gh release view "$RELEASE_TAG" --json tagName,targetCommitish,body,assets > .build/dmg-evidence/release.json
+          gh release download "$RELEASE_TAG" --pattern Passport-Filigrane.dmg --dir dist/candidate
+          shasum -a 256 dist/candidate/Passport-Filigrane.dmg > .build/dmg-evidence/sha256.txt
+          sw_vers > .build/dmg-evidence/system.txt
+          uname -m >> .build/dmg-evidence/system.txt
+      - name: Verify, inspect Finder, copy, eject, and launch
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          scripts/verify-dmg.sh dist/candidate/Passport-Filigrane.dmg "${RELEASE_TAG#v}"
+          mount="$RUNNER_TEMP/dmg-mounted"
+          installed="$RUNNER_TEMP/installed"
+          mkdir -p "$mount" "$installed"
+          trap 'hdiutil detach "$mount" -quiet 2>/dev/null || true' EXIT
+          hdiutil attach dist/candidate/Passport-Filigrane.dmg -readonly -nobrowse -mountpoint "$mount" -quiet
+          open "$mount"
+          sleep 3
+          window_id=$(osascript -e 'with timeout of 15 seconds' -e 'tell application "Finder" to get id of window "Passport Filigrane"' -e 'end timeout')
+          screencapture -x -l "$window_id" .build/dmg-evidence/finder.png
+          ditto "$mount/Passport Filigrane.app" "$installed/Passport Filigrane.app"
+          hdiutil detach "$mount" -quiet
+          swift scripts/LaunchCheck.swift "$installed/Passport Filigrane.app" "$PWD/.build/dmg-evidence"
+      - name: Retain candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: uploaded-dmg-${{ matrix.os }}
+          path: .build/dmg-evidence/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
