@@ -8,7 +8,7 @@ mount = Path(sys.argv[1])
 with DSStore.open(str(mount / ".DS_Store"), "r") as store:
     window = store["."]["bwsp"]
     view = store["."]["icvp"]
-    assert window["WindowBounds"] == "{{160, 120}, {660, 440}}", "Unexpected window bounds"
+    assert window["WindowBounds"] == "{{160, 120}, {660, 480}}", "Unexpected window bounds"
     assert not any(window[key] for key in ("ShowToolbar", "ShowSidebar", "ShowStatusBar", "ShowPathbar", "ShowTabView"))
     assert view["arrangeBy"] == "none" and view["iconSize"] == 88 and view["textSize"] == 13
     assert view["backgroundType"] == 2
