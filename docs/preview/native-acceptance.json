@@ -1,0 +1,9 @@
+{
+  "architecture" : "arm64",
+  "checks" : [
+    "Synthetic high-resolution photo, animated zoom\/Fit, 50-page mixed PDF stress, retained budget, exports and native reopen screenshots"
+  ],
+  "error" : "",
+  "os" : "Version 26.6.2 (Build 25G83)",
+  "passed" : true
+}

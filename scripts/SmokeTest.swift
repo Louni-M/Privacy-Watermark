@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import PDFKit
+import ImageIO
 import WatermarkCore
 
 @main struct SmokeTest {
@@ -40,7 +41,12 @@ import WatermarkCore
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 720),
                           styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
-        window.contentView = NSHostingView(rootView: ContentView(session: session))
+        window.title = "Passport Filigrane — Native smoke test"
+        let hostingView = NSHostingView(rootView: ContentView(session: session))
+        // Honor the requested test window size instead of resizing to SwiftUI's
+        // preferred content height whenever selection changes.
+        hostingView.sizingOptions = [.minSize]
+        window.contentView = hostingView
         window.makeKeyAndOrderFront(nil)
         NSApplication.shared.activate(ignoringOtherApps: true)
         Task {
@@ -77,6 +83,7 @@ import WatermarkCore
     }
 
     func runChecks() async throws {
+        if ProcessInfo.processInfo.environment["PASSPORT_PREVIEW_ACCEPTANCE"] != nil { try await previewAcceptance(); return }
         if ProcessInfo.processInfo.environment["PASSPORT_BATCH_CORPUS"] != nil { try await measureBatch(); return }
         try check(!session.canExport, "Empty window disables export")
         try await cancelPanel { await self.session.chooseFiles() }
@@ -154,6 +161,142 @@ import WatermarkCore
             }
         }
         completed.append("Captured normal and minimum-size native layouts; manual drag-and-drop remains pending")
+    }
+
+    func previewAcceptance() async throws {
+        // Give external window managers a moment to register this test window.
+        try await Task.sleep(for: .seconds(1))
+        let imageURL = output.appendingPathComponent("Synthetic 高解像度 document with a deliberately long filename for checking two lines and truncation at the minimum supported window size.jpg")
+        let width = 4200, height = 5940
+        guard let bitmap = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) else {
+            throw DocumentError.renderFailed
+        }
+        bitmap.setFillColor(CGColor(gray: 0.85, alpha: 1)); bitmap.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        bitmap.setFillColor(CGColor(gray: 0.3, alpha: 1))
+        for row in 0..<12 { bitmap.fill(CGRect(x: 400, y: 400 + row * 400, width: 2800, height: 35)) }
+        guard let cgImage = bitmap.makeImage(), let destination = CGImageDestinationCreateWithURL(imageURL as CFURL, "public.jpeg" as CFString, 1, nil) else { throw DocumentError.writeFailed }
+        CGImageDestinationAddImage(destination, cgImage, nil)
+        try check(CGImageDestinationFinalize(destination), "Synthetic photo created")
+        let pdfURL = output.appendingPathComponent("synthetic-mixed-50.pdf")
+        var box = CGRect(x: 0, y: 0, width: 595.275590551, height: 841.88976378)
+        guard let pdf = CGContext(pdfURL as CFURL, mediaBox: &box, nil) else { throw DocumentError.writeFailed }
+        for index in 0..<50 {
+            box = CGRect(x: 0, y: 0, width: index % 3 == 0 ? 595.275590551 : 400,
+                height: index % 3 == 0 ? 841.88976378 : 600)
+            let data = Data(bytes: &box, count: MemoryLayout<CGRect>.size)
+            pdf.beginPDFPage([kCGPDFContextMediaBox as String: data] as CFDictionary)
+            pdf.setFillColor(CGColor(gray: 0.85, alpha: 1)); pdf.fill(box)
+            pdf.setFillColor(CGColor(gray: 0.3, alpha: 1))
+            for row in 0..<12 { pdf.fill(CGRect(x: box.width * 400 / 4200, y: box.height * CGFloat(400 + row * 400) / 5940,
+                width: box.width * 2800 / 4200, height: box.height * 35 / 5940)) }
+            pdf.endPDFPage()
+        }
+        pdf.closePDF()
+        if let document = PDFDocument(url: pdfURL) {
+            for index in 1..<50 where index % 2 == 1 {
+                document.page(at: index)?.rotation = 90
+                document.page(at: index)?.setBounds(CGRect(x: 20, y: 30, width: 360, height: 540), for: .cropBox)
+            }
+            try check(document.write(to: pdfURL), "Rotated/cropped fixture created")
+        }
+        window.setContentSize(CGSize(width: 860, height: 600))
+        session.add([imageURL, pdfURL])
+        session.watermark.color = .black
+        try await wait { !session.isLoading && !session.isRendering }
+        try check(session.effectiveScale < 0.25, "High resolution photo fits below 25 percent")
+        window.setFrame(NSRect(x: 100, y: 100, width: 860, height: 622), display: true)
+        try await Task.sleep(for: .milliseconds(250))
+        try await wait { !session.isRendering }
+        try check(abs((window.contentView?.bounds.height ?? 0) - 600) < 1, "Actual minimum window height: bounds=\(String(describing: window.contentView?.bounds)) min=\(window.contentMinSize) layout=\(window.contentLayoutRect)")
+        try capture("photo-fit")
+        let originalFit = session.effectiveScale
+        session.requestZoom(originalFit * 1.2)
+        try await Task.sleep(for: .milliseconds(70))
+        try check(session.effectiveScale > originalFit && session.effectiveScale < originalFit * 1.2, "Zoom has intermediate scale")
+        try await Task.sleep(for: .milliseconds(200))
+        try await wait { !session.isRendering }
+        try check(abs(session.effectiveScale - originalFit * 1.2) < 0.0001, "Zoom button takes a continuous 1.2 step")
+        try capture("photo-zoom")
+        session.requestZoom(nil)
+        try await Task.sleep(for: .milliseconds(300))
+        try await wait { !session.isRendering }
+        try check(session.zoom == nil, "Animated Fit returns to fit mode")
+        session.select(session.batch.items[1].id)
+        try await wait { !session.isRendering }
+        try capture("pdf-fit")
+        var peak = await session.retainedPreviewBytes()
+        var longestAcknowledgement = 0.0
+        for page in 1..<50 {
+            let start = ContinuousClock.now
+            session.changePage(1)
+            if page % 8 == 0 { session.watermark.text = "COPY \(page)" }
+            window.contentView?.layoutSubtreeIfNeeded()
+            let duration = start.duration(to: .now).components
+            longestAcknowledgement = max(longestAcknowledgement, Double(duration.seconds) + Double(duration.attoseconds) / 1e18)
+            if page % 10 == 0 {
+                try await Task.sleep(for: .milliseconds(220))
+                peak = max(peak, await session.retainedPreviewBytes())
+            }
+        }
+        try await Task.sleep(for: .milliseconds(300))
+        try await wait { !session.isRendering }
+        peak = max(peak, await session.retainedPreviewBytes())
+        try check(peak <= 96 * 1024 * 1024, "Retained preview budget")
+        try capture("pdf-stress-settled")
+        for index in 0..<12 {
+            session.select(session.batch.items[index % 2].id)
+            session.watermark.text = "SWITCH \(index)"
+            session.setZoom(index % 2 == 0 ? 0.15 : 1.2)
+            try await Task.sleep(for: .milliseconds(15))
+        }
+        try await wait { !session.isRendering }
+        try check(session.displayedKey?.itemID == session.selected?.id && session.displayedKey?.watermark.text == "SWITCH 11", "Pending high-resolution file/settings replacements stay current")
+        // Inject a render failure without changing the source or export snapshot.
+        session.previewBoundary = { _ in throw DocumentError.renderFailed }
+        session.schedulePreview()
+        try await wait { !session.isRendering }
+        try check(session.errorMessage != nil, "Preview render failure reports a recoverable error")
+        session.errorMessage = nil
+        session.previewBoundary = { _ in }
+        session.setZoom(nil)
+        try await wait { !session.isRendering }
+        try check(session.preview != nil && session.canExport, "Preview failure recovers")
+        // Reopen real exports as new selected files in the same native viewer.
+        session.watermark.text = "COPY"
+        session.exportSettings.flattened = false
+        session.startExport(to: output)
+        try await wait { !session.isExporting }
+        try check(session.summary?.saved == 2, "Stress leaves export correctness intact")
+        let outputs = session.batch.items.flatMap { item -> [URL] in
+            if case .saved(let urls) = item.export { return urls }; return []
+        }
+        session.clearAll()
+        session.watermark.text = ""
+        session.add(outputs)
+        try await wait { !session.isLoading && !session.isRendering }
+        try capture("photo-reopened")
+        session.select(session.batch.items[1].id)
+        try await wait { !session.isRendering }
+        try capture("pdf-reopened")
+        let report: [String: Any] = ["peak_retained_preview_bytes": peak,
+            "retained_budget_bytes": 96 * 1024 * 1024, "maximum_render_pixels": PreviewRendering.maximumPixels,
+            "largest_navigation_ack_seconds": longestAcknowledgement,
+            "photo_pixels": [width, height], "pdf_pages": 50,
+            "real_trackpad_pinch_momentum_mouse_wheel_command_wheel": "pending: physical input not exercised",
+            "note": "Programmatic native-window checks; source document storage and transient render scratch are outside retained preview cache accounting."]
+        try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+            .write(to: output.appendingPathComponent("preview-acceptance.json"))
+        completed.append("Synthetic high-resolution photo, animated zoom/Fit, 50-page mixed PDF stress, retained budget, exports and native reopen screenshots")
+    }
+
+    func capture(_ name: String) throws {
+        guard let view = window.contentView else { throw DocumentError.renderFailed }
+        view.layoutSubtreeIfNeeded(); view.displayIfNeeded()
+        guard let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { throw DocumentError.renderFailed }
+        view.cacheDisplay(in: view.bounds, to: rep)
+        guard let data = rep.representation(using: .png, properties: [:]) else { throw DocumentError.renderFailed }
+        try data.write(to: output.appendingPathComponent(name + ".png"))
     }
 
     func measureBatch() async throws {

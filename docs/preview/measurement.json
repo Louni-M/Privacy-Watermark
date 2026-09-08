@@ -1,0 +1,13 @@
+{
+  "largest_navigation_ack_seconds" : 0.010163958000000001,
+  "maximum_render_pixels" : 16000000,
+  "note" : "Programmatic native-window checks; source document storage and transient render scratch are outside retained preview cache accounting.",
+  "pdf_pages" : 50,
+  "peak_retained_preview_bytes" : 14486110,
+  "photo_pixels" : [
+    4200,
+    5940
+  ],
+  "real_trackpad_pinch_momentum_mouse_wheel_command_wheel" : "pending: physical input not exercised",
+  "retained_budget_bytes" : 100663296
+}

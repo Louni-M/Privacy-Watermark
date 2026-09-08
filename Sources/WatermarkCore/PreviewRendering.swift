@@ -20,6 +20,16 @@ public struct PreviewViewport: Equatable, Sendable {
 public enum PreviewRendering {
     public static let maximumPixels = 16_000_000
 
+    public static func pageSizes(_ source: SourceDocument) throws -> [CGSize] {
+        if source.kind == .image { return [CGSize(width: source.pixelWidth, height: source.pixelHeight)] }
+        guard let pdf = PDFDocument(data: source.data) else { throw DocumentError.invalidPDF }
+        return try (0..<pdf.pageCount).map { index in
+            try Task.checkCancellation()
+            guard let page = pdf.page(at: index) else { throw DocumentError.invalidPage }
+            return Renderer.pageSize(page)
+        }
+    }
+
     public static func pageSize(_ source: SourceDocument, pageIndex: Int) throws -> CGSize {
         guard (0..<source.pageCount).contains(pageIndex) else { throw DocumentError.invalidPage }
         if source.kind == .image { return CGSize(width: source.pixelWidth, height: source.pixelHeight) }
@@ -81,6 +91,9 @@ public enum PreviewRendering {
                             maximumDimension: max(expanded.width, expanded.height) * outputScale)
                     }
                     canvas.saveGState()
+                    // Tile boundaries are coverage boundaries, not drawn edges.
+                    // Antialiasing fractional clips leaves white seams at fit scales.
+                    canvas.setShouldAntialias(false)
                     canvas.clip(to: target.offsetBy(dx: -region.minX, dy: -region.minY))
                     canvas.draw(rendered, in: expanded.offsetBy(dx: -region.minX, dy: -region.minY))
                     canvas.restoreGState()

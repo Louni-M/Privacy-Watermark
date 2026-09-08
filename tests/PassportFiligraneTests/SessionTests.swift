@@ -168,6 +168,68 @@ struct SessionTests {
         #expect(session.summary?.cancelled == true)
     }
 
+    @Test func scrollingKeepsFitReferenceAndZoomStartsContinuously() async throws {
+        let session = Session()
+        session.add([fixture("document.pdf"), fixture("photo.jpg")])
+        try await wait { !session.isLoading && !session.isRendering }
+        let original = session.effectiveScale
+        session.updateViewport(size: session.viewportSize,
+            regions: [1: CGRect(origin: .zero, size: session.pageSizes[1])], origin: CGPoint(x: 0, y: 600),
+            currentPage: 1, backingScale: 1)
+        #expect(session.pageIndex == 1 && session.fitReference == 0)
+        #expect(session.effectiveScale == original && session.zoom == nil)
+        let reset = session.viewReset
+        session.setZoom(original * 1.2)
+        #expect(session.viewReset == reset && session.preview != nil)
+        session.changePage(-1)
+        #expect(session.zoom == original * 1.2 && session.viewReset == reset)
+        session.setZoom(nil)
+        #expect(session.fitReference == 0 && session.zoom == nil)
+        session.select(session.batch.items[1].id)
+        try await wait { !session.isRendering }
+        session.updateViewport(size: CGSize(width: 5, height: 5), region: nil, backingScale: 1)
+        let tinyFit = session.effectiveScale
+        #expect(tinyFit < 0.01)
+        session.setZoom(tinyFit * 1.2)
+        #expect(abs(session.effectiveScale - tinyFit * 1.2) < 0.000001)
+        session.setZoom(nil)
+        #expect(session.effectiveScale == tinyFit)
+        session.updateViewport(size: CGSize(width: 6000, height: 6000), region: nil, backingScale: 1)
+        let largeFit = session.effectiveScale
+        #expect(largeFit > 4)
+        session.setZoom(largeFit / 1.2)
+        #expect(abs(session.effectiveScale - largeFit / 1.2) < 0.000001)
+        session.clearAll()
+    }
+
+    @Test func continuousStressAndRetainedBudget() async throws {
+        let session = Session()
+        session.add([fixture("pages-50.pdf"), fixture("photo.jpg")])
+        try await wait { !session.isLoading && !session.isRendering }
+        #expect(session.pageSizes.count == 50)
+        for page in 0..<50 {
+            let size = session.pageSizes[page]
+            session.updateViewport(size: CGSize(width: 700, height: 650),
+                regions: [page: CGRect(origin: .zero, size: size)], origin: CGPoint(x: 0, y: CGFloat(page) * 800),
+                currentPage: page, backingScale: 2)
+            if page % 7 == 0 { session.watermark.text = "REVISION \(page)" }
+            session.setZoom(page % 2 == 0 ? 1.2 : 2)
+            if page % 10 == 0 { try await Task.sleep(for: .milliseconds(20)) }
+            #expect(session.displayedBytes <= Session.maximumDisplayedBytes)
+        }
+        try await wait { !session.isRendering }
+        #expect(session.displayedKey?.page == 49)
+        #expect(session.displayedKey?.watermark.text == "REVISION 49")
+        #expect(session.details.keys.allSatisfy { $0 == 49 })
+        #expect(session.overviews.keys.allSatisfy { $0 >= 48 })
+        #expect(session.displayedBytes <= Session.maximumDisplayedBytes)
+        session.select(session.batch.items[1].id)
+        try await wait { !session.isRendering }
+        #expect(session.details.values.allSatisfy { $0.key.itemID == session.selected?.id })
+        #expect(session.overviews.values.allSatisfy { $0.key.itemID == session.selected?.id })
+        session.clearAll()
+    }
+
     @Test(.enabled(if: ProcessInfo.processInfo.environment["PASSPORT_TEST_OUTPUT"] != nil))
     func renderNativeInterface() async throws {
         let output = ProcessInfo.processInfo.environment["PASSPORT_TEST_OUTPUT"]!

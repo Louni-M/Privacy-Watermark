@@ -23,10 +23,6 @@ struct ContentView: View {
                 Button("Add files…", systemImage: "plus") { Task { await session.chooseFiles() } }
                     .disabled(session.isExporting).keyboardShortcut("o")
             }
-            ToolbarItem {
-                Text(session.selected?.url.lastPathComponent ?? "Passport Filigrane")
-                    .foregroundStyle(.secondary).lineLimit(1)
-            }
         }
         .dropDestination(for: URL.self) { urls, _ in
             guard !session.isExporting else { return false }
@@ -168,6 +164,16 @@ struct ContentView: View {
 
     private var preview: some View {
         VStack(spacing: 12) {
+            if let name = session.selected?.url.lastPathComponent {
+                Text(name)
+                    .font(.headline)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .help(name)
+                    .accessibilityLabel(name)
+                    .accessibilityIdentifier("selectedFilename")
+            }
             if session.selected?.validation.metadata != nil {
                 HStack {
                     if session.isPDF {
@@ -180,12 +186,12 @@ struct ContentView: View {
                     Spacer(minLength: 0)
                 }
                 HStack {
-                    Button("Zoom out", systemImage: "minus.magnifyingglass") { session.setZoom(session.effectiveScale / 1.25) }
-                        .labelStyle(.iconOnly).disabled(session.effectiveScale <= 0.25)
+                    Button("Zoom out", systemImage: "minus.magnifyingglass") { session.requestZoom(session.effectiveScale / 1.2) }
+                        .labelStyle(.iconOnly).disabled(session.effectiveScale <= session.minimumZoom)
                     Text("\(Int(session.effectiveScale * 100))%").font(.caption).monospacedDigit()
-                    Button("Zoom in", systemImage: "plus.magnifyingglass") { session.setZoom(session.effectiveScale * 1.25) }
+                    Button("Zoom in", systemImage: "plus.magnifyingglass") { session.requestZoom(session.effectiveScale * 1.2) }
                         .labelStyle(.iconOnly).disabled(session.effectiveScale >= 4)
-                    Button("Fit to window") { session.setZoom(nil) }
+                    Button("Fit to window") { session.requestZoom(nil) }
                     Spacer(minLength: 0)
                 }
                 PreviewHost(session: session)

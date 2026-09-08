@@ -1,0 +1,15 @@
+[0/1] Planning build
+Building for production...
+[0/2] Write swift-version--1AB21518FC5DEDBE.txt
+Build complete! (0.11s)
+[0/1] Planning build
+Building for production...
+[0/4] Write sources
+[2/4] Write swift-version--1AB21518FC5DEDBE.txt
+[4/5] Compiling WatermarkCore Batch.swift
+[5/7] Compiling PassportFiligrane ContentView.swift
+[5/7] Write Objects.LinkFileList
+[6/7] Linking PassportFiligrane
+Build complete! (6.06s)
+dist/Passport Filigrane.app: replacing existing signature
+Built dist/Passport Filigrane.app

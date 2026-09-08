@@ -16,7 +16,7 @@ actor PreviewWorker {
     private(set) var sourceID: UUID?
     private var cache: [(PreviewKey, Data, Int)] = []
     private(set) var cacheBytes = 0
-    static let maximumCacheBytes = 96 * 1024 * 1024
+    static let maximumCacheBytes = 48 * 1024 * 1024
 
     func clear() { source = nil; sourceID = nil; cache.removeAll(); cacheBytes = 0 }
 
@@ -33,6 +33,10 @@ actor PreviewWorker {
         source = loaded
         sourceID = item.id
         return loaded
+    }
+
+    func sizes(_ item: BatchItem) throws -> [CGSize] {
+        try PreviewRendering.pageSizes(load(item))
     }
 
     func size(_ item: BatchItem, page: Int) throws -> CGSize {

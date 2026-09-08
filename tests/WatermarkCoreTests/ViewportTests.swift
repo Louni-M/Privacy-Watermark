@@ -51,4 +51,23 @@ struct ViewportTests {
                 viewport: PreviewViewport(region: region, scale: 1000))
         }
     }
+    @Test func fractionalFitTilesHaveNoWhiteSeams() throws {
+        let size = CGSize(width: 3000, height: 3000)
+        let context = try Renderer.bitmap(size: size)
+        context.setFillColor(CGColor(gray: 0.5, alpha: 1))
+        context.fill(CGRect(origin: .zero, size: size))
+        let decoded: CGImage = try #require(context.makeImage())
+        let source = SourceDocument(url: URL(fileURLWithPath: "/synthetic.png"), data: Data(), kind: .image,
+            pageCount: 1, pixelWidth: 3000, pixelHeight: 3000, decodedImage: decoded, transparentImage: nil)
+        var mark = WatermarkSettings(); mark.text = ""
+        var output = ExportSettings(); output.format = .png
+        let image = try decode(PreviewRendering.render(source, pageIndex: 0, watermark: mark, export: output,
+            viewport: PreviewViewport(region: CGRect(origin: .zero, size: size), scale: 0.113, detailed: true)))
+        let bytes = try pixels(image)
+        let stride = bytes.count / image.height
+        let values = (0..<image.height).flatMap { y in (0..<image.width).map { x in bytes[y * stride + x * 4] } }
+        let minimum = try #require(values.min()), maximum = try #require(values.max())
+        #expect(maximum - minimum <= 1, "Pixel range: \(minimum)...\(maximum)")
+    }
+
 }

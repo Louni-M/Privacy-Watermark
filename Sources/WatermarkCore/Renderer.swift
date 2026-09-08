@@ -54,6 +54,14 @@ enum Renderer {
     /// used their alpha twice (paste mask, then compositing); retain that appearance.
     static func watermark(_ context: CGContext, size: CGSize, settings: WatermarkSettings, raster: Bool) {
         guard !settings.text.isEmpty, settings.opacity > 0 else { return }
+        // Normalize the entire pattern using the full displayed page, even when
+        // the caller is rendering a region. This preserves phase across tiles.
+        let factor = min(size.width, size.height) / (210 / 25.4 * 72)
+        guard factor.isFinite, factor > 0 else { return }
+        context.saveGState()
+        defer { context.restoreGState() }
+        context.scaleBy(x: factor, y: factor)
+        let size = CGSize(width: size.width / factor, height: size.height / factor)
         let opacity = settings.opacity / 100
         let alpha = raster ? opacity * opacity : opacity
         let color = CGColor(gray: settings.color.component, alpha: alpha)
