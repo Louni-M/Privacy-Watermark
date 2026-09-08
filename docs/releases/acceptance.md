@@ -1,13 +1,13 @@
 # DMG acceptance record
 
-Status: **committed draft verified on both architectures; browser/Gatekeeper acceptance and publication pending**.
+Status: **v2.0.0 published following maintainer first-launch acceptance**. Automated installation/runtime checks passed on both architectures; a separate manual Intel browser/Gatekeeper observation has not been recorded.
 
 ## Final candidate
 
 - Date: 2026-09-08.
 - App version: 2.0.0 (bundle build 1).
 - Source: `07918eab138b5ab3bab23c141800f55af397bf33`.
-- [Draft release](https://github.com/Louni-M/Privacy-Watermark/releases), visible to authorized maintainers until published.
+- [Published release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.0.0).
 - Local uploaded-asset copy: `dist/release-2.0.0/Passport-Filigrane.dmg` (2,952,563 bytes).
 - SHA-256: `25b1f3f37fbe531ab25798c0ea0f94584644c7bc48554afa130e6ce826788893`.
 - [Successful release build](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34257217679).
@@ -38,19 +38,20 @@ The broader Intel native suite exposed a pre-existing race in the preview retent
 
 ## Browser and first launch
 
-The final candidate was subsequently downloaded through Safari as `Downloads/Passport-Filigrane-2.dmg`. Its SHA-256 matches the final uploaded asset and its quarantine metadata records Safari (`0083`). Final-candidate approval/export observations remain pending.
+The final candidate was subsequently downloaded through Safari as `Downloads/Passport-Filigrane-2.dmg`. Its SHA-256 matches the final uploaded asset and its quarantine metadata records Safari (`0083`). After providing the macOS warning screenshot and receiving the documented Done → Privacy & Security → Open Anyway steps, the maintainer confirmed “ok it works”. This records successful user acceptance of that first-launch flow; detailed manual export/reopen observations were not supplied separately.
 
 On the local Apple Silicon Mac (macOS 26.6.2), Safari downloaded the first draft with normal quarantine metadata (`0083`, agent Safari). Its hash matched that uploaded asset. Finder copying preserved quarantine on the copied app. LaunchServices attempted opening it, and `spctl --assess` rejected it as expected for this distribution mode.
 
-The agent cannot capture the local security prompt or operate its controls: local screen capture is unavailable and System Events reports that osascript is not allowed assistive access. The maintainer has been asked to report the actual first-launch warning, supported per-app approval result, and a successful watermark export. No quarantine attributes were removed and no Gatekeeper settings were disabled. The final candidate's visual and runtime checks above are complete; CLI download/direct launch is not browser/Gatekeeper acceptance.
+The agent cannot capture the local security prompt or operate its controls: local screen capture is unavailable and System Events reports that osascript is not allowed assistive access. The maintainer supplied the “Not Opened / Apple could not verify … is free of malware” warning and subsequently confirmed that the documented approval steps work. No quarantine attributes were removed and no Gatekeeper settings were disabled. The final candidate's visual and runtime checks above are complete; CLI download/direct launch is not browser/Gatekeeper acceptance.
 
-## Remaining release gates
+## Release acceptance and coverage
 
 - [x] Public destination resolved: the maintainer authorized making Louni-M/Privacy-Watermark public. GitHub reports PUBLIC; anonymous repository access returned HTTP 200.
 - [x] Committed draft produced by the release workflow.
 - [x] Final Finder screenshots reviewed and installed launch verified on both architectures.
 - [x] Full native CI passes with the corrected preview test on both architectures.
-- [ ] Actual browser first-launch approval and synthetic export/reopen/source-preservation confirmed on supported test Macs, including Intel coverage. Retain exact prompts and observations; do not mark unavailable physical checks complete.
-- [ ] Maintainer publishes the accepted draft; README download link activated; anonymous download and candidate hash verified.
+- [x] Maintainer first-launch acceptance recorded after the documented per-app approval steps.
+- [ ] Separate manual Intel browser/Gatekeeper and detailed manual export/reopen observations remain unrecorded. Both architectures have automated installation, launch and export/reopen evidence; this is not represented as manual browser coverage.
+- [x] Published v2.0.0 as latest after maintainer acceptance, activated the README download link, and downloaded the public asset without authentication. Its SHA-256 exactly matches `25b1f3f37fbe531ab25798c0ea0f94584644c7bc48554afa130e6ce826788893`.
 
-Record first-launch observations and publication results here before closing the remaining tasks.
+The release is public. OpenSpec task 5.3 retains the broader manual-coverage follow-up; publication does not turn missing observations into completed tests.

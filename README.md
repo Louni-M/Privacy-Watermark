@@ -6,15 +6,15 @@ Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
 ## Download for Mac
 
-**The new drag-to-Applications installer is being prepared and is not yet available as a public download.**
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg)** · Version 2.0.0 · 2.8 MB
 
-Once the DMG release is available:
+Install in three steps:
 
 1. Download `Passport-Filigrane.dmg` and double-click it.
 2. Drag **Passport Filigrane** onto **Applications** in the installation window.
 3. Wait for copying to finish, eject the disk image, and open the app from Applications.
 
-This free release is **ad-hoc signed and not notarized by Apple**. If macOS blocks the first launch because the developer cannot be verified, open **System Settings → Privacy & Security → Open Anyway**, then confirm and authenticate if asked. Only approve a download you trust. The approval button is available for about an hour after attempting to open the app. See [installation help](assets/dmg/Install.txt), also included in the DMG, for missing approval controls or other warnings.
+This free release is **ad-hoc signed and not notarized by Apple**. If macOS says Apple could not verify the app is free of malware, click **Done**, then open **System Settings → Privacy & Security → Open Anyway**, then confirm and authenticate if asked. Only approve a download you trust. The approval button is available for about an hour after attempting to open the app. See [installation help](assets/dmg/Install.txt), also included in the DMG, for missing approval controls or other warnings.
 
 ## Use
 

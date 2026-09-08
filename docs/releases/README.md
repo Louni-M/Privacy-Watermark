@@ -4,7 +4,7 @@ The installer contains one universal native app for macOS 14 or newer, an Applic
 
 ## Current availability
 
-On 2026-09-08, the maintainer authorized making `Louni-M/Privacy-Watermark` public. Visibility is now public and anonymous repository access was verified (HTTP 200). This repository is the download destination. Its latest existing release remains `v1.4.1`, containing the older ZIP; do not activate the DMG download link until the first accepted DMG release is published.
+On 2026-09-08, the maintainer authorized making `Louni-M/Privacy-Watermark` public. Visibility is now public and anonymous repository access was verified (HTTP 200). This repository is the download destination. Version `v2.0.0` is now the published latest release, with `Passport-Filigrane.dmg` attached. The README links directly to the DMG; anonymous download was verified against the accepted artifact hash.
 
 The release workflow targets the public source repository. It retains a private-repository guard to avoid potentially billable hosted minutes if visibility changes in future. The selected standard `macos-14` runner is free under [GitHub's Actions billing rules](https://docs.github.com/en/billing/concepts/product-billing/github-actions). No billing or token-scope changes are needed. Local packaging remains available as a fallback.
 
