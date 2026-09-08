@@ -21,8 +21,8 @@ concurrency:
 
 jobs:
   draft:
-    # Standard hosted runners are free for public repos. Until visibility is
-    # resolved, use the documented local build; do not consume paid minutes.
+    # Standard hosted runners are free for this public repository. Keep this
+    # guard in case visibility changes; local packaging is the fallback.
     if: github.event.repository.private == false
     runs-on: macos-14
     timeout-minutes: 25

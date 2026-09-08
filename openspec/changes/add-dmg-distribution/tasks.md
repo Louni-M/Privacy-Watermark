@@ -6,14 +6,14 @@
 ## 2. Build the installation disk image
 
 - [x] 2.1 Add isolated, repeatable DMG packaging around the existing universal app build, with an Applications symlink, installation document, compressed read-only output, and temporary mount cleanup on failure.
-- [ ] 2.2 Add the deliberate Finder layout and presentation assets using the existing app icon; verify app, destination, arrow, and instructions are visible together without clipping.
+- [x] 2.2 Add the deliberate Finder layout and presentation assets using the existing app icon; verify app, destination, arrow, and instructions are visible together without clipping.
 - [x] 2.3 Add package verification for image integrity, staged contents, shortcut target, bundled version/minimum OS, both architectures, and the enclosed ad-hoc signature; exercise failure cleanup and a path containing spaces.
 
 ## 3. Prepare draft releases
 
 - [x] 3.1 Add manual release dispatch with validated version and source revision, serialized execution, scoped repository-token permissions, and rejection of existing tags/releases.
 - [x] 3.2 Run existing native tests and package checks before preparing the draft and attaching the DMG with source revision and installation notes; report incomplete uploads as failures and never auto-publish.
-- [ ] 3.3 Verify version mismatch, duplicate release, and failed verification paths cannot overwrite or publish a release; prepare one successful draft candidate through the workflow when repository access permits.
+- [x] 3.3 Verify version mismatch, duplicate release, and failed verification paths cannot overwrite or publish a release; prepare one successful draft candidate through the workflow when repository access permits.
 
 ## 4. Explain download and installation
 
@@ -24,8 +24,8 @@
 ## 5. Record release acceptance
 
 - [x] 5.1 Create a candidate-specific acceptance record separating automated package evidence from browser-download installation evidence, with explicit pending states and version/revision/system details.
-- [ ] 5.2 Run native tests and final DMG verification; visually inspect the mounted final image and confirm the installed app runs after ejecting it.
+- [x] 5.2 Run native tests and final DMG verification; visually inspect the mounted final image and confirm the installed app runs after ejecting it.
 - [ ] 5.3 Verify the browser-downloaded candidate under normal quarantine on Apple Silicon and Intel, covering macOS 14; record exact security prompts, documented recovery, and successful synthetic watermark export with unchanged source and independently reopened output. Leave unavailable environments pending.
 - [ ] 5.4 Hand off the accepted draft for the maintainer's manual publication. Record the publication/link activation checklist; once the maintainer publishes, verify anonymous README download access to the intended DMG. Keep publication and its dependent checks explicitly pending until performed.
 
-Implementation evidence and remaining release prerequisites are recorded in `docs/releases/acceptance.md`. Tasks 2.2 and 5.2 retain pending visual Finder inspection; 3.3 retains pending real workflow execution; 5.3 and 5.4 retain downloaded-install and publication gates. The maintainer authorized making the existing source repository public; this is now complete and anonymous access is verified. Workflow execution still requires the release tooling and its source revision to be committed and pushed.
+Implementation evidence and remaining release prerequisites are recorded in `docs/releases/acceptance.md`. The committed draft was built through GitHub Actions and its actual uploaded DMG passed visual Finder review, package verification, copying/ejection, and installed launch on macOS 14 Apple Silicon and macOS 15 Intel. Tasks 5.3 and 5.4 retain the browser/Gatekeeper acceptance and publication gates; automated CLI downloads are not recorded as browser acceptance.

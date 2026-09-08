@@ -35,6 +35,8 @@ Release from a clean committed checkout, including packaging files and the inten
 
 Once the workflow is committed to the default branch on GitHub, choose **Actions → Prepare DMG release → Run workflow**, and enter the app version and full 40-character source commit SHA. The workflow checks out that exact revision, runs native and release tests, builds/verifies a fresh DMG, and prepares a **draft** with installation notes and a SHA-256 digest. It never publishes automatically.
 
+Then run **Actions → Verify uploaded DMG** with the draft tag. It downloads that exact asset on macOS 14 Apple Silicon and macOS 15 Intel, verifies its package, captures the Finder window, copies/ejects/launches the app, and retains screenshots, hashes and launch reports as workflow artifacts. GitHub requires repository write permission to read an unpublished draft; this verification workflow uses it only for reading, never for publication. These CLI-download checks do not replace browser/Gatekeeper acceptance.
+
 For the equivalent local process, authenticate the GitHub CLI with the maintainer account and run from a clean checkout whose commit is present in the destination repository:
 
 ```sh

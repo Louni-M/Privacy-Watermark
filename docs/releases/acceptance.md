@@ -1,43 +1,56 @@
 # DMG acceptance record
 
-Status: **local candidate verified; not approved for public release**.
+Status: **committed draft verified on both architectures; browser/Gatekeeper acceptance and publication pending**.
 
-## Candidate
+## Final candidate
 
 - Date: 2026-09-08.
 - App version: 2.0.0 (bundle build 1).
-- Local file: `dist/dmg candidate/Passport-Filigrane.dmg` (approximately 2.8 MiB).
-- SHA-256: `b4a824f98fcaef6c4cea307bc6c699f457efd86cd45e892211cf3fad9fc42ef1`.
-- Checkout base: `92b1c2ee2821797b1dd556f4291d61f596f401fc` **with uncommitted app and packaging changes**. This is a local working-tree candidate, not a reproducible committed release revision. The release helper correctly requires a clean commit before uploading.
-- Test host: Apple Silicon (`arm64`), macOS 26.6.2, build 25G83.
+- Source: `07918eab138b5ab3bab23c141800f55af397bf33`.
+- [Draft release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/untagged-59f848258176818f6a2d), visible to authorized maintainers until published.
+- Local uploaded-asset copy: `dist/release-2.0.0/Passport-Filigrane.dmg` (2,952,563 bytes).
+- SHA-256: `25b1f3f37fbe531ab25798c0ea0f94584644c7bc48554afa130e6ce826788893`.
+- [Successful release build](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34257217679).
+- [Successful uploaded-DMG verification on both Macs](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34257450336).
 
-## Automated and local evidence
+The earlier working-tree image and first draft are superseded. Screenshot review found the first draft's help label clipped; the final candidate increases the Finder window from 660 × 440 to 660 × 480 points. No published binary was replaced.
+
+## Automated and visual evidence
 
 | Check | Result |
 | --- | --- |
-| Existing native behavior suite | Passed: 47 tests across 13 suites; optional native-interface test skipped by the existing suite |
-| Release failure boundaries | Passed: 7 tests cover version/revision validation, dirty checkout, existing draft/tag, API failures, failed tests/build/package verification, and draft-only creation |
-| Workflow and source validation | Passed: actionlint 1.7.12, YAML parsing, shell syntax, strict OpenSpec validation, and whitespace checks |
-| Universal app | Passed: arm64 and x86_64 slices; this does not demonstrate Intel runtime behavior |
-| Final image | Passed: compressed read-only UDZO; checksum valid |
-| Bundle identity, icon, minimum OS and version | Passed: expected identity/icon, macOS 14.0, version 2.0.0 |
-| Signing | Passed: strict codesign verification and ad-hoc signature inside mounted DMG |
-| Contents and destination | Passed: app, help, presentation resources, /Applications symlink; no runtime or source tree packaged |
-| Saved Finder settings | Passed: 660 × 440 window, 88-point icons, expected positions, hidden toolbars/sidebar, background alias inside volume |
-| Artwork | Generated background inspected; 1320 × 880 pixels at 144 DPI (660 × 440 points) |
-| Paths containing spaces | Passed: build, verification and copying use paths containing spaces |
-| Failure handling | Passed: wrong expected version, existing output, and truncated image rejected; no packaging/verification mounts remain attached |
-| Launch after eject | Passed: app copied from image to `.build/dmg installed/Passport Filigrane.app`, image ejected, existing LaunchCheck reports a visible window; `.build/dmg-launch/bundle-launch.json` |
+| Release preparation | Passed: clean committed checkout, version validation, native tests, packaging and verification; draft created without publication |
+| Release failure boundaries | Passed: 7 tests cover invalid version/revision, dirty checkout, existing draft/tag, API failure, failed tests/build/verification, and draft-only creation |
+| Workflow/source validation | Passed: actionlint, YAML parsing, shell syntax, strict OpenSpec validation, whitespace checks |
+| Final image | Passed: compressed read-only UDZO, valid checksum, matching uploaded hash on both test Macs and local download |
+| Bundle | Passed: expected identity/icon, macOS 14 minimum, version 2.0.0, arm64 and x86_64 slices, strict ad-hoc signature |
+| Contents | Passed: app, help, presentation resources and /Applications link; no runtime or source tree packaged |
+| Finder presentation | Passed by screenshot review on both Macs: app, Applications, arrow, title, instructions and full Install.txt label visible together without overlap or clipping |
+| Copy/eject/launch | Passed on both Macs: app copied from the exact downloaded image, image ejected, installed app launches and displays a window |
+| Failure handling | Wrong expected version, existing output and truncated image rejected; no temporary verification mounts left attached |
 
-Implementation checks are not a substitute for the browser-downloaded acceptance below. Development logs are in `/tmp/passport-dmg-tests.log`, `/tmp/passport-dmg-build.log`, and `/tmp/passport-dmg-verify.log` for this session; they are ephemeral, so preserve release-specific evidence when preparing the committed candidate.
+| Test environment | Retained evidence |
+| --- | --- |
+| Apple Silicon, macOS 14.8.9 (23J631) | [Finder](macos-14/finder.png), [launch](macos-14/bundle-launch.json), [hash](macos-14/sha256.txt), [system](macos-14/system.txt), [native export smoke](macos-14/native-smoke.json) |
+| Intel, macOS 15.7.9 (24G830) | [Finder](macos-15-intel/finder.png), [launch](macos-15-intel/bundle-launch.json), [hash](macos-15-intel/sha256.txt), [system](macos-15-intel/system.txt), [native export smoke](macos-15-intel/native-smoke.json) |
 
-## Required remaining evidence
+The broader Intel native suite exposed a pre-existing race in the preview retention test: visible-page completion does not imply neighbor prefetch completion. Test-only commit `c626830` waits for the selected page image and then asserts that zoom preserves that same image. The focused local regression passed. No app source changed. The full [native CI run](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34257614167) passed on both macOS 14 Apple Silicon and macOS 15 Intel, including native behavior tests, universal builds, window checks and export/reopen smoke tests. No app source changed between the candidate revision and the test-only correction.
 
-- [ ] Final Finder window visually inspected with actual icons and labels; screenshot recorded. Screen capture was unavailable in this agent session; saved metadata and background inspection do not establish final Finder appearance.
-- [ ] Successful draft prepared by the committed release workflow. No workflow was pushed or dispatched; it must first be committed and available on the default branch for manual dispatch. Public-repository eligibility is now satisfied.
-- [x] Public download destination resolved. On explicit maintainer instruction, `Louni-M/Privacy-Watermark` was made public on 2026-09-08. GitHub reports PUBLIC and an unauthenticated repository request returns HTTP 200.
-- [ ] Browser-downloaded candidate on a fresh Apple Silicon environment, normal quarantine intact: exact prompts, per-app approval, installation, ejection, export, independent output reopen, source preservation.
-- [ ] Equivalent browser-download and runtime evidence on Intel, with macOS 14 coverage across the two environments.
-- [ ] Maintainer publishes the accepted draft, activates the README link, and verifies anonymous download and matching candidate hash.
+## Browser and first launch
 
-Record version, full source commit, artifact hash, hardware, OS, screenshots, prompts, and outcomes for the committed candidate here. Do not reuse this local candidate's passing checks as evidence for a different binary.
+The final candidate was subsequently downloaded through Safari as `Downloads/Passport-Filigrane-2.dmg`. Its SHA-256 matches the final uploaded asset and its quarantine metadata records Safari (`0083`). Final-candidate approval/export observations remain pending.
+
+On the local Apple Silicon Mac (macOS 26.6.2), Safari downloaded the first draft with normal quarantine metadata (`0083`, agent Safari). Its hash matched that uploaded asset. Finder copying preserved quarantine on the copied app. LaunchServices attempted opening it, and `spctl --assess` rejected it as expected for this distribution mode.
+
+The agent cannot capture the local security prompt or operate its controls: local screen capture is unavailable and System Events reports that osascript is not allowed assistive access. The maintainer has been asked to report the actual first-launch warning, supported per-app approval result, and a successful watermark export. No quarantine attributes were removed and no Gatekeeper settings were disabled. The final candidate's visual and runtime checks above are complete; CLI download/direct launch is not browser/Gatekeeper acceptance.
+
+## Remaining release gates
+
+- [x] Public destination resolved: the maintainer authorized making Louni-M/Privacy-Watermark public. GitHub reports PUBLIC; anonymous repository access returned HTTP 200.
+- [x] Committed draft produced by the release workflow.
+- [x] Final Finder screenshots reviewed and installed launch verified on both architectures.
+- [x] Full native CI passes with the corrected preview test on both architectures.
+- [ ] Actual browser first-launch approval and synthetic export/reopen/source-preservation confirmed on supported test Macs, including Intel coverage. Retain exact prompts and observations; do not mark unavailable physical checks complete.
+- [ ] Maintainer publishes the accepted draft; README download link activated; anonymous download and candidate hash verified.
+
+Record first-launch observations and publication results here before closing the remaining tasks.
