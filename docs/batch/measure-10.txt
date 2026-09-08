@@ -2,7 +2,7 @@
 Building for production...
 [0/2] Write swift-version--1AB21518FC5DEDBE.txt
 Build complete! (0.12s)
-/Users/louni/Code/PassportFiligrane/.build/arm64-apple-macosx/release/NativeSmoke.app: replacing existing signature
+<workspace>/.build/arm64-apple-macosx/release/NativeSmoke.app: replacing existing signature
 SMOKE: starting native window
 SMOKE: Measured 10-file native-window workload
 {

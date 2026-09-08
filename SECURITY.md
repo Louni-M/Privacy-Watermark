@@ -32,3 +32,11 @@ Progressive validation and sequential export are separate from the interactive p
 ## Reporting a problem
 
 Report reproducible issues through the repository's issue tracker using synthetic examples. Do not attach identity documents, private watermark text or other personal data to a public report.
+
+## Repository checks
+
+GitHub secret scanning and push protection are enabled for this repository. The Security workflow also runs Gitleaks over the full available Git history on pushes, pull requests, weekly, and on manual dispatch. Findings are redacted in CI output. These checks supplement review; they cannot identify every secret or personal detail.
+
+Before publishing diagnostic evidence, replace personal home/workspace paths with `<workspace>` and inspect screenshots and document metadata. CI checks tracked text evidence for personal home paths; generic GitHub runner paths are allowed. Sanitization changes identifying path text, not recorded test outcomes.
+
+For a local check, install Gitleaks and run `gitleaks git . --log-opts="--all --full-history" --redact=100 --no-banner` and `python3 scripts/check-evidence-privacy.py`. Python and Gitleaks are development tools and are not part of the distributed app.

@@ -1,6 +1,6 @@
 Building for production...
 [0/12] Write sources
-[0/12] /Users/louni/Code/PassportFiligrane/.build/arm64-apple-macosx/release/PassportFiligranePackageTests.derived/runner.swift
+[0/12] <workspace>/.build/arm64-apple-macosx/release/PassportFiligranePackageTests.derived/runner.swift
 [0/12] Write sources
 [6/12] Copying Fixtures
 [7/12] Write swift-version--1AB21518FC5DEDBE.txt
