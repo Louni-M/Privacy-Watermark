@@ -10,7 +10,9 @@ on:
         type: string
 
 permissions:
-  contents: read
+  # GitHub requires write access to read unpublished draft releases. This
+  # workflow uses that access only to download the candidate; it never edits it.
+  contents: write
 
 jobs:
   installed:
