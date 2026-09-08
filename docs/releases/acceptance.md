@@ -7,7 +7,7 @@ Status: **committed draft verified on both architectures; browser/Gatekeeper acc
 - Date: 2026-09-08.
 - App version: 2.0.0 (bundle build 1).
 - Source: `07918eab138b5ab3bab23c141800f55af397bf33`.
-- [Draft release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/untagged-59f848258176818f6a2d), visible to authorized maintainers until published.
+- [Draft release](https://github.com/Louni-M/Privacy-Watermark/releases), visible to authorized maintainers until published.
 - Local uploaded-asset copy: `dist/release-2.0.0/Passport-Filigrane.dmg` (2,952,563 bytes).
 - SHA-256: `25b1f3f37fbe531ab25798c0ea0f94584644c7bc48554afa130e6ce826788893`.
 - [Successful release build](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34257217679).
