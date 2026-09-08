@@ -178,9 +178,13 @@ struct SessionTests {
             currentPage: 1, backingScale: 1)
         #expect(session.pageIndex == 1 && session.fitReference == 0)
         #expect(session.effectiveScale == original && session.zoom == nil)
+        // Neighbor prefetch can still be running when the initial page stops
+        // rendering. Establish the image that this zoom is meant to preserve.
+        try await wait { !session.isRendering && session.preview != nil }
+        let imageBeforeZoom = try #require(session.preview)
         let reset = session.viewReset
         session.setZoom(original * 1.2)
-        #expect(session.viewReset == reset && session.preview != nil)
+        #expect(session.viewReset == reset && session.preview === imageBeforeZoom)
         session.changePage(-1)
         #expect(session.zoom == original * 1.2 && session.viewReset == reset)
         session.setZoom(nil)
