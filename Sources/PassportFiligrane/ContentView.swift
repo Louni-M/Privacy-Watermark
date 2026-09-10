@@ -121,6 +121,7 @@ struct ContentView: View {
                     }
                 }.padding(.top, 12)
             }
+            .disclosureGroupStyle(AppearanceDisclosureStyle())
             Divider()
             Picker("Export as", selection: $session.outputPolicy) {
                 ForEach(OutputPolicy.allCases, id: \.self) { Text($0.rawValue).tag($0) }
@@ -235,6 +236,30 @@ struct ContentView: View {
         }
         .padding(16)
         .background(Color(nsColor: .underPageBackgroundColor))
+    }
+}
+
+private struct AppearanceDisclosureStyle: DisclosureGroupStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Button {
+                withAnimation { configuration.isExpanded.toggle() }
+            } label: {
+                HStack {
+                    configuration.label
+                    Spacer()
+                    Image(systemName: configuration.isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .accessibilityHidden(true)
+                }
+                .frame(maxWidth: .infinity, minHeight: 28)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.bordered)
+            .accessibilityValue(configuration.isExpanded ? "Expanded" : "Collapsed")
+            .accessibilityIdentifier("appearanceToggle")
+            if configuration.isExpanded { configuration.content }
+        }
     }
 }
 

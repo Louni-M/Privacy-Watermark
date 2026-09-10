@@ -2,6 +2,7 @@
 """Exercise release failure boundaries without creating GitHub releases."""
 import importlib.util
 from pathlib import Path
+import plistlib
 import subprocess
 import sys
 import unittest
@@ -38,9 +39,11 @@ class ReleaseTests(unittest.TestCase):
                 release.ensure_new_release("owner/repo", "2.0.0")
 
     def test_dirty_checkout_is_rejected(self):
+        with (release.ROOT / "scripts/Info.plist").open("rb") as source:
+            version = plistlib.load(source)["CFBundleShortVersionString"]
         with patch.object(release, "run", side_effect=[REVISION, "?? uncommitted.swift"]):
             with self.assertRaisesRegex(ValueError, "clean committed"):
-                release.validate_checkout("2.0.0", REVISION)
+                release.validate_checkout(version, REVISION)
 
     def test_failed_tests_build_or_verification_never_create_release(self):
         for failing in ("scripts/test.sh", "scripts/build-dmg.sh", "scripts/verify-dmg.sh"):

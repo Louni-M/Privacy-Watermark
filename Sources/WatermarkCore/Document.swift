@@ -40,7 +40,7 @@ public struct WatermarkSettings: Equatable, Sendable, Codable {
     public var opacity = 30.0
     public var size = 36.0
     public var spacing = 150.0
-    public var color = WatermarkColor.white
+    public var color = WatermarkColor.black
     public var direction = WatermarkDirection.ascending
     public init() {}
 
