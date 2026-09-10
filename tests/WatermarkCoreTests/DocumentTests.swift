@@ -195,6 +195,7 @@ final class DocumentTests {
         let rgb = try require(normalized.makeImage()?.dataProvider?.data) as Data
         checkEqual(Array(rgb.prefix(3)), [UInt8(90), 140, 180])
         watermark.opacity = 30
+        watermark.color = .white
         let marked = try Renderer.renderImage(source, settings: watermark)
         normalized.draw(marked, in: CGRect(x: 0, y: 0, width: clean.width, height: clean.height))
         let markedRGB = try require(normalized.makeImage()?.dataProvider?.data) as Data
