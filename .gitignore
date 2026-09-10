@@ -41,3 +41,9 @@ credentials.*
 *.zip
 *.dmg
 *.tar.gz
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+/AGENTS.md
+/.ignore
+/opencode.json

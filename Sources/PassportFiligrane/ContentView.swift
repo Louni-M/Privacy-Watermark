@@ -119,7 +119,10 @@ struct ContentView: View {
                     Picker("Direction", selection: $session.watermark.direction) {
                         ForEach(WatermarkDirection.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                     }
-                }.padding(.top, 12)
+                }
+                .pickerStyle(.menu)
+                .buttonStyle(.borderless)
+                .padding(.top, 12)
             }
             .disclosureGroupStyle(AppearanceDisclosureStyle())
             Divider()
@@ -159,7 +162,8 @@ struct ContentView: View {
                 Spacer()
                 Text("\(Int(value.wrappedValue))\(suffix)").monospacedDigit().foregroundStyle(.secondary)
             }
-            Slider(value: value, in: range, step: 1).accessibilityLabel(title)
+            BlackTrackSlider(value: value, range: range, title: title)
+                .frame(height: 20)
         }
     }
 
@@ -235,7 +239,64 @@ struct ContentView: View {
             }
         }
         .padding(16)
-        .background(Color(nsColor: .underPageBackgroundColor))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(nsColor: .windowBackgroundColor))
+    }
+}
+
+private struct BlackTrackSlider: NSViewRepresentable {
+    @Binding var value: Double
+    let range: ClosedRange<Double>
+    let title: String
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeCoordinator() -> Coordinator { Coordinator(value: $value) }
+
+    func makeNSView(context: Context) -> NSSlider {
+        let slider = NSSlider()
+        slider.cell = BlackTrackSliderCell()
+        slider.isContinuous = true
+        slider.target = context.coordinator
+        slider.action = #selector(Coordinator.changed(_:))
+        return slider
+    }
+
+    func updateNSView(_ slider: NSSlider, context: Context) {
+        context.coordinator.value = $value
+        slider.minValue = range.lowerBound
+        slider.maxValue = range.upperBound
+        slider.doubleValue = value
+        slider.isEnabled = isEnabled
+        slider.setAccessibilityLabel(title)
+        slider.needsDisplay = true
+    }
+
+    final class Coordinator: NSObject {
+        var value: Binding<Double>
+
+        init(value: Binding<Double>) { self.value = value }
+
+        @MainActor @objc func changed(_ slider: NSSlider) {
+            let rounded = slider.doubleValue.rounded()
+            slider.doubleValue = rounded
+            value.wrappedValue = rounded
+        }
+    }
+}
+
+private final class BlackTrackSliderCell: NSSliderCell {
+    override func drawBar(inside rect: NSRect, flipped: Bool) {
+        let track = NSRect(x: rect.minX, y: rect.midY - 2, width: rect.width, height: 4)
+        let path = NSBezierPath(roundedRect: track, xRadius: 2, yRadius: 2)
+        NSColor.black.setFill()
+        path.fill()
+
+        NSGraphicsContext.saveGraphicsState()
+        path.addClip()
+        let filledWidth = min(track.width, max(0, knobRect(flipped: flipped).midX - track.minX))
+        NSColor.controlAccentColor.withAlphaComponent(isEnabled ? 1 : 0.4).setFill()
+        NSBezierPath(rect: NSRect(x: track.minX, y: track.minY, width: filledWidth, height: track.height)).fill()
+        NSGraphicsContext.restoreGraphicsState()
     }
 }
 
@@ -255,7 +316,7 @@ private struct AppearanceDisclosureStyle: DisclosureGroupStyle {
                 .frame(maxWidth: .infinity, minHeight: 28)
                 .contentShape(Rectangle())
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.plain)
             .accessibilityValue(configuration.isExpanded ? "Expanded" : "Collapsed")
             .accessibilityIdentifier("appearanceToggle")
             if configuration.isExpanded { configuration.content }
