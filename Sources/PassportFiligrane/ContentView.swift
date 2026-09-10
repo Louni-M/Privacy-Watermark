@@ -225,6 +225,12 @@ struct ContentView: View {
             }
             if !session.status.isEmpty {
                 Text(session.status).font(.callout).textSelection(.enabled).accessibilityIdentifier("exportStatus")
+                if session.canRevealExports {
+                    Button("Reveal in Finder", systemImage: "folder") { session.revealExports() }
+                        .buttonStyle(.bordered)
+                        .help("Show the files saved by the latest export in Finder.")
+                        .accessibilityIdentifier("revealExports")
+                }
             }
         }
         .padding(16)

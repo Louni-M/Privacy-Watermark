@@ -71,6 +71,7 @@ final class Session {
     private(set) var completedFiles = 0
     private(set) var totalFiles = 0
     private(set) var summary: BatchRunResult?
+    private var exportedURLs: [URL] = []
     private(set) var feedback = ""
     var errorMessage: String?
     @ObservationIgnored private let previewWorker = PreviewWorker()
@@ -108,6 +109,12 @@ final class Session {
             : "\(metadata.pixelWidth) × \(metadata.pixelHeight) pixels"
     }
     var status: String { summary?.message ?? "" }
+    var canRevealExports: Bool { summary != nil && !isExporting && !exportedURLs.isEmpty }
+
+    func revealExports() {
+        guard canRevealExports else { return }
+        NSWorkspace.shared.activateFileViewerSelecting(exportedURLs)
+    }
 
     func chooseFiles() async {
         guard !isExporting, activePanel == nil else { return }
@@ -397,6 +404,7 @@ final class Session {
         completedFiles = 0
         totalFiles = batch.readyCount
         summary = nil
+        exportedURLs = []
         errorMessage = nil
         for item in items where item.validation.metadata != nil { batch.update(item.id) { $0.export = .pending } }
         exportTask = Task {
@@ -416,6 +424,7 @@ final class Session {
     }
 
     private func recordExport(_ id: UUID, state: ExportState, count: Int) {
+        if case .saved(let urls) = state { exportedURLs.append(contentsOf: urls) }
         batch.update(id) {
             $0.export = state
             if case .failed(let message) = state,

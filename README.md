@@ -29,6 +29,8 @@ Copies use `<name>_watermarked.ext`, adding ` (2)`, ` (3)` and so on when names 
 
 Files validate progressively. Invalid files stay visible and do not prevent valid files from exporting once checking finishes. During export, you can browse previews or **Cancel**; collection and shared settings are locked. Cancellation keeps completed copies and removes unfinished output. The summary distinguishes saved, failed and unprocessed files. If a queued source changes or becomes unavailable, restore access and remove/add it again to review its current content.
 
+After an export saves files, **Reveal in Finder** appears below the export summary at the bottom of the preview pane. It selects the saved copies in Finder, including completed outputs from a cancelled or partially failed export.
+
 | Input | Output |
 |---|---|
 | JPG / PNG | JPG, PNG, or single-page PDF |
