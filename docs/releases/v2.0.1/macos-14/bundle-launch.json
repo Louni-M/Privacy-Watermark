@@ -1,0 +1,5 @@
+{
+  "check" : "Built universal app launches and displays a window",
+  "os" : "Version 14.8.9 (Build 23J631)",
+  "passed" : true
+}

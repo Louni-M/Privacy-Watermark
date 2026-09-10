@@ -1,5 +1,20 @@
 # DMG acceptance record
 
+## v2.0.1 — published 2026-09-10
+
+The maintainer requested completion and publication after the tagged draft was uploaded.
+
+- Source: `ce30d9c19db1991229e8eab6fa960abac04c06e3`; tag: `v2.0.1`.
+- [Published latest release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.0.1).
+- DMG SHA-256: `9132437262f23d0ae49c5f94d097adaec0c8c0f280732aaa9450702e000dde7d`.
+- Native tests and seven release-script tests passed locally; [tagged-source CI](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34495529241) passed on both architectures.
+- [Exact uploaded-DMG checks](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34525671383) passed on macOS 14 Apple Silicon and macOS 15 Intel: package verification, copy, eject, and installed launch with a visible window.
+- Both Finder screenshots were reviewed: app, Applications shortcut, installation instructions, and Install.txt are visible and readable. Evidence is retained under [Apple Silicon](v2.0.1/macos-14/finder.png) and [Intel](v2.0.1/macos-15-intel/finder.png), alongside launch reports, hashes, and system versions.
+- The public latest-download URL was downloaded without authentication and its SHA-256 matched the uploaded candidate.
+- Fresh manual browser/Gatekeeper observations were not collected for this patch; automated checks are not represented as manual acceptance. Publication follows the maintainer's explicit instruction to finish the release.
+
+## v2.0.0 historical acceptance
+
 Status: **v2.0.0 published following maintainer first-launch acceptance**. Automated installation/runtime checks passed on both architectures; a separate manual Intel browser/Gatekeeper observation has not been recorded.
 
 ## Final candidate
