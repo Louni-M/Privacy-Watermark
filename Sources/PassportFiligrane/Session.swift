@@ -89,6 +89,13 @@ final class Session {
     var selected: BatchItem? { batch.selected }
     var isLoading: Bool { batch.checkingCount > 0 }
     var canExport: Bool { batch.readyCount > 0 && !isLoading && !isExporting }
+    var exportPrediction: ExportPrediction { ExportPrediction(items: batch.items, policy: outputPolicy, settings: exportSettings) }
+
+    func resetAppearance() {
+        var defaults = WatermarkSettings()
+        defaults.text = watermark.text
+        watermark = defaults
+    }
     var isPDF: Bool { selected?.validation.metadata?.isPDF == true }
     var hasPDF: Bool { batch.items.contains { $0.url.pathExtension.lowercased() == "pdf" } }
     var pageCount: Int { selected?.validation.metadata?.pageCount ?? 0 }

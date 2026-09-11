@@ -35,7 +35,7 @@ public enum WatermarkDirection: String, CaseIterable, Sendable, Codable {
     case ascending = "Ascending ↗", descending = "Descending ↘"
     var angle: CGFloat { self == .ascending ? .pi / 4 : -.pi / 4 }
 }
-public struct WatermarkSettings: Equatable, Sendable, Codable {
+public struct WatermarkSettings: Hashable, Sendable, Codable {
     public var text = "COPY"
     public var opacity = 30.0
     public var size = 36.0

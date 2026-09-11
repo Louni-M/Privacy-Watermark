@@ -6,7 +6,7 @@ Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
 ## Download for Mac
 
-**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg)** · Version 2.0.2 · 3.0 MB
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg)** · [Version 2.1.0](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.0)
 
 Install in three steps:
 
@@ -18,12 +18,12 @@ This free release is **ad-hoc signed and not notarized by Apple**. If macOS says
 
 ## Use
 
-1. Choose **Add files** or press **⌘O** to select JPG, JPEG, PNG and PDF files, or drag files into the window. Later additions append to the list; repeated additions of the same file are ignored.
-2. Enter the shared watermark text. Expand **Appearance** to adjust opacity, size, spacing, color and diagonal direction for every file.
+1. Try the interactive **Sample preview**, or choose **Add files** / press **⌘O** to select JPG, JPEG, PNG and PDF files, or drag files into the window. Later additions append to the list; repeated additions of the same file are ignored.
+2. Enter shared watermark text (up to 200 characters, including line breaks). Select **Include today’s date** (⇧⌘D) to add an editable `DD-MM-YYYY` line (for example, `09-09-2026`); deselect it to remove that line. Insertion keeps the complete date within 200 characters by shortening the end of existing text when necessary. Expand **Appearance** (⇧⌘A) to adjust opacity, size, spacing, color and diagonal direction for every file. Sliders use black unfilled tracks, blue filled portions and light thumbs; click a slider and use arrow keys for keyboard adjustment. Sliders and editable numbers stay synchronized; size and spacing scale with the document. **Reset appearance** (⇧⌘R, while expanded) resets only those five appearance choices.
 3. Select a file to inspect it. PDF arrows navigate every page; use zoom and scrolling for details, or **Fit to window** for the whole page.
-4. Keep each input's original format, or choose PDF, JPG or PNG for the batch. Choose **Export all…** and one destination folder. Your originals stay unchanged.
+4. Keep each input's original format, or choose PDF, JPG or PNG for the batch. Review the predicted output files and PDF page-image folders, then choose **Export N documents…** (⇧⌘S) and one destination folder. The button counts eligible source documents; invalid files remain visible and are excluded. Your originals stay unchanged.
 
-Remove individual files or choose **Clear all** to empty the list. Shared settings survive additions, removals and selection changes; restarting restores defaults and an empty batch. Selecting another file resets page and view to the first page and Fit. Changing PDF page preserves your zoom.
+Use Control-Tab to leave the multiline editor and Tab to move between numeric fields. Drag the divider to resize the settings panel; scroll it to reach expanded controls in a small window. Remove individual files or choose **Clear all** to empty the list and return to the sample. The sample never enters the batch or exports. Blank text and 0% opacity are allowed without warnings or extra confirmations. Shared settings survive additions, removals and selection changes; restarting restores defaults and an empty batch. Selecting another file resets page and view to the first page and Fit. Changing PDF page preserves your zoom.
 
 Copies use `<name>_watermarked.ext`, adding ` (2)`, ` (3)` and so on when names are already used. PDFs converted to images get a separate `<name>_watermarked` folder containing numbered `<name>_page_001.jpg` or `.png` files. Inputs are never merged, existing destinations are never replaced, and another export creates new copies. This folder workflow also applies to one file; PNG input defaults to PNG.
 

@@ -4,18 +4,32 @@ import WatermarkCore
 struct ContentView: View {
     @Bindable var session: Session
     @State private var adjustmentsExpanded = false
+    @State private var dateLine = WatermarkText.dateLine(for: Date())
+    @State private var dropTargeted = false
+
+    init(session: Session, adjustmentsExpanded: Bool = false) {
+        self.session = session
+        _adjustmentsExpanded = State(initialValue: adjustmentsExpanded)
+    }
 
     var body: some View {
-        HStack(spacing: 0) {
-            ScrollView {
-                controls.padding(16)
+        GeometryReader { geometry in
+            HSplitView {
+                ScrollView {
+                    controls.padding(16)
+                }
+                .frame(minWidth: 260, idealWidth: 280,
+                       maxWidth: max(280, geometry.size.width - (session.batch.items.isEmpty ? 321 : 512)))
+                .background(.regularMaterial)
+                HStack(spacing: 0) {
+                    if !session.batch.items.isEmpty {
+                        fileList.frame(width: 190)
+                        Divider()
+                    }
+                    preview.frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .layoutPriority(1)
             }
-            .frame(width: 240)
-            .background(.regularMaterial)
-            Divider()
-            fileList.frame(width: 190)
-            Divider()
-            preview.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(minWidth: 860, minHeight: 600)
         .toolbar {
@@ -28,7 +42,7 @@ struct ContentView: View {
             guard !session.isExporting else { return false }
             session.add(urls)
             return true
-        }
+        } isTargeted: { dropTargeted = $0 }
         .alert("Unable to complete operation", isPresented: Binding(
             get: { session.errorMessage != nil },
             set: { if !$0 { session.errorMessage = nil } }
@@ -54,11 +68,11 @@ struct ContentView: View {
                         Label(item.url.lastPathComponent, systemImage: item.url.pathExtension.lowercased() == "pdf" ? "doc.richtext" : "photo")
                             .lineLimit(2)
                         Text(item.url.deletingLastPathComponent().abbreviatingWithTildeInPath)
-                            .font(.caption2).foregroundStyle(.secondary).lineLimit(2)
+                            .font(.callout).foregroundStyle(.secondary).lineLimit(2)
                             .help(item.url.path)
-                        Text(rowStatus(item)).font(.caption).foregroundStyle(rowFailed(item) ? .red : .secondary)
+                        Text(rowStatus(item)).font(.callout).foregroundStyle(rowFailed(item) ? .red : .secondary)
                         Button("Remove", systemImage: "minus.circle") { session.remove(item.id) }
-                            .buttonStyle(.borderless).font(.caption).disabled(session.isExporting)
+                            .buttonStyle(.borderless).font(.callout).disabled(session.isExporting)
                     }.padding(.vertical, 4).tag(item.id)
                 }
             }
@@ -69,7 +83,7 @@ struct ContentView: View {
                 ProgressView("Checking \(session.batch.checkingCount) files…").controlSize(.small).padding(8)
             }
             if !session.feedback.isEmpty {
-                Text(session.feedback).font(.caption).foregroundStyle(.secondary).padding(8)
+                Text(session.feedback).font(.callout).foregroundStyle(.secondary).padding(8)
             }
         }
         .background(Color(nsColor: .windowBackgroundColor))
@@ -103,22 +117,48 @@ struct ContentView: View {
             Text("Shared settings · All files").font(.callout).foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 8) {
                 Text("Watermark text").font(.headline)
-                TextField("COPY", text: Binding(
+                TextEditor(text: Binding(
                     get: { session.watermark.text },
-                    set: { session.watermark.text = String($0.prefix(200)) }
-                )).textFieldStyle(.roundedBorder).accessibilityIdentifier("watermarkText")
+                    set: { session.watermark.text = WatermarkText.accepted($0) }
+                ))
+                .font(.body)
+                .scrollContentBackground(.hidden)
+                .padding(6)
+                .frame(height: 82)
+                .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
+                .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(nsColor: .separatorColor)))
+                .accessibilityLabel("Watermark text")
+                .accessibilityIdentifier("watermarkText")
+                Text("\(session.watermark.text.count) / \(WatermarkText.limit) characters")
+                    .font(.callout).foregroundStyle(.secondary)
+                Toggle("Include today’s date", isOn: Binding(
+                    get: { WatermarkText.containsDateLine(dateLine, in: session.watermark.text) },
+                    set: { include in
+                        if include { dateLine = WatermarkText.dateLine(for: Date()) }
+                        session.watermark.text = WatermarkText.settingDateLine(
+                            dateLine, included: include, in: session.watermark.text)
+                    }
+                ))
+                .toggleStyle(.checkbox)
+                .accessibilityIdentifier("includeTodayDate")
+                .keyboardShortcut("d", modifiers: [.command, .shift])
             }
             DisclosureGroup("Appearance", isExpanded: $adjustmentsExpanded) {
                 VStack(spacing: 16) {
-                    adjustment("Opacity", value: $session.watermark.opacity, range: 0...100, suffix: "%")
-                    adjustment("Text size", value: $session.watermark.size, range: 12...72, suffix: "")
-                    adjustment("Spacing", value: $session.watermark.spacing, range: 50...300, suffix: "")
+                    AppearanceAdjustment(title: "Opacity", value: $session.watermark.opacity, range: 0...100, suffix: "%")
+                    AppearanceAdjustment(title: "Text size", value: $session.watermark.size, range: 12...72)
+                    AppearanceAdjustment(title: "Spacing", value: $session.watermark.spacing, range: 50...300)
+                    Text("Size and spacing scale with your document.")
+                        .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     Picker("Color", selection: $session.watermark.color) {
                         ForEach(WatermarkColor.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                     }
                     Picker("Direction", selection: $session.watermark.direction) {
                         ForEach(WatermarkDirection.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                     }
+                    Button("Reset appearance") { session.resetAppearance() }
+                        .accessibilityIdentifier("resetAppearance")
+                        .keyboardShortcut("r", modifiers: [.command, .shift])
                 }
                 .pickerStyle(.menu)
                 .buttonStyle(.borderless)
@@ -126,8 +166,11 @@ struct ContentView: View {
             }
             .disclosureGroupStyle(AppearanceDisclosureStyle())
             Divider()
-            Picker("Export as", selection: $session.outputPolicy) {
-                ForEach(OutputPolicy.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Export as").font(.headline)
+                Picker("Export as", selection: $session.outputPolicy) {
+                    ForEach(OutputPolicy.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                }.labelsHidden().frame(maxWidth: .infinity)
             }
             if session.hasPDF {
                 Picker("PDF processing", selection: $session.exportSettings.flattened) {
@@ -139,32 +182,24 @@ struct ContentView: View {
                         ForEach([300, 450, 600], id: \.self) { Text("\($0) DPI").tag($0) }
                     }
                     Text("Combines the watermark with the page image. PDF page images export at 72 DPI.")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.callout).foregroundStyle(.secondary)
                 } else {
                     Text("In a PDF, this watermark can be removed separately with an editor.")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .font(.callout).foregroundStyle(.secondary)
                 }
             }
-            Button("Export all…", systemImage: "square.and.arrow.up") {
+            Text(session.exportPrediction.message)
+                .font(.callout).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("exportPrediction")
+            Button(session.exportPrediction.actionLabel, systemImage: "square.and.arrow.up") {
                 Task { await session.chooseDestination() }
             }
             .buttonStyle(.borderedProminent).controlSize(.large)
             .keyboardShortcut("s", modifiers: [.command, .shift])
             .disabled(!session.canExport).accessibilityIdentifier("exportAll")
-            Text("Original files stay unchanged.").font(.caption).foregroundStyle(.secondary)
+            LocalProcessingNote()
         }.disabled(session.isExporting)
-    }
-
-    private func adjustment(_ title: String, value: Binding<Double>, range: ClosedRange<Double>, suffix: String) -> some View {
-        VStack(spacing: 4) {
-            HStack {
-                Text(title)
-                Spacer()
-                Text("\(Int(value.wrappedValue))\(suffix)").monospacedDigit().foregroundStyle(.secondary)
-            }
-            BlackTrackSlider(value: value, range: range, title: title)
-                .frame(height: 20)
-        }
     }
 
     private var preview: some View {
@@ -184,16 +219,16 @@ struct ContentView: View {
                     if session.isPDF {
                         Button("Previous page", systemImage: "chevron.left") { session.changePage(-1) }
                             .labelStyle(.iconOnly).disabled(session.pageIndex == 0)
-                        Text(session.fileInformation).font(.caption).monospacedDigit()
+                        Text(session.fileInformation).font(.callout).monospacedDigit()
                         Button("Next page", systemImage: "chevron.right") { session.changePage(1) }
                             .labelStyle(.iconOnly).disabled(session.pageIndex + 1 >= session.pageCount)
-                    } else { Text(session.fileInformation).font(.caption) }
+                    } else { Text(session.fileInformation).font(.callout) }
                     Spacer(minLength: 0)
                 }
                 HStack {
                     Button("Zoom out", systemImage: "minus.magnifyingglass") { session.requestZoom(session.effectiveScale / 1.2) }
                         .labelStyle(.iconOnly).disabled(session.effectiveScale <= session.minimumZoom)
-                    Text("\(Int(session.effectiveScale * 100))%").font(.caption).monospacedDigit()
+                    Text("\(Int(session.effectiveScale * 100))%").font(.callout).monospacedDigit()
                     Button("Zoom in", systemImage: "plus.magnifyingglass") { session.requestZoom(session.effectiveScale * 1.2) }
                         .labelStyle(.iconOnly).disabled(session.effectiveScale >= 4)
                     Button("Fit to window") { session.requestZoom(nil) }
@@ -206,6 +241,10 @@ struct ContentView: View {
                             ProgressView("Updating…").controlSize(.small).padding(8).background(.regularMaterial)
                         }
                     }
+            } else if session.batch.items.isEmpty {
+                SamplePreview(watermark: session.watermark, targeted: dropTargeted) {
+                    Task { await session.chooseFiles() }
+                }
             } else {
                 Spacer()
                 Image(systemName: "doc.viewfinder").font(.system(size: 48, weight: .light)).foregroundStyle(.secondary)
@@ -244,62 +283,6 @@ struct ContentView: View {
     }
 }
 
-private struct BlackTrackSlider: NSViewRepresentable {
-    @Binding var value: Double
-    let range: ClosedRange<Double>
-    let title: String
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeCoordinator() -> Coordinator { Coordinator(value: $value) }
-
-    func makeNSView(context: Context) -> NSSlider {
-        let slider = NSSlider()
-        slider.cell = BlackTrackSliderCell()
-        slider.isContinuous = true
-        slider.target = context.coordinator
-        slider.action = #selector(Coordinator.changed(_:))
-        return slider
-    }
-
-    func updateNSView(_ slider: NSSlider, context: Context) {
-        context.coordinator.value = $value
-        slider.minValue = range.lowerBound
-        slider.maxValue = range.upperBound
-        slider.doubleValue = value
-        slider.isEnabled = isEnabled
-        slider.setAccessibilityLabel(title)
-        slider.needsDisplay = true
-    }
-
-    final class Coordinator: NSObject {
-        var value: Binding<Double>
-
-        init(value: Binding<Double>) { self.value = value }
-
-        @MainActor @objc func changed(_ slider: NSSlider) {
-            let rounded = slider.doubleValue.rounded()
-            slider.doubleValue = rounded
-            value.wrappedValue = rounded
-        }
-    }
-}
-
-private final class BlackTrackSliderCell: NSSliderCell {
-    override func drawBar(inside rect: NSRect, flipped: Bool) {
-        let track = NSRect(x: rect.minX, y: rect.midY - 2, width: rect.width, height: 4)
-        let path = NSBezierPath(roundedRect: track, xRadius: 2, yRadius: 2)
-        NSColor.black.setFill()
-        path.fill()
-
-        NSGraphicsContext.saveGraphicsState()
-        path.addClip()
-        let filledWidth = min(track.width, max(0, knobRect(flipped: flipped).midX - track.minX))
-        NSColor.controlAccentColor.withAlphaComponent(isEnabled ? 1 : 0.4).setFill()
-        NSBezierPath(rect: NSRect(x: track.minX, y: track.minY, width: filledWidth, height: track.height)).fill()
-        NSGraphicsContext.restoreGraphicsState()
-    }
-}
-
 private struct AppearanceDisclosureStyle: DisclosureGroupStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -319,6 +302,7 @@ private struct AppearanceDisclosureStyle: DisclosureGroupStyle {
             .buttonStyle(.plain)
             .accessibilityValue(configuration.isExpanded ? "Expanded" : "Collapsed")
             .accessibilityIdentifier("appearanceToggle")
+            .keyboardShortcut("a", modifiers: [.command, .shift])
             if configuration.isExpanded { configuration.content }
         }
     }

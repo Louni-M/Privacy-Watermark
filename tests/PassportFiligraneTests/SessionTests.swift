@@ -236,30 +236,45 @@ struct SessionTests {
 
     @Test(.enabled(if: ProcessInfo.processInfo.environment["PASSPORT_TEST_OUTPUT"] != nil))
     func renderNativeInterface() async throws {
-        let output = ProcessInfo.processInfo.environment["PASSPORT_TEST_OUTPUT"]!
-        let session = Session()
-        session.add([fixture("photo.jpg"), fixture("document.pdf")])
-        try await wait { !session.isLoading && !session.isRendering }
+        let output = URL(fileURLWithPath: ProcessInfo.processInfo.environment["PASSPORT_TEST_OUTPUT"]!)
+        try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
         _ = NSApplication.shared
         NSApplication.shared.delegate = TestingAppDelegate.shared
-        let view = NSHostingView(rootView: ContentView(session: session).frame(width: 1040, height: 720))
-        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 720),
-            styleMask: [.titled, .closable], backing: .buffered, defer: false)
-        window.isReleasedWhenClosed = false
-        window.contentView = view
-        window.makeKeyAndOrderFront(nil)
-        defer { window.close() }
-        try await Task.sleep(for: .milliseconds(300))
-        try await wait { !session.isRendering }
-        #expect(session.canExport)
-        view.layoutSubtreeIfNeeded()
-        view.displayIfNeeded()
-        let rep = try #require(view.bitmapImageRepForCachingDisplay(in: view.bounds))
-        view.cacheDisplay(in: view.bounds, to: rep)
-        let bytes = try #require(rep.representation(using: .png, properties: [:]))
-        try FileManager.default.createDirectory(atPath: output, withIntermediateDirectories: true)
-        try bytes.write(to: URL(fileURLWithPath: output).appendingPathComponent("native-interface.png"))
+        for loaded in [false, true] {
+            let session = Session()
+            if loaded {
+                session.add([fixture("photo.jpg"), fixture("document.pdf"), fixture("corrupt.pdf")])
+                try await wait { !session.isLoading && !session.isRendering }
+                session.watermark.text = "For: Example\nPurpose: Test"
+                session.outputPolicy = .png
+            }
+            for expanded in [false, true] {
+                for (appearance, name) in [(NSAppearance.Name.aqua, "light"), (.darkAqua, "dark")] {
+                    for (width, height) in [(860.0, 600.0), (1040.0, 720.0)] {
+                        let view = NSHostingView(rootView: ContentView(session: session, adjustmentsExpanded: expanded))
+                        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: width, height: height),
+                            styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+                        window.isReleasedWhenClosed = false
+                        window.appearance = NSAppearance(named: appearance)
+                        window.contentView = view
+                        window.setContentSize(CGSize(width: width, height: height))
+                        window.makeKeyAndOrderFront(nil)
+                        try await Task.sleep(for: .milliseconds(400))
+                        try await wait { !session.isRendering }
+                        view.layoutSubtreeIfNeeded()
+                        #expect(view.bounds.width == width && view.bounds.height == height)
+                        let rep = try #require(view.bitmapImageRepForCachingDisplay(in: view.bounds))
+                        view.cacheDisplay(in: view.bounds, to: rep)
+                        let bytes = try #require(rep.representation(using: .png, properties: [:]))
+                        let label = "\(loaded ? "batch" : "sample")-\(expanded ? "expanded" : "collapsed")-\(name)-\(Int(width))"
+                        try bytes.write(to: output.appendingPathComponent(label + ".png"))
+                        window.close()
+                    }
+                }
+            }
+        }
     }
+
 }
 
 @MainActor private final class TestingAppDelegate: NSObject, NSApplicationDelegate {

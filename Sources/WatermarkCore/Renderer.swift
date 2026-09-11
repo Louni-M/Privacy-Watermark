@@ -70,10 +70,48 @@ enum Renderer {
             NSAttributedString.Key(kCTFontAttributeName as String): font,
             NSAttributedString.Key(kCTForegroundColorAttributeName as String): color
         ]
-        let line = CTLineCreateWithAttributedString(NSAttributedString(string: settings.text, attributes: attributes))
-        let width = CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil))
-        let extent = max(width, settings.size) + 20
+        let lines = WatermarkText.accepted(settings.text).components(separatedBy: "\n").map {
+            CTLineCreateWithAttributedString(NSAttributedString(string: $0, attributes: attributes))
+        }
+        let width = lines.map { CGFloat(CTLineGetTypographicBounds($0, nil, nil, nil)) }.max() ?? 0
+        let lineDistance = settings.size * 1.2
+        let blockHeight = CGFloat(lines.count - 1) * lineDistance + settings.size
+        // Keep the exact original single-line grid phase. Multiline bounds must
+        // include the complete rotated block, including preserved blank lines.
+        let extent = lines.count == 1 ? max(width, settings.size) + 20 : hypot(width, blockHeight) + 20
         let step = settings.spacing
+        if lines.count > 1 {
+            // Visit only stamps whose individual lines intersect this render
+            // region. A 200-character mark can contain 199 blank lines; looping
+            // over the entire block's bounding square would do millions of
+            // invisible draws. The grid origin and row staggering stay identical.
+            let clip = context.boundingBoxOfClipPath.intersection(CGRect(origin: .zero, size: size))
+            guard !clip.isNull else { return }
+            for (index, line) in lines.enumerated() where CTLineGetGlyphCount(line) > 0 {
+                let baseline = -CGFloat(index) * lineDistance
+                let transform = CGAffineTransform(rotationAngle: settings.direction.angle).translatedBy(x: 0, y: baseline)
+                let bounds = CTLineGetBoundsWithOptions(line, .useGlyphPathBounds).applying(transform).insetBy(dx: -2, dy: -2)
+                let firstRow = max(0, Int(ceil((clip.minY - bounds.maxY + extent) / step)))
+                let lastRow = Int(floor((clip.maxY - bounds.minY + extent) / step))
+                guard firstRow <= lastRow else { continue }
+                for row in firstRow...lastRow {
+                    let origin = -extent + (row % 2 == 0 ? step / 2 : 0)
+                    let firstColumn = max(0, Int(ceil((clip.minX - bounds.maxX - origin) / step)))
+                    let lastColumn = Int(floor((clip.maxX - bounds.minX - origin) / step))
+                    guard firstColumn <= lastColumn else { continue }
+                    for column in firstColumn...lastColumn {
+                        context.saveGState()
+                        context.translateBy(x: origin + CGFloat(column) * step, y: -extent + CGFloat(row) * step)
+                        context.rotate(by: settings.direction.angle)
+                        context.textMatrix = .identity
+                        context.textPosition = CGPoint(x: 0, y: baseline)
+                        CTLineDraw(line, context)
+                        context.restoreGState()
+                    }
+                }
+            }
+            return
+        }
         var row = 0
         var y = -extent
         while y < size.height + extent {
@@ -83,8 +121,10 @@ enum Renderer {
                 context.translateBy(x: x, y: y)
                 context.rotate(by: settings.direction.angle)
                 context.textMatrix = .identity
-                context.textPosition = .zero
-                CTLineDraw(line, context)
+                for (index, line) in lines.enumerated() {
+                    context.textPosition = CGPoint(x: 0, y: -CGFloat(index) * lineDistance)
+                    CTLineDraw(line, context)
+                }
                 context.restoreGState()
                 x += step
             }

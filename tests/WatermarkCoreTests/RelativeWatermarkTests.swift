@@ -29,11 +29,11 @@ struct RelativeWatermarkTests {
         return Data(bytes: context.data!, count: context.bytesPerRow * context.height)
     }
 
-    @Test func wholePatternIsResolutionIndependent() throws {
+    @Test(arguments: ["COPY", "FIRST\n\nSECOND"]) func wholePatternIsResolutionIndependent(text: String) throws {
         for direction in WatermarkDirection.allCases {
             for (size, spacing) in [(12.0, 50.0), (36, 150), (72, 300)] {
                 var mark = WatermarkSettings(); mark.color = .black; mark.direction = direction
-                mark.size = size; mark.spacing = spacing
+                mark.size = size; mark.spacing = spacing; mark.text = text
                 let baseline = try normalizedPixels(size: a4, settings: mark)
                 for factor: CGFloat in [0.5, 2, 8] {
                     #expect(try normalizedPixels(size: CGSize(width: a4.width * factor, height: a4.height * factor), settings: mark) == baseline)
@@ -67,7 +67,7 @@ struct RelativeWatermarkTests {
         #expect(try #require(coverage.max()) - #require(coverage.min()) < 0.003)
         #expect(try #require(coverage.min()) > 0.01)
     }
-    @Test func reopenedRoutesMatchRegionsAndKeepGeometry() throws {
+    @Test(arguments: ["COPY", "FIRST\nSECOND", "COPY\n11-09-2026"]) func reopenedRoutesMatchRegionsAndKeepGeometry(text: String) throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
@@ -78,7 +78,7 @@ struct RelativeWatermarkTests {
                     for flattened in source.kind == .pdf ? [false, true] : [false] {
                         var output = ExportSettings(); output.format = format; output.dpi = dpi; output.flattened = flattened
                         var mark = WatermarkSettings(); mark.color = .black; mark.opacity = 50
-                        mark.direction = dpi == 450 ? .descending : .ascending
+                        mark.direction = dpi == 450 ? .descending : .ascending; mark.text = text
                         let directory = root.appendingPathComponent(UUID().uuidString)
                         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
                         let target = source.kind == .pdf && format != .pdf ? directory : directory.appendingPathComponent("saved.\(format.fileExtension)")
@@ -91,7 +91,9 @@ struct RelativeWatermarkTests {
                                 let reopened = try #require(pdf.page(at: page))
                                 #expect(Renderer.pageSize(reopened) == size)
                                 if source.kind == .pdf {
-                                    #expect((pdf.string?.contains("COPY") == true) == !flattened)
+                                    for line in text.components(separatedBy: "\n") {
+                                        #expect((pdf.string?.contains(line) == true) == !flattened)
+                                    }
                                 }
                                 var empty = mark; empty.text = ""
                                 saved = try Renderer.renderPage(reopened, settings: empty, scale: 1, raster: false)
