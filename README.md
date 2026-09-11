@@ -6,7 +6,7 @@ Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
 ## Download for Mac
 
-**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg)** · [Version 2.1.0](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.0)
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg)** · [Version 2.1.0](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.0) · 3.1 MB
 
 Install in three steps:
 

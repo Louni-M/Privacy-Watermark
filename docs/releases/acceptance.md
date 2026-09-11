@@ -1,5 +1,18 @@
 # DMG acceptance record
 
+## v2.1.0 — published 2026-09-11
+
+Published at the maintainer's request to commit, push, and release the latest workflow changes.
+
+- Source: `a12b03819d828c6aa76a54f09054cdd5541e821a`; tag: `v2.1.0`.
+- [Published release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.0), with the universal `Passport-Filigrane.dmg` (3,131,447 bytes).
+- DMG SHA-256: `6b7eeb05cc59f7874ca878fdaab42d2ea1663065990083c8ddf72eec1e262efb`.
+- Local native tests: 55 tests in 15 suites passed; seven release-script tests passed.
+- [Source CI](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34644569435) passed on macOS 14 Apple Silicon and macOS 15 Intel, including universal builds and native window/export smoke checks.
+- [Exact uploaded-DMG verification](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34644620700) passed on both architectures: package, copy, eject, and installed launch with a visible window. Both Finder screenshots were reviewed and show readable app, Applications, and installation-help labels. Workflow artifacts retain hashes, screenshots, and launch reports; local copies are under ignored `.build/release-2.1.0-evidence/`.
+- The anonymous public latest-download URL returned a DMG matching the uploaded candidate SHA-256. README links to the download and versioned release.
+- Fresh browser/Gatekeeper acceptance was not performed for this release; automated installation checks are not represented as manual acceptance. Existing first-launch instructions remain applicable.
+
 ## v2.0.1 — published 2026-09-10
 
 The maintainer requested completion and publication after the tagged draft was uploaded.
