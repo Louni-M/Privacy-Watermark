@@ -1,0 +1,6 @@
+interface:
+  display_name: "Latest Release"
+  short_description: "Commit, verify, and publish the latest macOS DMG"
+  default_prompt: "Use $latest-release to commit and push the latest changes, publish a verified DMG release, and update the README."
+policy:
+  allow_implicit_invocation: true
