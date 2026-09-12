@@ -6,6 +6,8 @@ Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
 ![Adjust watermark appearance in Privacy Watermark](assets/demo/preview.gif)
 
+[View the full demo](assets/demo/README.md)
+
 ## Download for Mac
 
 **[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · 3.13 MB · [Version 2.1.1](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1)
