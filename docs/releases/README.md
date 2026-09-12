@@ -4,7 +4,7 @@ The installer contains one universal native app for macOS 14 or newer, an Applic
 
 ## Current availability
 
-The public release destination is `Louni-M/Privacy-Watermark`. Version `v2.1.1` is being prepared with the Privacy Watermark name and a recorded README demo. The installer is now named `Privacy-Watermark.dmg`; prior published releases retain their original assets.
+The public release destination is `Louni-M/Privacy-Watermark`. Version [v2.1.1](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1) is published with the Privacy Watermark name and a recorded README demo (3,132,379-byte universal DMG). The installer is now named `Privacy-Watermark.dmg`; prior published releases retain their original assets.
 
 The release workflow targets the public source repository. It retains a private-repository guard to avoid potentially billable hosted minutes if visibility changes in future. The selected standard `macos-14` runner is free under [GitHub's Actions billing rules](https://docs.github.com/en/billing/concepts/product-billing/github-actions). No billing or token-scope changes are needed. Local packaging remains available as a fallback.
 

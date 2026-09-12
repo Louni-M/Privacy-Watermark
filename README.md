@@ -4,13 +4,11 @@ A native macOS app for watermarking images and PDFs together before sharing copi
 
 Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
-[![Adjust watermark appearance in Privacy Watermark](assets/demo/preview.gif)](https://github.com/Louni-M/Privacy-Watermark/blob/main/assets/demo/privacy-watermark.mp4)
-
-[Watch the full 22-second demo](https://github.com/Louni-M/Privacy-Watermark/blob/main/assets/demo/privacy-watermark.mp4) · [Download the video](https://raw.githubusercontent.com/Louni-M/Privacy-Watermark/main/assets/demo/privacy-watermark.mp4)
+![Adjust watermark appearance in Privacy Watermark](assets/demo/preview.gif)
 
 ## Download for Mac
 
-**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · [Version 2.1.1](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1)
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · 3.13 MB · [Version 2.1.1](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1)
 
 Install in three steps:
 

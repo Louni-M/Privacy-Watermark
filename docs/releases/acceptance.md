@@ -1,5 +1,19 @@
 # DMG acceptance record
 
+## v2.1.1 — published 2026-09-12
+
+- Source: 4b77e7474e797e76f2e05eee7ddf2effaec39b22; tag: v2.1.1.
+- [Published release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1). Privacy-Watermark.dmg: 3,132,379 bytes.
+- SHA-256: cef36a7a5c4d548a1880de134082122aeda7b84343272badd990ddecccda100f.
+- App/module/installer branding is Privacy Watermark; the redundant upper-left title is removed. The app was visually verified locally using a fictional sample document.
+- 55 native tests across 15 suites and seven release-script tests passed locally. [Source CI](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34685159830) passed on macOS 14 Apple Silicon and macOS 15 Intel, including universal builds and native window/export smoke checks. Security and CodeQL passed for the same source revision.
+- [Exact uploaded-DMG verification](https://github.com/Louni-M/Privacy-Watermark/actions/runs/34685203989) passed on both architectures. Both recorded hashes match; both launch reports confirm a visible window. Finder screenshots were reviewed and show the correct title, app, Applications shortcut, arrow, instructions and Install.txt. The image was also opened locally in Finder and ejected after review.
+- Evidence is retained in workflow artifacts and locally under ignored .build/release-2.1.1-evidence/.
+- The public latest-download URL was downloaded without authentication; its hash matches the uploaded candidate. The published tag resolves to the exact source revision above.
+- Fresh browser/Gatekeeper acceptance was not repeated; automated checks are not represented as manual first-launch acceptance. The release remains ad-hoc signed and not notarized.
+- The maintainer's Recordly project and original export are saved locally. The README includes a 1.14 MB looping preview without watch/download-video links; the full MP4 is retained as a repository asset. Playback of the exported demo was visually reviewed. Subsequent demo/documentation edits do not change the tagged app binary.
+
+
 ## v2.1.0 — published 2026-09-11
 
 Published at the maintainer's request to commit, push, and release the latest workflow changes.
