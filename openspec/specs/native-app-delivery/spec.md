@@ -7,7 +7,7 @@ Deliver a maintainable native Mac application with verified compatibility, docum
 ## Requirements
 
 ### Requirement: Supported native application
-Passport Filigrane SHALL run natively on macOS 14 or newer on Apple Silicon and Intel. A reproducible build SHALL produce a downloadable `Passport Filigrane.app` with the existing name and icon, requiring no separately installed Python or other language runtime. Documentation SHALL identify supported systems and accurately describe local installation and signing status.
+Privacy Watermark SHALL run natively on macOS 14 or newer on Apple Silicon and Intel. A reproducible build SHALL produce a downloadable `Privacy Watermark.app` with the existing name and icon, requiring no separately installed Python or other language runtime. Documentation SHALL identify supported systems and accurately describe local installation and signing status.
 
 #### Scenario: Install built application
 - **WHEN** the built app is copied into Applications on a supported Mac
@@ -37,7 +37,7 @@ The old implementation SHALL remain available for comparison until parity, compa
 - **AND** the migration remains incomplete until this cleanup and a clean native build/test check have finished
 
 ### Requirement: Drag-to-Applications disk image
-Distribution SHALL provide one DMG containing Passport Filigrane.app for macOS 14 or newer on both Apple Silicon and Intel. Its Finder window SHALL present the existing app icon, an Applications shortcut, and a legible drag-to-install instruction in a deliberate layout without overlapping or clipped labels. Installation SHALL require no developer tools, terminal commands, additional runtime, or paid account from the user.
+Distribution SHALL provide one DMG containing Privacy Watermark.app for macOS 14 or newer on both Apple Silicon and Intel. Its Finder window SHALL present the existing app icon, an Applications shortcut, and a legible drag-to-install instruction in a deliberate layout without overlapping or clipped labels. Installation SHALL require no developer tools, terminal commands, additional runtime, or paid account from the user.
 
 #### Scenario: Install a downloaded disk image
 - **WHEN** a user opens the downloaded DMG on a supported Mac

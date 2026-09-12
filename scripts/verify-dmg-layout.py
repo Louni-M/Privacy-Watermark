@@ -14,7 +14,7 @@ with DSStore.open(str(mount / ".DS_Store"), "r") as store:
     assert view["backgroundType"] == 2
     alias = Alias.from_bytes(view["backgroundImageAlias"])
     assert alias.target.filename == ".background.png", "Background alias points to wrong file"
-    assert store["Passport Filigrane.app"]["Iloc"] == (175, 200)
+    assert store["Privacy Watermark.app"]["Iloc"] == (175, 200)
     assert store["Applications"]["Iloc"] == (485, 200)
     assert store["Install.txt"]["Iloc"] == (330, 355)
 print("Verified saved Finder layout and background alias")

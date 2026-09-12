@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 import WatermarkCore
-@testable import PassportFiligrane
+@testable import PrivacyWatermark
 
 @MainActor struct WorkflowControlsTests {
     @Test func numericDrafts() {

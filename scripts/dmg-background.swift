@@ -21,7 +21,7 @@ func label(_ text: String, y: CGFloat, size: CGFloat, weight: NSFont.Weight, col
         .foregroundColor: color, .paragraphStyle: style
     ])
 }
-label("Passport Filigrane", y: 352, size: 28, weight: .semibold, color: .darkGray)
+label("Privacy Watermark", y: 352, size: 28, weight: .semibold, color: .darkGray)
 label("Drag the app into Applications", y: 316, size: 16, weight: .regular, color: .darkGray)
 label("→", y: 208, size: 36, weight: .medium, color: .systemGray)
 label("First launch blocked? Open Install.txt below.", y: 112, size: 13, weight: .regular, color: .darkGray)

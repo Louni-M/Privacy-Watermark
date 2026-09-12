@@ -41,7 +41,7 @@ import WatermarkCore
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 720),
                           styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
-        window.title = "Passport Filigrane — Native smoke test"
+        window.title = "Privacy Watermark — Native smoke test"
         let hostingView = NSHostingView(rootView: ContentView(session: session))
         // Honor the requested test window size instead of resizing to SwiftUI's
         // preferred content height whenever selection changes.

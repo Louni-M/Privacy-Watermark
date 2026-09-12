@@ -4,7 +4,7 @@ import Foundation
 let bundle = URL(fileURLWithPath: CommandLine.arguments[1])
 let output = URL(fileURLWithPath: CommandLine.arguments[2])
 let process = Process()
-process.executableURL = bundle.appendingPathComponent("Contents/MacOS/PassportFiligrane")
+process.executableURL = bundle.appendingPathComponent("Contents/MacOS/PrivacyWatermark")
 process.standardOutput = FileHandle.nullDevice
 process.standardError = FileHandle.nullDevice
 try process.run()

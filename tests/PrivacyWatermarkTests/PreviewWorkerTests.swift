@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 import WatermarkCore
-@testable import PassportFiligrane
+@testable import PrivacyWatermark
 
 struct PreviewWorkerTests {
     @Test func cacheBoundRevisionAndSourceOwnership() async throws {

@@ -2,13 +2,14 @@ import SwiftUI
 import WatermarkCore
 
 @main
-struct PassportFiligraneApp: App {
+struct PrivacyWatermarkApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @State private var session = Session()
     var body: some Scene {
-        Window("Passport Filigrane", id: "main") {
+        Window("Privacy Watermark", id: "main") {
             ContentView(session: session)
         }
+        .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1040, height: 720)
         .commands {
             CommandGroup(replacing: .newItem) {

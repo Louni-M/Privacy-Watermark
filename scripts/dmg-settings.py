@@ -4,10 +4,10 @@ import os
 stage = defines["stage"]
 format = "UDZO"
 filesystem = "HFS+"
-files = [os.path.join(stage, "Passport Filigrane.app"), os.path.join(stage, "Install.txt")]
+files = [os.path.join(stage, "Privacy Watermark.app"), os.path.join(stage, "Install.txt")]
 symlinks = {"Applications": "/Applications"}
 background = os.path.join(stage, "background.png")
-icon = os.path.join(stage, "Passport Filigrane.app/Contents/Resources/app_icon.icns")
+icon = os.path.join(stage, "Privacy Watermark.app/Contents/Resources/app_icon.icns")
 window_rect = ((160, 120), (660, 480))
 default_view = "icon-view"
 show_status_bar = False
@@ -18,7 +18,7 @@ show_sidebar = False
 icon_size = 88
 text_size = 13
 icon_locations = {
-    "Passport Filigrane.app": (175, 200),
+    "Privacy Watermark.app": (175, 200),
     "Applications": (485, 200),
     "Install.txt": (330, 355),
 }

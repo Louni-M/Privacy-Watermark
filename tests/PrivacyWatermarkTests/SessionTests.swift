@@ -1,7 +1,7 @@
 import Testing
 import SwiftUI
 import PDFKit
-@testable import PassportFiligrane
+@testable import PrivacyWatermark
 import WatermarkCore
 
 @Suite(.serialized) @MainActor

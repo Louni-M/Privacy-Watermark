@@ -1,10 +1,10 @@
-INSTALL PASSPORT FILIGRANE
+INSTALL PRIVACY WATERMARK
 
 For macOS 14 or newer, on Apple Silicon and Intel.
 
-1. Drag Passport Filigrane into the Applications folder beside it.
-2. Wait for copying to finish, then eject Passport Filigrane in Finder.
-3. Open Applications and double-click Passport Filigrane.
+1. Drag Privacy Watermark into the Applications folder beside it.
+2. Wait for copying to finish, then eject Privacy Watermark in Finder.
+3. Open Applications and double-click Privacy Watermark.
 
 FIRST LAUNCH
 
@@ -13,7 +13,7 @@ or notarized by Apple. macOS can block it on first launch because it cannot
 verify the developer. Only approve a download you trust.
 
 If macOS blocks it for this reason, dismiss the alert, open System Settings
-> Privacy & Security, and find the message about Passport Filigrane.
+> Privacy & Security, and find the message about Privacy Watermark.
 Choose Open Anyway, confirm Open, and authenticate if requested.
 The approval button is available for about an hour after the attempted launch.
 

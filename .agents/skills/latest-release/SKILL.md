@@ -1,6 +1,6 @@
 ---
 name: latest-release
-description: Commit and push the latest Passport Filigrane changes, build and verify a universal macOS DMG, publish a new tagged GitHub release, and update README download links and release evidence. Use when the user asks to ship, publish, or release the latest changes, including committing and pushing them with a DMG release.
+description: Commit and push the latest Privacy Watermark changes, build and verify a universal macOS DMG, publish a new tagged GitHub release, and update README download links and release evidence. Use when the user asks to ship, publish, or release the latest changes, including committing and pushing them with a DMG release.
 ---
 
 # Latest release
@@ -15,7 +15,7 @@ Run this workflow from this repository's root. This skill is project-local: keep
 - Read the current release instructions and acceptance record in `docs/releases/`, the version in `scripts/Info.plist`, and the release/verification workflows as needed. Prefer the existing scripts over reimplementing them.
 - Use a requested version, otherwise choose the next appropriate unused semantic version: minor for new compatible features, patch for fixes. Announce the choice. Check both tags and releases, including drafts; an API failure does not establish that a version is unused.
 - Set `CFBundleShortVersionString` in `scripts/Info.plist`. Update the root `README.md` version and versioned release link, retaining this stable download URL:
-  `https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg`.
+  `https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg`.
   Do not carry forward an old DMG size as if measured for the new release.
 
 ## 2. Test, commit, and push source
@@ -38,7 +38,7 @@ The script validates the checkout and unused version, runs native tests, builds 
 
 If packaging tools are missing, install the pinned dependencies into `.build/dmg-tools` as documented in `docs/releases/README.md`. If local packaging is unavailable, dispatch `.github/workflows/release.yml` with the same version and immutable revision, and wait for successful completion. Do not build or upload a stale DMG.
 
-Inspect the draft's tag, target, body, assets, state, byte size, and digest. Download `Passport-Filigrane.dmg` into a fresh ignored `dist/release-<version>/` directory and independently compare its SHA-256 with the built/uploaded digest. A partial or failed upload remains an unpublished draft; investigate it rather than blindly retrying creation or replacing an asset.
+Inspect the draft's tag, target, body, assets, state, byte size, and digest. Download `Privacy-Watermark.dmg` into a fresh ignored `dist/release-<version>/` directory and independently compare its SHA-256 with the built/uploaded digest. A partial or failed upload remains an unpublished draft; investigate it rather than blindly retrying creation or replacing an asset.
 
 ## 4. Verify the exact uploaded installer
 
@@ -58,7 +58,7 @@ Inspect the draft's tag, target, body, assets, state, byte size, and digest. Dow
 gh release edit "$release_tag" --draft=false --latest --notes-file "$release_notes_path"
 ```
 
-- Download the public `releases/latest/download/Passport-Filigrane.dmg` URL without authentication into a separate file and verify its SHA-256 matches the accepted candidate. Confirm the release is no longer a draft, is latest, contains the uploaded asset, and has the intended tag. Fetch the tag and verify its resolved commit equals the recorded source SHA.
+- Download the public `releases/latest/download/Privacy-Watermark.dmg` URL without authentication into a separate file and verify its SHA-256 matches the accepted candidate. Confirm the release is no longer a draft, is latest, contains the uploaded asset, and has the intended tag. Fetch the tag and verify its resolved commit equals the recorded source SHA.
 - Never silently replace binaries under an already published version. If public delivery fails, investigate and correct it explicitly; do not report completion prematurely.
 
 ## 6. Finish documentation and report

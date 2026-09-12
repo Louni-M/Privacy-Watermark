@@ -4,7 +4,7 @@ The installer contains one universal native app for macOS 14 or newer, an Applic
 
 ## Current availability
 
-On 2026-09-08, the maintainer authorized making `Louni-M/Privacy-Watermark` public. Visibility is now public and anonymous repository access was verified (HTTP 200). This repository is the download destination. Version `v2.1.0` is now the published latest release, with `Passport-Filigrane.dmg` attached. The README links directly to the DMG; anonymous download was verified against the accepted artifact hash.
+The public release destination is `Louni-M/Privacy-Watermark`. Version `v2.1.1` is being prepared with the Privacy Watermark name and a recorded README demo. The installer is now named `Privacy-Watermark.dmg`; prior published releases retain their original assets.
 
 The release workflow targets the public source repository. It retains a private-repository guard to avoid potentially billable hosted minutes if visibility changes in future. The selected standard `macos-14` runner is free under [GitHub's Actions billing rules](https://docs.github.com/en/billing/concepts/product-billing/github-actions). No billing or token-scope changes are needed. Local packaging remains available as a fallback.
 
@@ -18,11 +18,11 @@ python3 -m venv .build/dmg-tools
 scripts/build-dmg.sh
 ```
 
-The result is `dist/Passport-Filigrane.dmg`. To keep multiple candidates, choose an empty output directory:
+The result is `dist/Privacy-Watermark.dmg`. To keep multiple candidates, choose an empty output directory:
 
 ```sh
 OUTPUT_DIR='dist/candidate 2.0.0' scripts/build-dmg.sh
-scripts/verify-dmg.sh 'dist/candidate 2.0.0/Passport-Filigrane.dmg' 2.0.0
+scripts/verify-dmg.sh 'dist/candidate 2.0.0/Privacy-Watermark.dmg' 2.0.0
 ```
 
 Packaging refuses to overwrite an existing DMG. It builds the app in an isolated temporary staging directory, generates the artwork and Finder settings with pinned `dmgbuild` dependencies, compresses with macOS disk-image tools, and verifies the final mounted image. It requires no Finder automation permission. Build and verification failures do not produce a successful output; temporary verification mounts are ejected on failure. If macOS prevents ejecting, the script reports the mount and leaves its directory intact for manual ejection.
@@ -47,7 +47,7 @@ python3 scripts/prepare-release.py 2.0.0 FULL_40_CHARACTER_SOURCE_COMMIT_SHA
 
 The destination is `Louni-M/Privacy-Watermark`; the target source commit must be pushed there before preparing its draft.
 
-If using the GitHub web interface instead, run native tests, build and verify from the same clean commit, then create a new **draft** release against that commit. Attach `Passport-Filigrane.dmg`, include the exact source revision and SHA-256 from `shasum -a 256`, and copy `assets/dmg/Install.txt` into its notes. Label it a candidate awaiting manual acceptance. A failed upload leaves an incomplete draft, which is not ready to publish.
+If using the GitHub web interface instead, run native tests, build and verify from the same clean commit, then create a new **draft** release against that commit. Attach `Privacy-Watermark.dmg`, include the exact source revision and SHA-256 from `shasum -a 256`, and copy `assets/dmg/Install.txt` into its notes. Label it a candidate awaiting manual acceptance. A failed upload leaves an incomplete draft, which is not ready to publish.
 
 ## Accept and publish
 
@@ -60,6 +60,6 @@ Use [the acceptance record](acceptance.md) for each candidate. Download the draf
 
 Mark missing environments or unresolved failures pending. A successful local launch without quarantine does not satisfy the downloaded-install check. First-launch instructions follow [Apple's guidance](https://support.apple.com/en-au/102445); managed Macs or different warnings can require administrator assistance.
 
-Only after acceptance, the maintainer manually publishes the draft as a stable latest release. Activate the README Download for Mac link to `https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg` using the agreed public destination, and verify it in a signed-out browser. Check the downloaded hash against the accepted candidate. Keeping this asset filename unchanged makes the link stable between releases ([GitHub release links](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases)).
+Only after acceptance, the maintainer manually publishes the draft as a stable latest release. Activate the README Download for Mac link to `https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg` using the agreed public destination, and verify it in a signed-out browser. Check the downloaded hash against the accepted candidate. Keeping this asset filename unchanged makes the link stable between releases ([GitHub release links](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases)).
 
 If a defective public artifact must be withdrawn, mark the README download unavailable and withdraw the affected release deliberately. Restore a previously accepted latest release if one exists. Never silently replace binaries under an already published version. Updates and onboarding are outside this change.

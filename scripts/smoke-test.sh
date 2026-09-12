@@ -3,8 +3,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 configuration="${CONFIGURATION:-release}"
 smoke_output="${PASSPORT_SMOKE_OUTPUT:-.build/smoke-output}"
-if [[ -d 'dist/Passport Filigrane.app' ]]; then
-    swift scripts/LaunchCheck.swift "$PWD/dist/Passport Filigrane.app" "$smoke_output"
+if [[ -d 'dist/Privacy Watermark.app' ]]; then
+    swift scripts/LaunchCheck.swift "$PWD/dist/Privacy Watermark.app" "$smoke_output"
 fi
 swift build -c "$configuration"
 binary_dir="$(swift build -c "$configuration" --show-bin-path)"
@@ -13,13 +13,13 @@ smoke_app="$binary_dir/NativeSmoke.app"
 mkdir -p "$smoke_app/Contents/MacOS"
 swiftc -O -parse-as-library -swift-version 6 -target "$architecture-apple-macosx14.0" \
     -I "$binary_dir/Modules" \
-    Sources/PassportFiligrane/Session.swift Sources/PassportFiligrane/ContentView.swift \
-    Sources/PassportFiligrane/PreviewWorker.swift Sources/PassportFiligrane/PreviewHost.swift \
-    Sources/PassportFiligrane/WorkflowControls.swift \
+    Sources/PrivacyWatermark/Session.swift Sources/PrivacyWatermark/ContentView.swift \
+    Sources/PrivacyWatermark/PreviewWorker.swift Sources/PrivacyWatermark/PreviewHost.swift \
+    Sources/PrivacyWatermark/WorkflowControls.swift \
     scripts/SmokeTest.swift "$binary_dir/WatermarkCore.build/"*.o \
     -o "$smoke_app/Contents/MacOS/NativeSmoke"
 cp scripts/Info.plist "$smoke_app/Contents/Info.plist"
-/usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.lounim.passportfiligrane.smoke' "$smoke_app/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c 'Set :CFBundleIdentifier com.lounim.privacywatermark.smoke' "$smoke_app/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable NativeSmoke' "$smoke_app/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c 'Set :CFBundleName NativeSmoke' "$smoke_app/Contents/Info.plist"
 codesign --force --sign - "$smoke_app"

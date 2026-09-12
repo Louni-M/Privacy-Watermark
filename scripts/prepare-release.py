@@ -56,14 +56,14 @@ def prepare(version, revision, repo):
         env = dict(os.environ, OUTPUT_DIR=output)
         run("scripts/test.sh")
         run("scripts/build-dmg.sh", env=env)
-        dmg = str(Path(output) / "Passport-Filigrane.dmg")
+        dmg = str(Path(output) / "Privacy-Watermark.dmg")
         run("scripts/verify-dmg.sh", dmg, version)
         validate_checkout(version, revision)
         ensure_new_release(repo, version)
         digest = run("shasum", "-a", "256", dmg, capture=True).split()[0]
         notes = Path(output) / "release-notes.md"
         notes.write_text(
-            f"Passport Filigrane {version}\n\n"
+            f"Privacy Watermark {version}\n\n"
             "CANDIDATE — manual downloaded-install acceptance is still required before publication.\n\n"
             f"Source revision: `{revision}`\n\nDMG SHA-256: `{digest}`\n\n"
             + (ROOT / "assets/dmg/Install.txt").read_text()
@@ -72,7 +72,7 @@ def prepare(version, revision, repo):
         # partially created draft is explicitly a candidate, never ready/published.
         run("gh", "release", "create", "v" + version, dmg,
             "--repo", repo, "--target", revision, "--draft",
-            "--title", f"Passport Filigrane {version}", "--notes-file", str(notes))
+            "--title", f"Privacy Watermark {version}", "--notes-file", str(notes))
 
 
 def main():

@@ -1,17 +1,21 @@
-# Passport Filigrane
+# Privacy Watermark
 
 A native macOS app for watermarking images and PDFs together before sharing copies. Built with SwiftUI, PDFKit, Core Graphics and ImageIO; all processing stays on your Mac.
 
 Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
+[![Adjust watermark appearance in Privacy Watermark](assets/demo/preview.gif)](https://github.com/Louni-M/Privacy-Watermark/blob/main/assets/demo/privacy-watermark.mp4)
+
+[Watch the full 22-second demo](https://github.com/Louni-M/Privacy-Watermark/blob/main/assets/demo/privacy-watermark.mp4) · [Download the video](https://raw.githubusercontent.com/Louni-M/Privacy-Watermark/main/assets/demo/privacy-watermark.mp4)
+
 ## Download for Mac
 
-**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Passport-Filigrane.dmg)** · [Version 2.1.0](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.0) · 3.1 MB
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · [Version 2.1.1](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1)
 
 Install in three steps:
 
-1. Download `Passport-Filigrane.dmg` and double-click it.
-2. Drag **Passport Filigrane** onto **Applications** in the installation window.
+1. Download `Privacy-Watermark.dmg` and double-click it.
+2. Drag **Privacy Watermark** onto **Applications** in the installation window.
 3. Wait for copying to finish, eject the disk image, and open the app from Applications.
 
 This free release is **ad-hoc signed and not notarized by Apple**. If macOS says Apple could not verify the app is free of malware, click **Done**, then open **System Settings → Privacy & Security → Open Anyway**, then confirm and authenticate if asked. Only approve a download you trust. The approval button is available for about an hour after attempting to open the app. See [installation help](assets/dmg/Install.txt), also included in the DMG, for missing approval controls or other warnings.
@@ -48,10 +52,10 @@ Install a Swift 6 toolchain through Xcode 16 or newer, or compatible Xcode Comma
 
 ```sh
 scripts/build-app.sh
-open "dist/Passport Filigrane.app"
+open "dist/Privacy Watermark.app"
 ```
 
-The script builds and verifies a universal app containing both `arm64` and `x86_64` slices. Copy `dist/Passport Filigrane.app` to your Applications folder to install it. The built app needs no separately installed language runtime or third-party dependencies.
+The script builds and verifies a universal app containing both `arm64` and `x86_64` slices. Copy `dist/Privacy Watermark.app` to your Applications folder to install it. The built app needs no separately installed language runtime or third-party dependencies.
 
 The local bundle is **ad-hoc signed**, not Developer ID signed or notarized. A notarized public release is not produced by this script. macOS may require approval in Privacy & Security for a downloaded copy.
 
@@ -60,7 +64,7 @@ To build the drag-to-Applications installer, see [DMG packaging and release inst
 For development without bundling:
 
 ```sh
-swift run PassportFiligrane
+swift run PrivacyWatermark
 scripts/test.sh
 ```
 
@@ -81,7 +85,7 @@ screenshots, and user acceptance.
 
 ## Source layout
 
-- `Sources/PassportFiligrane`: native window, session and file dialogs.
+- `Sources/PrivacyWatermark`: native window, session and file dialogs.
 - `Sources/WatermarkCore`: validation, rendering, encoding and transactional export.
 - `tests`: native behavior tests and synthetic fixtures.
 - `scripts`: universal bundling and verification.

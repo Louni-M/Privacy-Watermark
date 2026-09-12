@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Preserve the document conversion, watermark, privacy, and validation behavior of Passport Filigrane while replacing its processing implementation with native macOS code.
+Preserve the document conversion, watermark, privacy, and validation behavior of Privacy Watermark while replacing its processing implementation with native macOS code.
 
 ## Requirements
 

@@ -1,6 +1,6 @@
 # Security and privacy
 
-Passport Filigrane processes documents locally using macOS frameworks. It has no account, upload service, telemetry or application network client. Keep macOS updated to receive fixes to its image and PDF parsers.
+Privacy Watermark processes documents locally using macOS frameworks. It has no account, upload service, telemetry or application network client. Keep macOS updated to receive fixes to its image and PDF parsers.
 
 ## What watermarking protects
 

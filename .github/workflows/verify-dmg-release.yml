@@ -41,27 +41,27 @@ jobs:
         run: |
           mkdir -p dist/candidate .build/dmg-evidence
           gh release view "$RELEASE_TAG" --json tagName,targetCommitish,body,assets > .build/dmg-evidence/release.json
-          gh release download "$RELEASE_TAG" --pattern Passport-Filigrane.dmg --dir dist/candidate
-          shasum -a 256 dist/candidate/Passport-Filigrane.dmg > .build/dmg-evidence/sha256.txt
+          gh release download "$RELEASE_TAG" --pattern Privacy-Watermark.dmg --dir dist/candidate
+          shasum -a 256 dist/candidate/Privacy-Watermark.dmg > .build/dmg-evidence/sha256.txt
           sw_vers > .build/dmg-evidence/system.txt
           uname -m >> .build/dmg-evidence/system.txt
       - name: Verify, inspect Finder, copy, eject, and launch
         env:
           RELEASE_TAG: ${{ inputs.tag }}
         run: |
-          scripts/verify-dmg.sh dist/candidate/Passport-Filigrane.dmg "${RELEASE_TAG#v}"
+          scripts/verify-dmg.sh dist/candidate/Privacy-Watermark.dmg "${RELEASE_TAG#v}"
           mount="$RUNNER_TEMP/dmg-mounted"
           installed="$RUNNER_TEMP/installed"
           mkdir -p "$mount" "$installed"
           trap 'hdiutil detach "$mount" -quiet 2>/dev/null || true' EXIT
-          hdiutil attach dist/candidate/Passport-Filigrane.dmg -readonly -nobrowse -mountpoint "$mount" -quiet
+          hdiutil attach dist/candidate/Privacy-Watermark.dmg -readonly -nobrowse -mountpoint "$mount" -quiet
           open "$mount"
           sleep 3
-          window_id=$(osascript -e 'with timeout of 15 seconds' -e 'tell application "Finder" to get id of window "Passport Filigrane"' -e 'end timeout')
+          window_id=$(osascript -e 'with timeout of 15 seconds' -e 'tell application "Finder" to get id of window "Privacy Watermark"' -e 'end timeout')
           screencapture -x -l "$window_id" .build/dmg-evidence/finder.png
-          ditto "$mount/Passport Filigrane.app" "$installed/Passport Filigrane.app"
+          ditto "$mount/Privacy Watermark.app" "$installed/Privacy Watermark.app"
           hdiutil detach "$mount" -quiet
-          swift scripts/LaunchCheck.swift "$installed/Passport Filigrane.app" "$PWD/.build/dmg-evidence"
+          swift scripts/LaunchCheck.swift "$installed/Privacy Watermark.app" "$PWD/.build/dmg-evidence"
       - name: Retain candidate evidence
         if: always()
         uses: actions/upload-artifact@v7
