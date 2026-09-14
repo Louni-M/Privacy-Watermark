@@ -1,12 +1,15 @@
 # Privacy Watermark
 
+[![Build & tests](https://github.com/Louni-M/Privacy-Watermark/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Louni-M/Privacy-Watermark/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Louni-M/Privacy-Watermark?label=release)](https://github.com/Louni-M/Privacy-Watermark/releases/latest)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](#download-for-mac)
+[![SwiftUI](https://img.shields.io/badge/SwiftUI-F05138?logo=swift&logoColor=white)](#build-and-install)
+
 A native macOS app for watermarking images and PDFs together before sharing copies. Built with SwiftUI, PDFKit, Core Graphics and ImageIO; all processing stays on your Mac.
 
 Requires **macOS 14 or newer**, on Apple Silicon or Intel.
 
-![Adjust watermark appearance in Privacy Watermark](assets/demo/preview.gif)
-
-[View the full demo](assets/demo/README.md)
+https://github.com/user-attachments/assets/58cd5805-29fc-4b51-af22-13063b5ddb02
 
 ## Download for Mac
 
