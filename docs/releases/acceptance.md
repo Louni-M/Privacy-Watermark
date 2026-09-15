@@ -1,5 +1,20 @@
 # DMG acceptance record
 
+## v2.1.2 — published 2026-09-15
+
+- Source: `47b5e6e367f601705ee13d541db469583aa42add`; tag: `v2.1.2`, verified to resolve to that exact commit.
+- [Published latest release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.2). Privacy-Watermark.dmg: **3,150,979 bytes** (3.15 MB).
+- SHA-256: `ac329c2a4d7613a405e58c434724f0406fc61daf9be9492faadc81f70a6a233c`.
+- Fixes repeated long/multiline watermark collisions using shared measured layout, keeps export/progress/cancellation visible while settings scroll, separates validation exclusions from attempted failures, and gates PDF controls on eligible output routes. README behavior and included installer button names match the app.
+- **60 native tests in 16 suites** and **seven release-script tests** passed locally. Additional visual/native/processing runs covered default pixel compatibility, Unicode and whitespace extremes, preview/export parity, cancellation, and actual minimum-size light/dark layouts. Detailed evidence and remaining interaction checks are in [implementation acceptance](../../openspec/changes/improve-watermark-layout-and-export-clarity/acceptance.md).
+- [Source CI](https://github.com/Louni-M/Privacy-Watermark/actions/runs/35000630087) passed on macOS 14 Apple Silicon and macOS 15 Intel, including native tests, universal builds and window/export smoke checks. [Security](https://github.com/Louni-M/Privacy-Watermark/actions/runs/35000630232) and [CodeQL](https://github.com/Louni-M/Privacy-Watermark/actions/runs/35000629284) passed for the same immutable source.
+- [Final exact uploaded-DMG verification](https://github.com/Louni-M/Privacy-Watermark/actions/runs/35001719969) passed on both architectures. Both recorded hashes match the built/uploaded candidate. Both launch reports confirm a visible window after copy and eject. Finder screenshots were reviewed: app icon, Applications shortcut, arrow/instructions and Install.txt are all visible and readable.
+- The [initial installer verification](https://github.com/Louni-M/Privacy-Watermark/actions/runs/35000802133) passed package and launch checks but its Intel screenshot captured an empty icon placeholder, including an Intel-only retry. Verification-only commit `d52b965ef9b7537598d2fa52f78f511871d1ee09` increased the Finder capture delay from 3 to 20 seconds. The final screenshots show the icon on both Macs. No app source or DMG changed; the release tag stays on the source commit above.
+- Evidence is retained in workflow artifacts and ignored `.build/release-2.1.2-evidence/final/`. Initial and retry evidence is retained alongside it. Local packaging and verification logs are `.build/release-2.1.2-prepare.log` and `.build/release-2.1.2-local-verify.log`; downloaded draft/public images are under ignored `dist/release-2.1.2/`.
+- The uploaded image was verified locally, mounted read-only and inspected in Finder, then ejected. The existing app session was preserved. Local navigation inherited Finder's list view; icon view was selected to inspect the artwork, while the hosted screenshots verify the saved standalone installer presentation.
+- The stable public latest-download URL was downloaded **without authentication**. Its checksum matches the accepted candidate, the release is stable/latest and no longer a draft, and the public asset has the expected name and size.
+- Fresh browser/Gatekeeper acceptance was not repeated. Physical trackpad gestures, a full VoiceOver session and fresh Finder drag-and-drop interaction remain manual follow-ups; automated checks are not represented as those observations. The release remains ad-hoc signed and not notarized.
+
 ## v2.1.1 — published 2026-09-12
 
 - Source: 4b77e7474e797e76f2e05eee7ddf2effaec39b22; tag: v2.1.1.

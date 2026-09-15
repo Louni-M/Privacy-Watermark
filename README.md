@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/58cd5805-29fc-4b51-af22-13063b5ddb02
 
 ## Download for Mac
 
-**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · [Version 2.1.2](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.2)
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · 3.15 MB · [Version 2.1.2](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.2)
 
 Install in three steps:
 
