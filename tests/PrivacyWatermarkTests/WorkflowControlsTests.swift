@@ -52,4 +52,26 @@ import WatermarkCore
         #expect(session.batch.items.isEmpty && session.selected == nil && !session.canExport)
         #expect(session.watermark.text == "For: Example\nPurpose: Test")
     }
+    @Test func outputControlsFollowEligibleRoutes() async throws {
+        let session = Session(), helpers = SessionTests()
+        #expect(!session.hasPDFOutput && !session.hasPDFPageImages)
+        session.add([helpers.fixture("photo.jpg"), helpers.fixture("corrupt.pdf")])
+        try await helpers.wait { !session.isLoading }
+        session.outputPolicy = .pdf
+        #expect(!session.hasPDFOutput && !session.hasPDFPageImages)
+        session.add([helpers.fixture("document.pdf")])
+        try await helpers.wait { !session.isLoading }
+        #expect(session.hasPDFOutput && !session.hasPDFPageImages)
+        session.exportSettings.flattened = false; session.exportSettings.dpi = 600
+        for policy in [OutputPolicy.png, .jpg] {
+            session.outputPolicy = policy
+            #expect(!session.hasPDFOutput && session.hasPDFPageImages)
+        }
+        session.outputPolicy = .original
+        #expect(session.hasPDFOutput && !session.hasPDFPageImages)
+        #expect(!session.exportSettings.flattened && session.exportSettings.dpi == 600)
+        session.clearAll()
+        #expect(!session.hasPDFOutput && !session.hasPDFPageImages)
+    }
+
 }

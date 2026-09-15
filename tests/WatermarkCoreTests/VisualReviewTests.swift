@@ -7,19 +7,20 @@ import Testing
 
 @Suite(.serialized, .enabled(if: ProcessInfo.processInfo.environment["PASSPORT_VISUAL_OUTPUT"] != nil))
 struct VisualReviewTests {
-    @Test func recordSavedFitAndZoomComparisons() throws {
-        let root = URL(fileURLWithPath: ProcessInfo.processInfo.environment["PASSPORT_VISUAL_OUTPUT"]!)
+    @Test(arguments: WatermarkDirection.allCases) func recordSavedFitAndZoomComparisons(direction: WatermarkDirection) throws {
+        let root = URL(fileURLWithPath: ProcessInfo.processInfo.environment["PASSPORT_VISUAL_OUTPUT"]!).appendingPathComponent(direction.rawValue)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         var records: [[String: Any]] = []
-        for file in ["document.pdf", "pages-10.pdf", "transparent.png"] {
+        for file in ["document.pdf", "pages-10.pdf", "transparent.png", "photo.jpg"] {
             let source = try SourceDocument.load(Bundle.module.url(forResource: file, withExtension: nil, subdirectory: "Fixtures")!)
-            for (mode, flattened, format) in [("standard", false, OutputFormat.pdf), ("flattened", true, .pdf), ("pages", true, .png)] {
+            for (mode, flattened, format, dpi) in [("standard", false, OutputFormat.pdf, 450), ("flattened-300", true, .pdf, 300), ("flattened-450", true, .pdf, 450), ("flattened-600", true, .pdf, 600), ("png", true, .png, 450), ("jpg", true, .jpg, 450)] {
                 let folder = root.appendingPathComponent(file + "-" + mode)
                 try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-                var export = ExportSettings(); export.flattened = flattened; export.format = format
+                var export = ExportSettings(); export.flattened = flattened; export.format = format; export.dpi = dpi
                 var mark = WatermarkSettings()
                 mark.color = mode == "standard" ? .black : .gray
-                mark.direction = mode == "flattened" ? .descending : .ascending
+                mark.direction = direction
+                mark.text = "For rental application\nÉlodie — Zürich\n15-09-2026"
                 var allocator = DestinationAllocator(directory: folder, sources: [source.url])
                 let outputs = try BatchExport.save(source, watermark: mark, settings: export, allocator: &allocator)
                 for index in Set([0, source.pageCount / 2, source.pageCount - 1]).sorted() {

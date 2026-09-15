@@ -46,12 +46,13 @@ public enum ExportBoundary: Sendable {
 public struct BatchRunResult: Equatable, Sendable {
     public var saved = 0
     public var failed = 0
+    public var excluded = 0
     public var unprocessed = 0
     public var cancelled = false
     public var processingSeconds: [Double] = []
     public init() {}
     public var message: String {
-        "\(saved) saved · \(failed) failed · \(unprocessed) not processed" + (cancelled ? " · Cancelled" : "")
+        "\(saved) saved · \(failed) failed · \(excluded) excluded · \(unprocessed) not processed" + (cancelled ? " · Cancelled" : "")
     }
 }
 
@@ -95,7 +96,7 @@ public enum BatchExport {
                            boundary: @Sendable (UUID, ExportBoundary) throws -> Void = { _, _ in },
                            update: @Sendable (UUID, ExportState, Int) async -> Void) async -> BatchRunResult {
         var result = BatchRunResult()
-        result.failed = items.filter { $0.validation.metadata == nil }.count
+        result.excluded = items.filter { $0.validation.metadata == nil }.count
         let eligible = items.filter { $0.validation.metadata != nil }
         var allocator = DestinationAllocator(directory: destination, sources: items.map(\.url))
         var completed = 0

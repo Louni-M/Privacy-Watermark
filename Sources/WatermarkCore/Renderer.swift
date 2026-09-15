@@ -70,66 +70,56 @@ enum Renderer {
             NSAttributedString.Key(kCTFontAttributeName as String): font,
             NSAttributedString.Key(kCTForegroundColorAttributeName as String): color
         ]
-        let lines = WatermarkText.accepted(settings.text).components(separatedBy: "\n").map {
-            CTLineCreateWithAttributedString(NSAttributedString(string: $0, attributes: attributes))
-        }
-        let width = lines.map { CGFloat(CTLineGetTypographicBounds($0, nil, nil, nil)) }.max() ?? 0
-        let lineDistance = settings.size * 1.2
-        let blockHeight = CGFloat(lines.count - 1) * lineDistance + settings.size
-        // Keep the exact original single-line grid phase. Multiline bounds must
-        // include the complete rotated block, including preserved blank lines.
-        let extent = lines.count == 1 ? max(width, settings.size) + 20 : hypot(width, blockHeight) + 20
-        let step = settings.spacing
-        if lines.count > 1 {
-            // Visit only stamps whose individual lines intersect this render
-            // region. A 200-character mark can contain 199 blank lines; looping
-            // over the entire block's bounding square would do millions of
-            // invisible draws. The grid origin and row staggering stay identical.
-            let clip = context.boundingBoxOfClipPath.intersection(CGRect(origin: .zero, size: size))
-            guard !clip.isNull else { return }
-            for (index, line) in lines.enumerated() where CTLineGetGlyphCount(line) > 0 {
-                let baseline = -CGFloat(index) * lineDistance
-                let transform = CGAffineTransform(rotationAngle: settings.direction.angle).translatedBy(x: 0, y: baseline)
-                let bounds = CTLineGetBoundsWithOptions(line, .useGlyphPathBounds).applying(transform).insetBy(dx: -2, dy: -2)
-                let firstRow = max(0, Int(ceil((clip.minY - bounds.maxY + extent) / step)))
-                let lastRow = Int(floor((clip.maxY - bounds.minY + extent) / step))
-                guard firstRow <= lastRow else { continue }
-                for row in firstRow...lastRow {
-                    let origin = -extent + (row % 2 == 0 ? step / 2 : 0)
-                    let firstColumn = max(0, Int(ceil((clip.minX - bounds.maxX - origin) / step)))
-                    let lastColumn = Int(floor((clip.maxX - bounds.minX - origin) / step))
-                    guard firstColumn <= lastColumn else { continue }
-                    for column in firstColumn...lastColumn {
-                        context.saveGState()
-                        context.translateBy(x: origin + CGFloat(column) * step, y: -extent + CGFloat(row) * step)
-                        context.rotate(by: settings.direction.angle)
-                        context.textMatrix = .identity
-                        context.textPosition = CGPoint(x: 0, y: baseline)
-                        CTLineDraw(line, context)
-                        context.restoreGState()
-                    }
+        let layout = WatermarkLayout(settings: settings, attributes: attributes)
+        guard !layout.drawableIndices.isEmpty else { return }
+        if layout.usesLegacyGrid {
+            // Keep pixel-identical placement for existing safe single-line marks.
+            let extent = max(layout.width, settings.size) + 20
+            var row = 0
+            var y = -extent
+            while y < size.height + extent {
+                var x = -extent + (row % 2 == 0 ? settings.spacing / 2 : 0)
+                while x < size.width + extent {
+                    context.saveGState()
+                    context.translateBy(x: x, y: y)
+                    context.rotate(by: settings.direction.angle)
+                    context.textMatrix = .identity
+                    context.textPosition = .zero
+                    CTLineDraw(layout.lines[0], context)
+                    context.restoreGState()
+                    x += settings.spacing
                 }
+                y += settings.spacing
+                row += 1
             }
             return
         }
-        var row = 0
-        var y = -extent
-        while y < size.height + extent {
-            var x = -extent + (row % 2 == 0 ? step / 2 : 0)
-            while x < size.width + extent {
-                context.saveGState()
-                context.translateBy(x: x, y: y)
-                context.rotate(by: settings.direction.angle)
-                context.textMatrix = .identity
-                for (index, line) in lines.enumerated() {
-                    context.textPosition = CGPoint(x: 0, y: -CGFloat(index) * lineDistance)
-                    CTLineDraw(line, context)
+        let clip = context.boundingBoxOfClipPath.intersection(CGRect(origin: .zero, size: size))
+        guard !clip.isNull else { return }
+        let anchor = layout.anchor(in: size)
+        // Cull per line so hundreds of blank lines never create huge invisible
+        // stamp loops. Indices extend in both directions from a page-stable anchor.
+        for index in layout.drawableIndices {
+            let bounds = layout.rotatedLineBounds[index].insetBy(dx: -2, dy: -2)
+            let firstRow = Int(ceil((clip.minY - bounds.maxY - anchor.y) / layout.pitch.height))
+            let lastRow = Int(floor((clip.maxY - bounds.minY - anchor.y) / layout.pitch.height))
+            guard firstRow <= lastRow else { continue }
+            for row in firstRow...lastRow {
+                let originX = anchor.x + (row % 2 == 0 ? 0 : layout.pitch.width / 2)
+                let firstColumn = Int(ceil((clip.minX - bounds.maxX - originX) / layout.pitch.width))
+                let lastColumn = Int(floor((clip.maxX - bounds.minX - originX) / layout.pitch.width))
+                guard firstColumn <= lastColumn else { continue }
+                for column in firstColumn...lastColumn {
+                    context.saveGState()
+                    context.translateBy(x: originX + CGFloat(column) * layout.pitch.width,
+                                        y: anchor.y + CGFloat(row) * layout.pitch.height)
+                    context.rotate(by: settings.direction.angle)
+                    context.textMatrix = .identity
+                    context.textPosition = CGPoint(x: 0, y: -CGFloat(index) * layout.lineDistance)
+                    CTLineDraw(layout.lines[index], context)
+                    context.restoreGState()
                 }
-                context.restoreGState()
-                x += step
             }
-            y += step
-            row += 1
         }
     }
 

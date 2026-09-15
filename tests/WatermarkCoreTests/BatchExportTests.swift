@@ -118,17 +118,44 @@ struct BatchExportTests {
             settings: ExportSettings(), destination: root, boundary: { id, boundary in
                 if id == first.id, case .beforeInput = boundary { throw DocumentError.writeFailed }
             }, update: { _, _, _ in })
-        #expect(result.saved == 1 && result.failed == 2 && result.unprocessed == 0)
+        #expect(result.saved == 1 && result.failed == 1 && result.excluded == 1 && result.unprocessed == 0)
         let empty = await BatchExport.run(items: [invalid], watermark: WatermarkSettings(), policy: .original,
             settings: ExportSettings(), destination: root, update: { _, _, _ in })
-        #expect(empty.saved == 0 && empty.failed == 1)
+        #expect(empty.saved == 0 && empty.failed == 0 && empty.excluded == 1)
+        let excludedItem = invalid
         let task = Task.detached {
-            await BatchExport.run(items: [first, second], watermark: WatermarkSettings(), policy: .original,
+            await BatchExport.run(items: [first, excludedItem, second], watermark: WatermarkSettings(), policy: .original,
                 settings: ExportSettings(), destination: root, boundary: { _, boundary in
                     if case .afterPublication = boundary { withUnsafeCurrentTask { $0?.cancel() } }
                 }, update: { _, _, _ in })
         }
         let cancelled = await task.value
-        #expect(cancelled.saved == 1 && cancelled.unprocessed == 1 && cancelled.cancelled)
+        #expect(cancelled.saved == 1 && cancelled.failed == 0 && cancelled.excluded == 1 && cancelled.unprocessed == 1 && cancelled.cancelled)
     }
+    @Test func successfulExclusionsAndChangedSourceRuns() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let valid = try (1...3).map { try item(root, name: "valid-\($0).pdf") }
+        let invalid = (1...3).map { index in
+            var value = BatchItem(url: root.appendingPathComponent("invalid-\(index).pdf"))
+            value.validation = .invalid("Unreadable")
+            return value
+        }
+        let result = await BatchExport.run(items: valid + invalid, watermark: WatermarkSettings(), policy: .original,
+            settings: ExportSettings(), destination: root, update: { _, _, _ in })
+        #expect(result.saved == 3 && result.failed == 0 && result.excluded == 3 && result.unprocessed == 0)
+        #expect(result.message == "3 saved · 0 failed · 3 excluded · 0 not processed")
+        try FileManager.default.removeItem(at: valid[0].url)
+        let changed = await BatchExport.run(items: valid + invalid, watermark: WatermarkSettings(), policy: .original,
+            settings: ExportSettings(), destination: root, update: { _, _, _ in })
+        #expect(changed.saved == 2 && changed.failed == 1 && changed.excluded == 3 && changed.unprocessed == 0)
+        var next = valid
+        next[0].validation = .invalid("Source unavailable")
+        let retried = await BatchExport.run(items: next + invalid, watermark: WatermarkSettings(), policy: .original,
+            settings: ExportSettings(), destination: root, update: { _, _, _ in })
+        #expect(retried.saved == 2 && retried.failed == 0 && retried.excluded == 4 && retried.unprocessed == 0)
+        for run in [result, changed, retried] {
+            #expect(run.saved + run.failed + run.excluded + run.unprocessed == 6)
+        }
+    }
+
 }

@@ -27,7 +27,8 @@ Apple guidance: https://support.apple.com/en-au/102445
 
 USING THE APP
 
-Add an image or PDF, enter your watermark text, then choose Export all.
+Add an image or PDF, enter your watermark text, then choose
+Export N documents… and a destination folder.
 Your originals stay unchanged and processing stays on your Mac.
 
 If Applications asks to replace an existing copy, cancel and keep your

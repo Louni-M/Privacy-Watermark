@@ -15,8 +15,10 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geometry in
             HSplitView {
-                ScrollView {
-                    controls.padding(16)
+                VStack(spacing: 0) {
+                    ScrollView { controls.padding(16) }
+                    Divider()
+                    exportAction.padding(16)
                 }
                 .frame(minWidth: 260, idealWidth: 280,
                        maxWidth: max(280, geometry.size.width - (session.batch.items.isEmpty ? 321 : 512)))
@@ -148,7 +150,7 @@ struct ContentView: View {
                     AppearanceAdjustment(title: "Opacity", value: $session.watermark.opacity, range: 0...100, suffix: "%")
                     AppearanceAdjustment(title: "Text size", value: $session.watermark.size, range: 12...72)
                     AppearanceAdjustment(title: "Spacing", value: $session.watermark.spacing, range: 50...300)
-                    Text("Size and spacing scale with your document.")
+                    Text("Size and spacing scale with your document. Longer text gets extra room to avoid overlap.")
                         .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     Picker("Color", selection: $session.watermark.color) {
                         ForEach(WatermarkColor.allCases, id: \.self) { Text($0.rawValue).tag($0) }
@@ -172,7 +174,7 @@ struct ContentView: View {
                     ForEach(OutputPolicy.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                 }.labelsHidden().frame(maxWidth: .infinity)
             }
-            if session.hasPDF {
+            if session.hasPDFOutput {
                 Picker("PDF processing", selection: $session.exportSettings.flattened) {
                     Text("Flattened").tag(true)
                     Text("Selectable text").tag(false)
@@ -181,25 +183,46 @@ struct ContentView: View {
                     Picker("Quality", selection: $session.exportSettings.dpi) {
                         ForEach([300, 450, 600], id: \.self) { Text("\($0) DPI").tag($0) }
                     }
-                    Text("Combines the watermark with the page image. PDF page images export at 72 DPI.")
+                    Text("Combines the watermark with the page image. Ordinary text selection is lost.")
                         .font(.callout).foregroundStyle(.secondary)
                 } else {
                     Text("In a PDF, this watermark can be removed separately with an editor.")
                         .font(.callout).foregroundStyle(.secondary)
                 }
             }
+            if session.hasPDFPageImages {
+                Text("PDF pages export as images at 72 DPI.")
+                    .font(.callout).foregroundStyle(.secondary)
+            }
             Text(session.exportPrediction.message)
                 .font(.callout).foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("exportPrediction")
-            Button(session.exportPrediction.actionLabel, systemImage: "square.and.arrow.up") {
-                Task { await session.chooseDestination() }
-            }
-            .buttonStyle(.borderedProminent).controlSize(.large)
-            .keyboardShortcut("s", modifiers: [.command, .shift])
-            .disabled(!session.canExport).accessibilityIdentifier("exportAll")
             LocalProcessingNote()
         }.disabled(session.isExporting)
+    }
+
+    private var exportAction: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if session.isExporting {
+                VStack(spacing: 8) {
+                    ProgressView(value: Double(session.completedFiles), total: Double(max(1, session.totalFiles)))
+                    HStack {
+                        Text(session.isCancelling ? "Cancelling…" : "\(session.completedFiles) of \(session.totalFiles) files")
+                        Spacer()
+                        Button("Cancel") { session.cancelExport() }.disabled(session.isCancelling)
+                    }
+                }
+            } else {
+                Button(session.exportPrediction.actionLabel, systemImage: "square.and.arrow.up") {
+                    Task { await session.chooseDestination() }
+                }
+                .buttonStyle(.borderedProminent).controlSize(.large)
+                .keyboardShortcut("s", modifiers: [.command, .shift])
+                .disabled(!session.canExport).accessibilityIdentifier("exportAll")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var preview: some View {
@@ -256,16 +279,6 @@ struct ContentView: View {
                     Button("Add files…") { Task { await session.chooseFiles() } }
                 }
                 Spacer()
-            }
-            if session.isExporting {
-                VStack(spacing: 8) {
-                    ProgressView(value: Double(session.completedFiles), total: Double(max(1, session.totalFiles)))
-                    HStack {
-                        Text(session.isCancelling ? "Cancelling…" : "\(session.completedFiles) of \(session.totalFiles) files")
-                        Spacer()
-                        Button("Cancel") { session.cancelExport() }.disabled(session.isCancelling)
-                    }
-                }
             }
             if !session.status.isEmpty {
                 Text(session.status).font(.callout).textSelection(.enabled).accessibilityIdentifier("exportStatus")

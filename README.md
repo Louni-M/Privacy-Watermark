@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/58cd5805-29fc-4b51-af22-13063b5ddb02
 
 ## Download for Mac
 
-**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · 3.13 MB · [Version 2.1.1](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.1)
+**[Download for Mac](https://github.com/Louni-M/Privacy-Watermark/releases/latest/download/Privacy-Watermark.dmg)** · [Version 2.1.2](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.2)
 
 Install in three steps:
 
@@ -26,15 +26,15 @@ This free release is **ad-hoc signed and not notarized by Apple**. If macOS says
 ## Use
 
 1. Try the interactive **Sample preview**, or choose **Add files** / press **⌘O** to select JPG, JPEG, PNG and PDF files, or drag files into the window. Later additions append to the list; repeated additions of the same file are ignored.
-2. Enter shared watermark text (up to 200 characters, including line breaks). Select **Include today’s date** (⇧⌘D) to add an editable `DD-MM-YYYY` line (for example, `09-09-2026`); deselect it to remove that line. Insertion keeps the complete date within 200 characters by shortening the end of existing text when necessary. Expand **Appearance** (⇧⌘A) to adjust opacity, size, spacing, color and diagonal direction for every file. Sliders use black unfilled tracks, blue filled portions and light thumbs; click a slider and use arrow keys for keyboard adjustment. Sliders and editable numbers stay synchronized; size and spacing scale with the document. **Reset appearance** (⇧⌘R, while expanded) resets only those five appearance choices.
+2. Enter shared watermark text (up to 200 characters, including line breaks). Select **Include today’s date** (⇧⌘D) to add an editable `DD-MM-YYYY` line (for example, `09-09-2026`); deselect it to remove that line. Insertion keeps the complete date within 200 characters by shortening the end of existing text when necessary. Expand **Appearance** (⇧⌘A) to adjust opacity, size, spacing, color and diagonal direction for every file. Sliders use black unfilled tracks, blue filled portions and light thumbs; click a slider and use arrow keys for keyboard adjustment. Sliders and editable numbers stay synchronized; size and spacing scale with the document. Spacing is a requested minimum: longer text automatically gets extra room between repetitions, preserving your font size and line breaks. **Reset appearance** (⇧⌘R, while expanded) resets only those five appearance choices.
 3. Select a file to inspect it. PDF arrows navigate every page; use zoom and scrolling for details, or **Fit to window** for the whole page.
 4. Keep each input's original format, or choose PDF, JPG or PNG for the batch. Review the predicted output files and PDF page-image folders, then choose **Export N documents…** (⇧⌘S) and one destination folder. The button counts eligible source documents; invalid files remain visible and are excluded. Your originals stay unchanged.
 
-Use Control-Tab to leave the multiline editor and Tab to move between numeric fields. Drag the divider to resize the settings panel; scroll it to reach expanded controls in a small window. Remove individual files or choose **Clear all** to empty the list and return to the sample. The sample never enters the batch or exports. Blank text and 0% opacity are allowed without warnings or extra confirmations. Shared settings survive additions, removals and selection changes; restarting restores defaults and an empty batch. Selecting another file resets page and view to the first page and Fit. Changing PDF page preserves your zoom.
+Use Control-Tab to leave the multiline editor and Tab to move between numeric fields. Drag the divider to resize the settings panel; scroll it to reach expanded controls in a small window. The export action and its document count stay visible below the scrolling settings, replaced by progress and Cancel during export. Remove individual files or choose **Clear all** to empty the list and return to the sample. The sample never enters the batch or exports. Blank text and 0% opacity are allowed without warnings or extra confirmations. Shared settings survive additions, removals and selection changes; restarting restores defaults and an empty batch. Selecting another file resets page and view to the first page and Fit. Changing PDF page preserves your zoom.
 
 Copies use `<name>_watermarked.ext`, adding ` (2)`, ` (3)` and so on when names are already used. PDFs converted to images get a separate `<name>_watermarked` folder containing numbered `<name>_page_001.jpg` or `.png` files. Inputs are never merged, existing destinations are never replaced, and another export creates new copies. This folder workflow also applies to one file; PNG input defaults to PNG.
 
-Files validate progressively. Invalid files stay visible and do not prevent valid files from exporting once checking finishes. During export, you can browse previews or **Cancel**; collection and shared settings are locked. Cancellation keeps completed copies and removes unfinished output. The summary distinguishes saved, failed and unprocessed files. If a queued source changes or becomes unavailable, restore access and remove/add it again to review its current content.
+Files validate progressively. Invalid files stay visible and do not prevent valid files from exporting once checking finishes. During export, you can browse previews or **Cancel**; collection and shared settings are locked. Cancellation keeps completed copies and removes unfinished output. The summary distinguishes saved documents, failed export attempts, inputs excluded by validation, and documents not processed or interrupted by cancellation. If a queued source changes or becomes unavailable, restore access and remove/add it again to review its current content.
 
 After an export saves files, **Reveal in Finder** appears below the export summary at the bottom of the preview pane. It selects the saved copies in Finder, including completed outputs from a cancelled or partially failed export.
 
@@ -43,7 +43,7 @@ After an export saves files, **Reveal in Finder** appears below the export summa
 | JPG / PNG | JPG, PNG, or single-page PDF |
 | PDF | PDF, or one JPG / PNG file per page |
 
-PDF export defaults to **Flattened at 450 DPI**, with 300 and 600 DPI available. **Selectable text** mode preserves source text and adds a separate vector watermark. PDF page images retain the existing 72-DPI output sizing.
+PDF export defaults to **Flattened at 450 DPI**, with 300 and 600 DPI available. **Selectable text** mode preserves source text and adds a separate vector watermark. PDF mode and quality controls appear only for eligible PDF-to-PDF outputs; quality appears only in Flattened mode. PDF page images retain the existing 72-DPI output sizing, stated explicitly when JPG or PNG is selected.
 
 Flattening combines the watermark and document pixels and removes the embedded selectable text layer. It does **not** prevent image editing, watermark removal attempts, or later OCR. Image exports remove source EXIF/GPS metadata; standard PDFs are not guaranteed to be sanitized. See [SECURITY.md](SECURITY.md).
 

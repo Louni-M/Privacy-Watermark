@@ -97,7 +97,12 @@ final class Session {
         watermark = defaults
     }
     var isPDF: Bool { selected?.validation.metadata?.isPDF == true }
-    var hasPDF: Bool { batch.items.contains { $0.url.pathExtension.lowercased() == "pdf" } }
+    var hasPDFOutput: Bool {
+        batch.items.contains { $0.validation.metadata?.isPDF == true && outputPolicy.resolve(for: $0.url, settings: exportSettings).format == .pdf }
+    }
+    var hasPDFPageImages: Bool {
+        batch.items.contains { $0.validation.metadata?.isPDF == true && outputPolicy.resolve(for: $0.url, settings: exportSettings).format != .pdf }
+    }
     var pageCount: Int { selected?.validation.metadata?.pageCount ?? 0 }
     var fitScale: CGFloat {
         let size = pageSizes.indices.contains(fitReference) ? pageSizes[fitReference] : pageSize
