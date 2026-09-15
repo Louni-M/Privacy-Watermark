@@ -56,7 +56,8 @@ jobs:
           trap 'hdiutil detach "$mount" -quiet 2>/dev/null || true' EXIT
           hdiutil attach dist/candidate/Privacy-Watermark.dmg -readonly -nobrowse -mountpoint "$mount" -quiet
           open "$mount"
-          sleep 3
+          # Finder loads mounted app icons asynchronously, especially on Intel.
+          sleep 20
           window_id=$(osascript -e 'with timeout of 15 seconds' -e 'tell application "Finder" to get id of window "Privacy Watermark"' -e 'end timeout')
           screencapture -x -l "$window_id" .build/dmg-evidence/finder.png
           ditto "$mount/Privacy Watermark.app" "$installed/Privacy Watermark.app"
