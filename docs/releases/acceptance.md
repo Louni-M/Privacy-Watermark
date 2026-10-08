@@ -1,5 +1,17 @@
 # DMG acceptance record
 
+## v2.1.3 — published 2026-10-08
+
+- Source: `771ad650ef6b58d965299a218c065b0f25c610ff`; tag: `v2.1.3`, verified to resolve to that exact commit.
+- [Published latest release](https://github.com/Louni-M/Privacy-Watermark/releases/tag/v2.1.3). Privacy-Watermark.dmg: **4,006,035 bytes** (4.01 MB). The increase from v2.1.2 comes from the larger jade `app_icon.icns` (1,421,136 bytes vs 998,305).
+- SHA-256: `52d17fec3eebf81ccf5664e1d33a4addad1be66d5ad2550c11691259b5f533b6`.
+- Replaces the app icon with the jade protected-copy design. No Swift source, installer resource or runtime behavior changes. Icon review evidence is in [icon acceptance](../../openspec/changes/archive/2026-09-15-replace-app-icon-with-jade-protected-copy/acceptance.md).
+- **Seven release-script tests** passed locally. Local native tests could not run: the installed Command Line Tools (Swift 6.4, macOS 27 SDK) cannot load the `SwiftUIMacros` and `TestingMacros` plugins, so the app itself does not build locally. The draft was therefore built by the [Prepare DMG release workflow](https://github.com/Louni-M/Privacy-Watermark/actions/runs/37847213969) with Xcode 16.2.
+- [Source CI](https://github.com/Louni-M/Privacy-Watermark/actions/runs/37847198449) passed on macOS 14 Apple Silicon and macOS 15 Intel, including native tests, universal builds and window/export smoke checks. [Security](https://github.com/Louni-M/Privacy-Watermark/actions/runs/37847198433) and [CodeQL](https://github.com/Louni-M/Privacy-Watermark/actions/runs/37847199261) passed for the same immutable source.
+- [Exact uploaded-DMG verification](https://github.com/Louni-M/Privacy-Watermark/actions/runs/37847844402) passed on macOS 14.8.9 Apple Silicon and macOS 15.7.9 Intel. Both recorded hashes match the uploaded candidate and an independent local download. Both launch reports confirm a visible window after copy and eject. Finder screenshots were reviewed: the jade app icon, Applications shortcut, arrow/instructions and Install.txt are all visible and readable. Evidence is kept locally in ignored `.build/release-2.1.3-evidence/`.
+- The public `releases/latest/download/Privacy-Watermark.dmg` URL, downloaded without authentication, returns the same SHA-256.
+- Fresh browser/Gatekeeper acceptance was not repeated for this release.
+
 ## v2.1.2 — published 2026-09-15
 
 - Source: `47b5e6e367f601705ee13d541db469583aa42add`; tag: `v2.1.2`, verified to resolve to that exact commit.
