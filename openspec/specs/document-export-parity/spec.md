@@ -24,9 +24,13 @@ The app SHALL accept case-insensitive .jpg, .jpeg, .png and .pdf extensions and 
 - **THEN** image destinations contain genuine PNG data, not previously generated JPEG bytes
 
 ### Requirement: Equivalent watermark and output quality
-Watermarks SHALL repeat diagonally across the full image or every PDF page and honor all settings. Text size and spacing SHALL be proportional to the shorter displayed document side, with reference length 210 / 25.4 * 72 points. At that reference length, configured size and spacing SHALL retain their existing numerical meaning. The complete watermark pattern geometry SHALL scale consistently, independently of source pixel density, output format, rasterization DPI, and preview zoom. Minor font metrics and antialiasing differences are acceptable; missing text, reversed direction, materially different opacity or deviation from the normalized density, clipped document content, and degraded readability are not. PNG output SHALL be lossless for the rendered image; JPEG quality SHALL be visually comparable to the current quality-90 output and quality-95 flattened PDF images. Existing opaque image output behavior SHALL be retained; transparency preservation is not a new capability.
+Watermarks SHALL repeat diagonally across the full image or every PDF page and honor all settings. Text size and spacing SHALL be proportional to the shorter displayed document side, with reference length 210 / 25.4 * 72 points. At that reference length, configured size SHALL retain its existing numerical meaning. Configured spacing SHALL be the requested minimum repetition pitch; the app SHALL increase effective horizontal and vertical separation as needed to keep the complete rotated text blocks apart with visible breathing room. The complete watermark pattern geometry SHALL scale consistently, independently of source pixel density, output format, rasterization DPI, and preview zoom. Minor font metrics and antialiasing differences are acceptable; missing text, reversed direction, materially different opacity or inconsistent normalized geometry across equivalent documents, clipped document content, and degraded readability are not. PNG output SHALL be lossless for the rendered image; JPEG quality SHALL be visually comparable to the current quality-90 output and quality-95 flattened PDF images. Existing opaque image output behavior SHALL be retained; transparency preservation is not a new capability.
 
-Watermark text SHALL preserve explicit line breaks as repeated multiline blocks in the selected direction across previews and all image, standard PDF, and flattened PDF output routes. Lines SHALL retain input order and consistent line spacing, without automatic wrapping or automatic font-size changes. Existing single-line text SHALL retain its prior normalized geometry and mode-specific opacity. Blank text and zero opacity SHALL continue to produce no visible watermark without warnings or export restrictions. The 200-character limit SHALL include line breaks.
+Watermark text SHALL preserve explicit line breaks as repeated multiline blocks in the selected direction across previews and all image, standard PDF, and flattened PDF output routes. Lines SHALL retain input order and consistent line spacing, without automatic wrapping or automatic font-size changes. Existing single-line text whose repeated blocks already have sufficient clearance SHALL retain its prior normalized geometry. Patterns that collide SHALL use the automatic minimum separation. Mode-specific opacity SHALL remain unchanged. Blank text and zero opacity SHALL continue to produce no visible watermark without warnings or export restrictions. The 200-character limit SHALL include line breaks.
+
+
+Repeated blocks SHALL NOT collide for any accepted text and appearance settings. Explicit blank lines and Unicode glyph extents SHALL be included in spacing decisions. Each line within a block SHALL also have adequate baseline separation for its rendered glyphs. Text SHALL NOT be silently shortened, wrapped, or reduced in size to achieve separation. Document edges MAY clip stamps as before; a visible nonempty watermark SHALL NOT disappear solely because adaptive spacing exceeds the page size. When a complete block fits within the displayed page, at least one complete block SHALL be placed on the page. Geometry SHALL be stable during panning and zooming and deterministic from the full document geometry and shared settings.
+
 
 #### Scenario: Representative visual comparison
 - **WHEN** reference images and PDFs are rendered with both directions, all colors, and representative settings including boundaries
@@ -54,7 +58,22 @@ Watermark text SHALL preserve explicit line breaks as repeated multiline blocks 
 
 #### Scenario: Existing single-line and invisible output
 - **WHEN** existing single-line settings, blank text, or zero opacity are rendered
-- **THEN** single-line output retains its existing appearance and invisible settings produce unmarked copies without warnings, confirmations, or additional restrictions
+- **THEN** non-overlapping single-line output retains its existing appearance and invisible settings produce unmarked copies without warnings, confirmations, or additional restrictions
+
+#### Scenario: Rental purpose with name and date
+- **WHEN** the text contains `For rental application`, `Élodie — Zürich`, and a date on separate lines with default size and spacing
+- **THEN** neighboring repeated blocks remain visibly separated in the sample, selected preview, and reopened outputs
+- **AND** each block preserves the three lines, their order, and selected text size
+
+#### Scenario: Large text and minimum spacing
+- **WHEN** accepted long single-line or multiline text is rendered at size 72 and spacing 50 in either direction
+- **THEN** automatic minimum separation prevents intersections between neighboring blocks without changing the entered settings
+- **AND** increasing requested spacing never decreases effective separation
+
+#### Scenario: Blank lines and document-edge clipping
+- **WHEN** accepted text includes many blank lines, emoji, or accented characters and the block is larger than the page
+- **THEN** rendering remains bounded and shows nonempty watermark content where possible, with edge clipping rather than silent wrapping or shrinking
+- **AND** lines and neighboring repeated blocks remain separated
 
 ### Requirement: Standard PDF semantics
 Standard output SHALL preserve selectable source text and vector content without flattening the whole page. The watermark SHALL remain vector text that is present after saving and reopening, and selectable/extractable by a PDF text reader. Page count, displayed page geometry, and visible document content SHALL be preserved.

@@ -29,7 +29,7 @@ The app SHALL present one native macOS window with Add files, a selectable batch
 - **AND** export remains disabled and removing items does not reset shared settings
 
 ### Requirement: Preserve watermark settings
-The app SHALL offer shared multiline text up to 200 characters including line breaks, opacity 0–100%, size 12–72, spacing 50–300, white/black/gray color, and ascending/descending diagonal directions. Initial values SHALL be COPY, 30%, 36, 150, black, and ascending. Settings SHALL apply to every batch item and persist during additions, removals and selection changes. Initial output policy SHALL keep each input's format; explicit batch conversion choices SHALL persist independently of preview selection. Restart SHALL restore initial values and an empty batch. Watermark size and spacing SHALL scale with the shorter displayed side of each image or PDF page, using an A4 shorter side (210 mm at 72 points per inch) as the reference. The same settings SHALL produce equal relative text size and spacing regardless of source resolution or type; zoom SHALL NOT modify them. Saved presets and per-file overrides are outside this change.
+The app SHALL offer shared multiline text up to 200 characters including line breaks, opacity 0–100%, size 12–72, spacing 50–300, white/black/gray color, and ascending/descending diagonal directions. Initial values SHALL be COPY, 30%, 36, 150, black, and ascending. Settings SHALL apply to every batch item and persist during additions, removals and selection changes. Initial output policy SHALL keep each input's format; explicit batch conversion choices SHALL persist independently of preview selection. Restart SHALL restore initial values and an empty batch. Watermark size and spacing SHALL scale with the shorter displayed side of each image or PDF page, using an A4 shorter side (210 mm at 72 points per inch) as the reference. Spacing SHALL be a requested minimum repetition pitch, automatically increased when required to separate the complete watermark blocks. The same settings and text SHALL produce equal relative text size and effective separation regardless of source resolution or type; zoom SHALL NOT modify them. Saved presets and per-file overrides are outside this change.
 
 The editor SHALL preserve explicit line breaks and expose the 200-character limit with a character count. Text entry and today-date insertion SHALL obey the same limit. Blank text and zero opacity SHALL NOT cause a warning, confirmation, or additional export restriction.
 
@@ -51,7 +51,7 @@ The editor SHALL preserve explicit line breaks and expose the 200-character limi
 - **AND** typing Return inserts a line break rather than starting export
 
 ### Requirement: Flattened PDF default and clear mode choice
-The initial PDF mode SHALL be flattened at 450 DPI, with 300 and 600 DPI also available. Standard PDF mode SHALL remain available and preserve selectable source text. The choice SHALL be visible when exporting PDF input as a PDF, and quality SHALL be shown when flattening applies. The interface SHALL explain that standard watermarks can be edited separately and flattened pages lose ordinary text selection. It MUST NOT claim flattening prevents all removal, editing, or OCR.
+The initial PDF mode SHALL be flattened at 450 DPI, with 300 and 600 DPI also available. Standard PDF mode SHALL remain available and preserve selectable source text. The choice SHALL be visible only when at least one eligible PDF input has PDF as its effective output, and quality SHALL be shown only when flattening applies to such an output. Invalid PDFs and image-to-PDF conversions alone SHALL NOT activate these controls. PDF-to-JPG and PDF-to-PNG output SHALL retain fixed 72-DPI page sizing and show that resolution explicitly without displaying an unrelated 300/450/600-DPI quality selector. Switching output policy SHALL retain the stored PDF settings so switching back restores them. Hidden PDF processing settings SHALL retain their existing effect on route-specific watermark opacity; this change SHALL NOT silently change that rendering behavior. The interface SHALL explain that standard watermarks can be edited separately and flattened pages lose ordinary text selection. It MUST NOT claim flattening prevents all removal, editing, or OCR.
 
 #### Scenario: First PDF export
 - **WHEN** the user opens a PDF in a fresh session and exports without changing its mode
@@ -60,6 +60,15 @@ The initial PDF mode SHALL be flattened at 450 DPI, with 300 and 600 DPI also av
 #### Scenario: Choose standard output
 - **WHEN** the user selects standard mode
 - **THEN** the app explains watermark removability and retains ordinary selectable source text in exported PDFs
+
+#### Scenario: PDF pages exported to images
+- **WHEN** a batch containing an eligible PDF is changed to JPG or PNG output
+- **THEN** the PDF mode and flattening quality selectors disappear and the output description states that PDF pages use 72 DPI
+- **AND** returning to PDF output restores the previously chosen PDF mode and quality
+
+#### Scenario: No eligible PDF-to-PDF output
+- **WHEN** only image inputs or invalid PDFs exist, including image-to-PDF conversion
+- **THEN** PDF processing and flattening quality selectors are hidden
 
 ### Requirement: Responsive and accurate preview
 The preview SHALL update after input settles without blocking interaction and SHALL identify its file and, for PDFs, current page and total page count. PDF pages SHALL form one continuous vertical document, scrollable with two-finger trackpad gestures and a mouse wheel without snapping between pages. Previous/next controls SHALL smoothly navigate to adjacent pages, disabling navigation at the first and last pages. The current page SHALL follow the page containing the viewport center, or the nearest page when the center falls in a gap. Zoom-in, zoom-out and Fit to window SHALL be offered; zoomed content SHALL be scrollable in both axes. Trackpad pinch and Command + mouse wheel SHALL change zoom continuously around the pointer location; zoom buttons SHALL animate around the viewport center. Zoom SHALL retain the focused document position except where document-edge constraints require clamping, without clearing the displayed preview during interaction. Ordinary scrolling SHALL NOT change zoom. Fit to window SHALL fit the current page, with other PDF pages still available by scrolling. Scrolling SHALL preserve scale even when subsequent pages have different dimensions; explicit page navigation in fit mode SHALL fit its target page. Selecting a different file SHALL start at its first page and Fit to window. Page navigation SHALL preserve the chosen fit or manual zoom mode. Preview content SHALL match the selected file, page, shared settings and effective export policy, including watermark size, direction, opacity, page geometry and the existing PDF-to-image 72-DPI output. Reduced resolution is allowed, but zoom MUST NOT present magnified obsolete or low-resolution imagery as a completed detailed preview when more output detail is available. Outdated background results MUST NOT replace newer state.
@@ -99,7 +108,7 @@ The preview SHALL update after input settles without blocking interaction and SH
 - **AND** selecting another file resets to its first page fitted to the window
 
 ### Requirement: Recoverable failures and export feedback
-The app SHALL explain unsupported, corrupt, protected, oversized, unreadable and unwritable items in plain language beside the affected row. Adding or selecting an invalid item MUST NOT remove other valid items or display another item's preview as its own. Processing SHALL show busy state, prevent overlapping export runs and report success only after a complete input's outputs are committed. Runs SHALL continue past individual failures and end with accurate saved, failed and unprocessed counts. Cancellation and write failure SHALL leave the remaining collection and shared settings usable for another attempt.
+The app SHALL explain unsupported, corrupt, protected, oversized, unreadable and unwritable items in plain language beside the affected row. Adding or selecting an invalid item MUST NOT remove other valid items or display another item's preview as its own. Processing SHALL show busy state, prevent overlapping export runs and report success only after a complete input's outputs are committed. Runs SHALL continue past individual failures and end with accurate saved, failed, excluded and unprocessed counts. Excluded SHALL identify inputs invalid before the run; failed SHALL identify eligible inputs whose attempted export failed; unprocessed SHALL identify eligible inputs without a completed attempt, including work interrupted by cancellation. Cancellation and write failure SHALL leave the remaining collection and shared settings usable for another attempt.
 
 #### Scenario: Recover after an invalid document
 - **WHEN** adding a corrupt file fails and the user subsequently adds or selects a valid file
@@ -153,7 +162,7 @@ The app SHALL replace the Help write my watermark button and helper sheet with a
 - **AND** no partial date, warning, or confirmation is introduced, and deselection does not restore truncated text
 
 ### Requirement: Readable resizable settings
-The settings panel SHALL be wider by default than the current 240-point panel and resizable while preserving a usable document preview at the supported 860 by 600 point minimum window size. Labels and the selected export format SHALL be readable without clipping or truncation; controls SHALL wrap or stack when necessary. Supporting explanations SHALL use at least the native callout text style and readable contrast in light and dark appearances. Appearance SHALL remain collapsed initially. New controls SHALL expose accessible names and keyboard operation, with visible focus; the primary workflow SHALL be operable without a pointer. Expanded settings SHALL remain reachable by scrolling.
+The settings panel SHALL be wider by default than the current 240-point panel and resizable while preserving a usable document preview at the supported 860 by 600 point minimum window size. Labels and the selected export format SHALL be readable without clipping or truncation; controls SHALL wrap or stack when necessary. Supporting explanations SHALL use at least the native callout text style and readable contrast in light and dark appearances. Appearance SHALL remain collapsed initially. New controls SHALL expose accessible names and keyboard operation, with visible focus; the primary workflow SHALL be operable without a pointer. Expanded settings and detailed explanations SHALL remain reachable by scrolling. The primary export action, or its progress and cancellation replacement during a run, and a concise eligible-document count SHALL remain visible outside the scrolling settings area at every supported window size. This fixed area SHALL remain compact enough to leave the editor and appearance controls usable. The idle action SHALL retain its disabled state when no eligible document exists.
 
 #### Scenario: Minimum window and keyboard use
 - **WHEN** the app is at 860 by 600 points with a file list present and Appearance expanded
@@ -164,8 +173,18 @@ The settings panel SHALL be wider by default than the current 240-point panel an
 - **WHEN** the user drags the settings divider within its allowed bounds
 - **THEN** the panel resizes without hiding controls or making the preview unusable
 
+#### Scenario: Export after changing appearance
+- **WHEN** Appearance is expanded with a mixed batch at 860 by 600 points and the user scrolls the settings panel
+- **THEN** the export action and concise eligible count remain visible and operable without scrolling back
+- **AND** all detailed controls remain reachable without overlapping the fixed action area
+
+#### Scenario: Running and cancelled export
+- **WHEN** an export is running with settings scrolled away from the bottom
+- **THEN** progress and Cancel remain visible in the action area
+- **AND** completion or cancellation restores the export action with the existing eligibility rules
+
 ### Requirement: Precise appearance editing and scoped reset
-Opacity, text size, and spacing SHALL each offer a synchronized slider and editable numeric value within their existing ranges. The unfilled portion of each appearance slider track SHALL be black to match the dark background rather than grey. The blue filled portion, light thumb, and visible keyboard focus SHALL remain. Opacity SHALL show percent; size and spacing SHALL explain that they scale with the document rather than presenting values as fixed pixels. Numeric editing SHALL commit on Return or focus loss, clamp finite out-of-range values to the existing range, and restore the prior valid value for empty or nonnumeric input. Reset appearance SHALL restore opacity 30%, size 36, spacing 150, black color, and ascending direction immediately, without changing text, date selection, files, or output settings. Shared controls SHALL retain the existing export-time lock.
+Opacity, text size, and spacing SHALL each offer a synchronized slider and editable numeric value within their existing ranges. The unfilled portion of each appearance slider track SHALL be black to match the dark background rather than grey. The blue filled portion, light thumb, and visible keyboard focus SHALL remain. Opacity SHALL show percent; size and spacing SHALL explain that they scale with the document rather than presenting values as fixed pixels. The spacing explanation SHALL also state that longer text automatically gets additional room to prevent overlap. The numeric value and slider SHALL show the requested minimum, not rewrite the user’s setting to an out-of-range effective pitch. Numeric editing SHALL commit on Return or focus loss, clamp finite out-of-range values to the existing range, and restore the prior valid value for empty or nonnumeric input. Reset appearance SHALL restore opacity 30%, size 36, spacing 150, black color, and ascending direction immediately, without changing text, date selection, files, or output settings. Shared controls SHALL retain the existing export-time lock.
 
 #### Scenario: Black slider interiors
 - **WHEN** the user views or adjusts opacity, text size, or spacing
@@ -181,7 +200,7 @@ Opacity, text size, and spacing SHALL each offer a synchronized slider and edita
 - **THEN** only the five appearance values return to defaults and the current preview updates
 
 ### Requirement: Predictable export summary
-Before export, the app SHALL show a live summary of eligible source document count and expected output file counts grouped by effective format. PDF-to-image conversion SHALL explain that each PDF produces a separate folder of page images; image inputs SHALL remain individual files. The action SHALL read Export 1 document… or Export N documents… and count eligible source documents, not pages or output files. While validation is pending, the summary SHALL identify checking as incomplete rather than claiming a final total, and export SHALL remain disabled under the existing rules. Invalid items SHALL be identified as excluded; an empty batch SHALL give an import hint without implying the sample can be exported. Counts SHALL update after additions, removals or format changes and SHALL NOT depend on preview selection. The summary SHALL describe expected outputs, not promise successful writes. Existing native folder selection, collision naming, actual saved/failed/unprocessed feedback, cancellation, and Reveal in Finder SHALL remain intact.
+Before export, the app SHALL show a live summary of eligible source document count and expected output file counts grouped by effective format. PDF-to-image conversion SHALL explain that each PDF produces a separate folder of page images; image inputs SHALL remain individual files. The action SHALL read Export 1 document… or Export N documents… and count eligible source documents, not pages or output files. While validation is pending, the summary SHALL identify checking as incomplete rather than claiming a final total, and export SHALL remain disabled under the existing rules. Invalid items SHALL be identified as excluded; an empty batch SHALL give an import hint without implying the sample can be exported. Counts SHALL update after additions, removals or format changes and SHALL NOT depend on preview selection. The summary SHALL describe expected outputs, not promise successful writes. Existing native folder selection, collision naming, actual saved/failed/excluded/unprocessed feedback, cancellation, and Reveal in Finder SHALL remain intact.
 
 #### Scenario: Mixed PDF page-image export
 - **WHEN** a validated three-page PDF and one PNG are selected for JPG export
@@ -195,6 +214,11 @@ Before export, the app SHALL show a live summary of eligible source document cou
 #### Scenario: Pending or invalid inputs
 - **WHEN** a batch includes checking or invalid candidates
 - **THEN** pending counts are visibly incomplete, invalid items are excluded from eligible counts, and export is enabled only after checking finishes with at least one eligible document
+
+#### Scenario: Successful export with excluded files
+- **WHEN** a batch has three eligible and three invalid source documents and every eligible export succeeds
+- **THEN** the result reports three saved, zero failed, three excluded, and zero not processed
+- **AND** invalid rows retain their original validation explanations and Reveal in Finder targets only saved outputs
 
 ### Requirement: Accurate local-processing reassurance
 The import area and export controls SHALL show Processed on your Mac. Originals stay unchanged. or equivalent wording. This reassurance MUST NOT claim that watermarking prevents editing or reuse, or that all PDFs are sanitized. The date checkbox and fictional sample SHALL work offline and SHALL NOT introduce uploads, accounts, telemetry, or logging of document or watermark contents.

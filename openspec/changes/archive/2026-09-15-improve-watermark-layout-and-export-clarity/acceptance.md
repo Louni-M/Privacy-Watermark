@@ -33,3 +33,7 @@ Ignored local artifacts live in `.build/apply-layout/`: `final-native/`, `final-
 ## Remaining manual acceptance
 
 Task 5.4 remains open for a physical trackpad pinch/momentum check, a full VoiceOver interaction session, and a fresh Finder drag-and-drop check. Existing keyboard, native cancellation, duplicate-naming, and Reveal in Finder checks passed. No macOS 14 or Intel runtime was available in this session. These limits do not indicate observed defects and are not silently marked as passes.
+
+## Archive disposition — September 15, 2026
+
+Archived at the maintainer’s request after publication of v2.1.2 and synchronization of all three delta specifications. Task 5.4 remains unchecked: physical trackpad gestures, a full VoiceOver session, and a fresh Finder drag-and-drop check still lack manual acceptance evidence. Archival does not represent those checks as passed.

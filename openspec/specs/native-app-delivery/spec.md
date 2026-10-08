@@ -7,11 +7,17 @@ Deliver a maintainable native Mac application with verified compatibility, docum
 ## Requirements
 
 ### Requirement: Supported native application
-Privacy Watermark SHALL run natively on macOS 14 or newer on Apple Silicon and Intel. A reproducible build SHALL produce a downloadable `Privacy Watermark.app` with the existing name and icon, requiring no separately installed Python or other language runtime. Documentation SHALL identify supported systems and accurately describe local installation and signing status.
+Privacy Watermark SHALL run natively on macOS 14 or newer on Apple Silicon and Intel. A reproducible build SHALL produce a downloadable `Privacy Watermark.app` with the existing name and the jade Protected copy icon, requiring no separately installed Python or other language runtime. Documentation SHALL identify supported systems and accurately describe local installation and signing status.
 
 #### Scenario: Install built application
 - **WHEN** the built app is copied into Applications on a supported Mac
 - **THEN** it launches and completes a local open-preview-export workflow without Python installed
+
+#### Scenario: Recognize the application icon
+- **WHEN** the application icon is displayed in Finder or the running app's Dock entry at small and large sizes
+- **THEN** it shows the selected jade rounded square with an ivory document, folded corner, and protective offset corner
+- **AND** the silhouette remains distinguishable at 16 and 32 points, with no comparison-board labels, mockup surroundings, clipped artwork, or opaque rectangular border outside the rounded square
+- **AND** the app retains its existing name and bundle identity
 
 ### Requirement: Behavioral acceptance evidence
 Migration acceptance SHALL include automated checks and visual review for the complete format matrix, every PDF mode and DPI, settings, metadata removal, validation, recovery, repeated exports, and preservation of originals. Evidence SHALL use synthetic non-sensitive fixtures and include reopen checks in an independent viewer. Compatibility evidence SHALL distinguish actual runtime checks from cross-compilation; untested support MUST NOT be reported as verified.
@@ -37,7 +43,7 @@ The old implementation SHALL remain available for comparison until parity, compa
 - **AND** the migration remains incomplete until this cleanup and a clean native build/test check have finished
 
 ### Requirement: Drag-to-Applications disk image
-Distribution SHALL provide one DMG containing Privacy Watermark.app for macOS 14 or newer on both Apple Silicon and Intel. Its Finder window SHALL present the existing app icon, an Applications shortcut, and a legible drag-to-install instruction in a deliberate layout without overlapping or clipped labels. Installation SHALL require no developer tools, terminal commands, additional runtime, or paid account from the user.
+Distribution SHALL provide one DMG containing Privacy Watermark.app for macOS 14 or newer on both Apple Silicon and Intel. Its Finder window SHALL present the jade Protected copy app icon, an Applications shortcut, and a legible drag-to-install instruction in a deliberate layout without overlapping or clipped labels. Installation SHALL require no developer tools, terminal commands, additional runtime, or paid account from the user.
 
 #### Scenario: Install a downloaded disk image
 - **WHEN** a user opens the downloaded DMG on a supported Mac
@@ -46,7 +52,7 @@ Distribution SHALL provide one DMG containing Privacy Watermark.app for macOS 14
 
 #### Scenario: Inspect the packaged app
 - **WHEN** the release package is verified
-- **THEN** the enclosed app has both supported architecture slices, its existing icon and identity, a valid ad-hoc signature, and a version matching the release
+- **THEN** the enclosed app has both supported architecture slices, the jade Protected copy icon and its existing application identity, a valid ad-hoc signature, and a version matching the release
 
 ### Requirement: Discoverable download and first-launch guidance
 The README SHALL prominently provide Download for Mac access to the published DMG, supported systems, and concise installation instructions. The release page and a readable document inside the DMG SHALL explain copying to Applications, ejecting the disk image, and opening the installed app. Guidance SHALL disclose that the app is ad-hoc signed and not notarized and describe the applicable macOS Privacy & Security approval flow without requiring terminal commands or disabling Gatekeeper globally.
