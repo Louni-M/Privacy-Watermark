@@ -4,15 +4,22 @@ cd "$(dirname "$0")/.."
 configuration="${CONFIGURATION:-release}"
 output="${OUTPUT_DIR:-dist}"
 app="$output/Privacy Watermark.app"
-swift build -c "$configuration" --arch arm64
-swift build -c "$configuration" --arch x86_64
-arm_dir="$(swift build -c "$configuration" --arch arm64 --show-bin-path)"
-intel_dir="$(swift build -c "$configuration" --arch x86_64 --show-bin-path)"
+architectures=(arm64 x86_64)
+slices=()
+for architecture in "${architectures[@]}"; do
+    # A scratch path per architecture keeps each slice in its own products
+    # folder with both the native and the swiftbuild build systems.
+    scratch=".build/arch-$architecture"
+    swift build -c "$configuration" --arch "$architecture" --scratch-path "$scratch"
+    slices+=("$(swift build -c "$configuration" --arch "$architecture" --scratch-path "$scratch" --show-bin-path)/PrivacyWatermark")
+done
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
-lipo -create "$arm_dir/PrivacyWatermark" "$intel_dir/PrivacyWatermark" -output "$app/Contents/MacOS/PrivacyWatermark"
+lipo -create "${slices[@]}" -output "$app/Contents/MacOS/PrivacyWatermark"
 cp assets/app_icon.icns "$app/Contents/Resources/app_icon.icns"
 cp scripts/Info.plist "$app/Contents/Info.plist"
 codesign --force --sign - "$app"
 codesign --verify --strict "$app"
-lipo "$app/Contents/MacOS/PrivacyWatermark" -verify_arch arm64 x86_64
+for architecture in "${architectures[@]}"; do
+    lipo "$app/Contents/MacOS/PrivacyWatermark" -verify_arch "$architecture"
+done
 printf 'Built %s\n' "$app"
