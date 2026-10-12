@@ -33,7 +33,9 @@ plist="$app/Contents/Info.plist"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$plist")" == 14.0 ]] || { echo 'Unexpected minimum macOS version.' >&2; exit 1; }
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$plist")" == com.lounim.privacywatermark ]] || { echo 'Unexpected bundle identity.' >&2; exit 1; }
 [[ -s "$app/Contents/Resources/app_icon.icns" ]] || { echo 'Missing app icon.' >&2; exit 1; }
-lipo "$app/Contents/MacOS/PrivacyWatermark" -verify_arch arm64 x86_64 || exit 1
+for architecture in arm64 x86_64; do
+    lipo "$app/Contents/MacOS/PrivacyWatermark" -verify_arch "$architecture" || exit 1
+done
 codesign --verify --strict "$app" || exit 1
 codesign -dv "$app" 2>&1 | grep '^Signature=adhoc$' >/dev/null || { echo 'Expected an ad-hoc signature.' >&2; exit 1; }
 for entry in "$mount"/* "$mount"/.[!.]*; do
