@@ -4,12 +4,14 @@ import Darwin
 public struct DestinationAllocator {
     let directory: URL
     let protectedSources: [URL]
+    let suffix: String
     private var reserved: Set<String> = []
     private let caseSensitive: Bool
 
-    public init(directory: URL, sources: [URL]) {
+    public init(directory: URL, sources: [URL], suffix: String = "_watermarked") {
         self.directory = directory
         protectedSources = sources
+        self.suffix = suffix
         caseSensitive = (try? directory.resourceValues(forKeys: [.volumeSupportsCaseSensitiveNamesKey]))?
             .volumeSupportsCaseSensitiveNames ?? false
     }
@@ -20,7 +22,7 @@ public struct DestinationAllocator {
     }
 
     public mutating func allocate(source: URL, format: OutputFormat, pageSeries: Bool) -> URL {
-        let stem = source.deletingPathExtension().lastPathComponent + "_watermarked"
+        let stem = source.deletingPathExtension().lastPathComponent + suffix
         var suffix = 1
         while true {
             let name = stem + (suffix == 1 ? "" : " (\(suffix))") + (pageSeries ? "" : ".\(format.fileExtension)")
@@ -95,10 +97,22 @@ public enum BatchExport {
                            destination: URL,
                            boundary: @Sendable (UUID, ExportBoundary) throws -> Void = { _, _ in },
                            update: @Sendable (UUID, ExportState, Int) async -> Void) async -> BatchRunResult {
+        await run(items: items, watermark: watermark, policy: policy, settings: settings,
+                  destinationFor: { _ in destination }, boundary: boundary, update: update)
+    }
+
+    /// Each item may publish into its own folder (for example beside its source).
+    /// Every folder gets its own allocator, and each protects all run sources.
+    public static func run(items: [BatchItem], watermark: WatermarkSettings, policy: OutputPolicy, settings: ExportSettings,
+                           suffix: String = "_watermarked",
+                           destinationFor: @Sendable (BatchItem) -> URL,
+                           boundary: @Sendable (UUID, ExportBoundary) throws -> Void = { _, _ in },
+                           update: @Sendable (UUID, ExportState, Int) async -> Void) async -> BatchRunResult {
         var result = BatchRunResult()
         result.excluded = items.filter { $0.validation.metadata == nil }.count
         let eligible = items.filter { $0.validation.metadata != nil }
-        var allocator = DestinationAllocator(directory: destination, sources: items.map(\.url))
+        let sources = items.map(\.url)
+        var allocators: [String: DestinationAllocator] = [:]
         var completed = 0
         for (index, item) in eligible.enumerated() {
             if Task.isCancelled {
@@ -112,6 +126,10 @@ public enum BatchExport {
             do {
                 try boundary(item.id, .beforeInput)
                 try Task.checkCancellation()
+                let directory = destinationFor(item).standardizedFileURL
+                var allocator = allocators[directory.path]
+                    ?? DestinationAllocator(directory: directory, sources: sources, suffix: suffix)
+                defer { allocators[directory.path] = allocator }
                 let outputs = try autoreleasepool {
                     let source = try SourceValidation.load(item.url, identity: item.identity, validated: item.validation.metadata)
                     return try save(source, watermark: watermark, settings: policy.resolve(for: item.url, settings: settings),

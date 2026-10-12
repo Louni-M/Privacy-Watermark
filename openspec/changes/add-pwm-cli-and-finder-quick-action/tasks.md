@@ -2,8 +2,8 @@
 
 ## 1. Generalize core export
 
-- [ ] 1.1 Add a `suffix` parameter to `DestinationAllocator` (default `"_watermarked"`) and verify that new `WatermarkCoreTests` cover `_stripped` names, ` (2)` suffixes and page-series folders, and that existing naming tests pass unchanged.
-- [ ] 1.2 Add a `BatchExport.run` overload taking a per-item destination closure and a suffix, with one allocator per directory that protects all run sources. Make the existing signature forward to it. Verify with tests that sources in two folders each get a copy beside them, that saved + failed + excluded + not processed equals the source count, and that `scripts/test.sh` passes with no app test changes.
+- [x] 1.1 Add a `suffix` parameter to `DestinationAllocator` (default `"_watermarked"`) and verify that new `WatermarkCoreTests` cover `_stripped` names, ` (2)` suffixes and page-series folders, and that existing naming tests pass unchanged.
+- [x] 1.2 Add a `BatchExport.run` overload taking a per-item destination closure and a suffix, with one allocator per directory that protects all run sources. Make the existing signature forward to it. Verify with tests that sources in two folders each get a copy beside them, that saved + failed + excluded + not processed equals the source count, and that `scripts/test.sh` passes with no app test changes.
 
 ## 2. Argument parsing and help
 

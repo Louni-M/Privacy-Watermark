@@ -109,6 +109,49 @@ struct BatchExportTests {
         #expect(unicode.lastPathComponent.hasSuffix(" (2)"))
     }
 
+    @Test func allocatorUsesRequestedSuffix() throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        try Data().write(to: root.appendingPathComponent("photo_stripped.jpg"))
+        var allocator = DestinationAllocator(directory: root, sources: [root.appendingPathComponent("photo.jpg")], suffix: "_stripped")
+        #expect(allocator.allocate(source: root.appendingPathComponent("photo.jpg"), format: .jpg, pageSeries: false)
+            .lastPathComponent == "photo_stripped (2).jpg")
+        #expect(allocator.allocate(source: root.appendingPathComponent("photo.jpg"), format: .jpg, pageSeries: false)
+            .lastPathComponent == "photo_stripped (3).jpg")
+        #expect(allocator.allocate(source: root.appendingPathComponent("lease.pdf"), format: .png, pageSeries: true)
+            .lastPathComponent == "lease_stripped")
+        var standard = DestinationAllocator(directory: root, sources: [])
+        #expect(standard.allocate(source: root.appendingPathComponent("photo.jpg"), format: .jpg, pageSeries: false)
+            .lastPathComponent == "photo_watermarked.jpg")
+    }
+
+    @Test func runPublishesBesideEachSource() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let left = root.appendingPathComponent("left"), right = root.appendingPathComponent("right")
+        for folder in [left, right] { try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false) }
+        let first = try item(left, name: "document.pdf")
+        let second = try item(right, name: "document.pdf")
+        let taken = try item(right, name: "document_watermarked.pdf")
+        let takenBytes = try Data(contentsOf: taken.url)
+        var invalid = BatchItem(url: left.appendingPathComponent("corrupt.pdf")); invalid.validation = .invalid("Unreadable")
+        let items = [first, invalid, second]
+        let originals = try [first, second].map { try Data(contentsOf: $0.url) }
+        let saved = Saved()
+        let result = await BatchExport.run(items: items, watermark: WatermarkSettings(), policy: .original, settings: ExportSettings(),
+            destinationFor: { $0.url.deletingLastPathComponent() }, update: { _, state, _ in
+                if case .saved(let urls) = state { await saved.append(urls) }
+            })
+        #expect(result.saved == 2 && result.failed == 0 && result.excluded == 1 && result.unprocessed == 0)
+        #expect(result.saved + result.failed + result.excluded + result.unprocessed == items.count)
+        let outputs = await saved.urls
+        #expect(outputs.map { $0.deletingLastPathComponent().standardizedFileURL } == [left, right].map(\.standardizedFileURL))
+        #expect(outputs.map(\.lastPathComponent) == ["document_watermarked.pdf", "document_watermarked (2).pdf"])
+        #expect(try Data(contentsOf: taken.url) == takenBytes)
+        #expect(try [first, second].map { try Data(contentsOf: $0.url) } == originals)
+        for folder in [left, right] {
+            #expect(!((try FileManager.default.contentsOfDirectory(atPath: folder.path)).contains { $0.hasPrefix(".passport-") }))
+        }
+    }
+
     @Test func runContinuesAfterFailureAndCountsExcludedRows() async throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let first = try item(root, name: "first.pdf")
@@ -158,4 +201,9 @@ struct BatchExportTests {
         }
     }
 
+}
+
+private actor Saved {
+    var urls: [URL] = []
+    func append(_ values: [URL]) { urls += values }
 }
