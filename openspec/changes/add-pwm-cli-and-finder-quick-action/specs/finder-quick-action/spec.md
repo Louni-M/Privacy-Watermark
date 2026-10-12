@@ -7,7 +7,7 @@ Let users watermark one or more selected images and PDFs directly from the Finde
 ## ADDED Requirements
 
 ### Requirement: Finder Quick Action availability
-Once installed, a Quick Action named **Watermark** SHALL appear under Quick Actions in the Finder context menu and in the Finder Preview pane when the selection contains JPG/JPEG, PNG or PDF files. It SHALL accept one or several selected files. Unsupported files in a mixed selection SHALL be reported as excluded without blocking the others. Folders SHALL NOT be traversed. The Quick Action SHALL run without opening the Privacy Watermark window or adding a Dock icon for the app.
+Once installed, a Quick Action named **Watermark** SHALL appear under Quick Actions in the Finder context menu and in the Finder Preview pane when every selected item is a JPG/JPEG, PNG or PDF file. It SHALL accept one or several selected files. Finder SHALL NOT offer it for a selection that includes another file type or a folder, so unsupported files are never passed to it; inputs that `pwm` still rejects, such as a password-protected PDF, SHALL be reported as excluded without blocking the others. Folders SHALL NOT be traversed. The Quick Action SHALL run without opening the Privacy Watermark window or adding a Dock icon for the app.
 
 #### Scenario: Several files selected
 - **WHEN** the user selects `id.jpg` and `payslip.pdf`, Control-clicks and chooses Quick Actions → Watermark

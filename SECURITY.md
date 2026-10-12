@@ -27,6 +27,8 @@ Each input is staged in a private directory beside the destination. After every 
 
 The app presents safe error messages and does not create a diagnostic file log or record document contents, watermark text or private paths. macOS frameworks may emit their own system diagnostics. The app is ad-hoc signed, not notarized or App Sandbox enabled.
 
+The `pwm` command and the Finder **Watermark** Quick Action process documents locally on your Mac with the same code as the app, with no network access. They keep no log of document contents or watermark text, and their messages never include the watermark text. `pwm` writes only the exported copies, prints file paths and reasons to the terminal, and only reads the optional preset file (`~/.config/pwm/presets.json`). That file is plain text and can contain private watermark text, so protect it like other personal files.
+
 Progressive validation and sequential export are separate from the interactive preview worker. Only active operations retain full sources. Preview requests identify the item, fingerprint, page, settings revision and viewport; cancelled or stale requests cannot replace the current view. The preview cache has a 96-MiB budget and rendered preview buffers are capped at 16 megapixels. Large zoom requests render the visible region with bounded scratch buffers. Export still renders full-resolution pages and can require substantial memory. Cancellation is cooperative between safe processing boundaries; system decoding may finish before cancellation completes. Failed operations leave the app available for another attempt.
 
 ## Reporting a problem

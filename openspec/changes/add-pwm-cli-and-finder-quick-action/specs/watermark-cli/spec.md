@@ -7,7 +7,7 @@ Let users and scripts watermark local images and PDFs from the command line with
 ## ADDED Requirements
 
 ### Requirement: Command invocation and help
-The `pwm` command SHALL accept the watermark text as its first positional argument, followed by one or more input file paths: `pwm TEXT FILE… [options]`. Options MAY appear before, between or after positional arguments. `--` SHALL end option parsing so that paths beginning with `-` can be given. An empty TEXT SHALL be accepted, matching the app's blank-text behavior. `--help` and `-h` SHALL print usage and exit successfully without processing files. Usage SHALL list every option with its accepted values and default. `--version` SHALL print the version of the containing app release. An unknown option, a missing value, an invalid value, a missing TEXT or no input file SHALL print a specific error and a hint to use `--help`, process no file and exit with the usage error code.
+The `pwm` command SHALL accept the watermark text as its first positional argument, followed by one or more input file paths: `pwm TEXT FILE… [options]`. `--text TEXT` SHALL provide the text as an option instead, in which case every positional argument is an input file. Options MAY appear before, between or after positional arguments. `--` SHALL end option parsing so that paths beginning with `-` can be given. An empty TEXT SHALL be accepted, matching the app's blank-text behavior. `--help` and `-h` SHALL print usage and exit successfully without processing files. Usage SHALL list every option with its accepted values and default. `--version` SHALL print the version of the containing app release. An unknown option, a missing value, an invalid value, a missing TEXT or no input file SHALL print a specific error and a hint to use `--help`, process no file and exit with the usage error code.
 
 #### Scenario: Show help
 - **WHEN** the user runs `pwm --help`
@@ -24,7 +24,7 @@ The `pwm` command SHALL accept the watermark text as its first positional argume
 - **THEN** `-scan.pdf` is treated as an input file, not as an option
 
 ### Requirement: Settings match the app
-The command SHALL expose the app's shared settings, with the app's defaults and ranges: `--date` (append today's date as a `DD-MM-YYYY` line, off by default), `--opacity` 0–100 (default 30), `--size` 12–72 (default 36), `--spacing` 50–300 (default 150), `--color white|black|gray` (default black), `--direction up|down` (default up), `--format keep|pdf|jpg|png` (default keep), `--pdf-mode flattened|text` (default flattened) and `--dpi 300|450|600` (default 450). Keep original format SHALL map PDF to PDF, PNG to PNG and JPG/JPEG to JPG. Text line breaks given as real newlines or the two-character sequence `\n` SHALL become separate watermark lines. Text, including any date line, SHALL be at most 200 characters. Text that is longer SHALL be rejected with a usage error rather than silently shortened. For the same input and settings, the rendered output SHALL be equivalent to the app's export.
+The command SHALL expose the app's shared settings, with the app's defaults and ranges: `--date` (append today's date as a `DD-MM-YYYY` line, off by default; `--no-date` turns it off), `--opacity` 0–100 (default 30), `--size` 12–72 (default 36), `--spacing` 50–300 (default 150), `--color white|black|gray` (default black), `--direction up|down` (default up), `--format keep|pdf|jpg|png` (default keep), `--pdf-mode flattened|text` (default flattened) and `--dpi 300|450|600` (default 450). Keep original format SHALL map PDF to PDF, PNG to PNG and JPG/JPEG to JPG. Text line breaks given as real newlines or the two-character sequence `\n` SHALL become separate watermark lines. Text, including any date line, SHALL be at most 200 characters. Text that is longer SHALL be rejected with a usage error rather than silently shortened. For the same input and settings, the rendered output SHALL be equivalent to the app's export.
 
 #### Scenario: Defaults equal the app
 - **WHEN** the user runs `pwm "COPY" contract.pdf` with no appearance or format options
@@ -92,15 +92,15 @@ Messages SHALL NOT include watermark text. The command SHALL NOT write diagnosti
 - **AND** the summary counts one saved and two not processed, and the exit status is 130
 
 ### Requirement: Named presets
-`--preset NAME` SHALL load text and settings from the user's preset file. The file is located at `$XDG_CONFIG_HOME/pwm/presets.json`, or at `~/.config/pwm/presets.json` when `XDG_CONFIG_HOME` is unset. A preset MAY define any of text, date, opacity, size, spacing, color, direction, format, PDF mode and DPI. Explicit command-line options and an explicitly given TEXT SHALL override preset values. When a preset defines text, TEXT MAY be omitted, and every positional argument is then an input file. `--list-presets` SHALL print the available preset names. An unknown preset name SHALL be a usage error. A missing file SHALL only be an error when a preset is requested. A malformed file or out-of-range preset value SHALL report the file and the problem and exit with the configuration error code. The command SHALL only read the preset file and SHALL never create or modify it.
+`--preset NAME` SHALL load text and settings from the user's preset file. The file is located at `$XDG_CONFIG_HOME/pwm/presets.json`, or at `~/.config/pwm/presets.json` when `XDG_CONFIG_HOME` is unset. A preset MAY define any of text, date, opacity, size, spacing, color, direction, format, PDF mode and DPI. Explicit command-line options, including `--text`, `--date` and `--no-date`, SHALL override preset values. When a preset defines text, positional TEXT SHALL NOT be expected, and every positional argument is then an input file. `--list-presets` SHALL print the available preset names. An unknown preset name SHALL be a usage error. A missing file SHALL only be an error when a preset is requested. A malformed file or out-of-range preset value SHALL report the file and the problem and exit with the configuration error code. The command SHALL only read the preset file and SHALL never create or modify it.
 
 #### Scenario: Use a preset
 - **WHEN** the preset `rental` defines text `Rental application`, date true and opacity 40, and the user runs `pwm --preset rental id.jpg payslip.pdf`
 - **THEN** both files are watermarked with that text, today's date line and 40% opacity
 
 #### Scenario: Override a preset value
-- **WHEN** the user runs `pwm --preset rental id.jpg --opacity 20`
-- **THEN** opacity 20 is used and the preset's other values are kept
+- **WHEN** the user runs `pwm --preset rental id.jpg --opacity 20 --text "Guarantor file"`
+- **THEN** opacity 20 and the text `Guarantor file` are used, and the preset's other values are kept
 
 #### Scenario: Malformed preset file
 - **WHEN** `presets.json` is not valid JSON and the user requests a preset
