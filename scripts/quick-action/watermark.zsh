@@ -23,10 +23,31 @@ end run
 APPLESCRIPT
 }
 
-notify() {
-    osascript - "$1" <<'APPLESCRIPT' >/dev/null
+# Success confirmation that closes by itself, not a notification:
+# from osascript it is posted as Script Editor, which shows a blank banner
+# and opens Script Editor on recent macOS. Prints the button, or nothing.
+confirm() {
+    osascript - "$1" "$2" <<'APPLESCRIPT'
 on run argv
-    display notification (item 1 of argv) with title "Watermark"
+    set answer to display alert (item 1 of argv) message (item 2 of argv) buttons {"Reveal in Finder", "OK"} default button "OK" giving up after 5
+    if gave up of answer then return ""
+    return button returned of answer
+end run
+APPLESCRIPT
+}
+
+# Selects the saved copies in Finder.
+reveal() {
+    osascript - "$@" <<'APPLESCRIPT' >/dev/null || open -R -- "$1"
+on run argv
+    set theItems to {}
+    repeat with thePath in argv
+        set end of theItems to (POSIX file (contents of thePath)) as alias
+    end repeat
+    tell application "Finder"
+        reveal theItems
+        activate
+    end tell
 end run
 APPLESCRIPT
 }
@@ -115,7 +136,8 @@ fi
 
 if (( code == 0 )); then
     (( ${#saved} == 1 )) && noun=copy || noun=copies
-    notify "${#saved} $noun saved beside the originals."
+    answer=$(confirm "${#saved} $noun saved" "Each copy is beside its original.") || exit 0
+    [[ $answer == "Reveal in Finder" ]] && reveal "${saved[@]}"
     exit 0
 fi
 
@@ -141,20 +163,7 @@ title="Some files were not watermarked"
 (( code == 130 )) && title="Watermark was interrupted"
 if (( ${#saved} )); then
     answer=$(alert "$title" "${(F)lines}" "OK" "Reveal in Finder") || exit 0
-    if [[ $answer == "Reveal in Finder" ]]; then
-        osascript - "${saved[@]}" <<'APPLESCRIPT' >/dev/null || open -R -- "${saved[1]}"
-on run argv
-    set theItems to {}
-    repeat with thePath in argv
-        set end of theItems to (POSIX file (contents of thePath)) as alias
-    end repeat
-    tell application "Finder"
-        reveal theItems
-        activate
-    end tell
-end run
-APPLESCRIPT
-    fi
+    [[ $answer == "Reveal in Finder" ]] && reveal "${saved[@]}"
 else
     alert "$title" "${(F)lines}" >/dev/null
 fi

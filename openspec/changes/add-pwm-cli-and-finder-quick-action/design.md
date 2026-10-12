@@ -62,7 +62,7 @@ A strip-only run is an export with empty watermark text, the source's own image 
   - resolves `pwm` as described in the spec, with the installed path written by `install.sh` into `Contents/Resources/pwm-path`;
   - shows `choose from list` when presets exist, then `display dialog` with the buttons Cancel / Without date / With date (default). Text is passed to and from `osascript` through `argv` or stdin, never interpolated into AppleScript source;
   - runs `pwm` without `--out`, captures stdout paths and stderr;
-  - posts `display notification` on full success. Otherwise it shows `display alert` with the reasons and an optional **Reveal in Finder**, which calls `open -R` or Finder `reveal` with the saved paths.
+  - on full success, shows a `display alert` confirmation with **Reveal in Finder** that closes itself (`giving up after 5`). It does not use `display notification`: posted from `osascript`, it is attributed to Script Editor, and on macOS 27 it showed an empty banner and opened Script Editor. Otherwise it shows `display alert` with the reasons and an optional **Reveal in Finder**, which calls `open -R` or Finder `reveal` with the saved paths.
 - `install.sh` copies the template to `~/Library/Services/Watermark.workflow`, replacing only that bundle. It records the `pwm` path, optionally runs `ln -s` into `~/.local/bin` with `--link`, and refreshes services with `/System/Library/CoreServices/pbs -update`. The scripts are also embedded in the app at `Contents/Resources/quick-action/`, so DMG users can run them from the installed app.
 - *Alternative:* a Shortcuts `.shortcut` file. Rejected because shared shortcuts must be signed and imported interactively, which cannot be scripted or diffed. App Intents and Finder extensions are later options (see proposal Non-goals).
 
@@ -72,7 +72,7 @@ A strip-only run is an export with empty watermark text, the source's own image 
 ## Risks / Trade-offs
 
 - [The hand-written `document.wflow` format is undocumented and may change between macOS versions] → Keep the template minimal and the logic outside it. Manual acceptance on macOS 14 and the current macOS: install, Finder menu, run, uninstall. Uninstall is a plain bundle removal.
-- [Quick Action dialogs and notifications are attributed to Automator or Script Editor, and the first run may ask for automation or notification permission] → Document the expected one-time prompts. Full-success feedback is a notification, not a modal, so a denied notification permission loses no data.
+- [Quick Action dialogs are attributed to Automator or `osascript`, and the first Reveal in Finder may ask for permission to control Finder] → Document the expected one-time prompt. Full-success feedback is a confirmation that closes itself rather than a notification, so it needs no notification permission and does not depend on Script Editor.
 - [An ad-hoc signed `pwm` inside a downloaded, quarantined app may be blocked when run from the Quick Action before the app has been approved once] → Document that the app must be opened once and approved first. Do not remove quarantine.
 - [JPEG re-encoding in `--strip-only` causes a small generation loss] → This is documented. It matches image export, and lossless stripping can be added later behind the same flag.
 - [The existing image pipeline does not apply EXIF orientation, so a rotated-camera photo may export sideways, both in the app and with `pwm`] → Out of scope for parity. It is tracked separately and verified with a fixture before release notes promise otherwise.

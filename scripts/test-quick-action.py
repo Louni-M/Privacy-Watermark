@@ -25,8 +25,8 @@ ACCENTED = "Dossier location — Agence Hôtel-de-Ville"
 OSASCRIPT = r'''#!/usr/bin/env python3
 import json, os, sys
 script = sys.stdin.read()
-kind = next(k for k, marker in [("list", "choose from list"), ("dialog", "display dialog"), ("alert", "display alert"),
-             ("notification", "display notification"), ("reveal", "reveal theItems")] if marker in script)
+kind = next(k for k, marker in [("list", "choose from list"), ("dialog", "display dialog"), ("confirmation", "giving up after"),
+             ("alert", "display alert"), ("reveal", "reveal theItems")] if marker in script)
 args = [a for a in sys.argv[1:] if a != "-"]
 with open(os.environ["STUB_LOG"], "a", encoding="utf-8") as log:
     log.write(json.dumps({"kind": kind, "argv": args}) + "\n")
@@ -41,7 +41,7 @@ if answer == "CANCEL":
 if kind == "dialog":
     button, text = answer
     sys.stdout.buffer.write((button + "\n" + text + "\n").encode())
-elif kind in ("list", "alert"):
+elif kind in ("list", "alert", "confirmation"):
     sys.stdout.buffer.write(((answer or "") + "\n").encode())
 '''
 
@@ -169,9 +169,9 @@ class WatermarkScriptTests(QuickActionCase):
         self.assertTrue((self.root / "docs" / "payslip_watermarked.pdf").is_file())
         self.assertEqual([photo.read_bytes(), payslip.read_bytes()], originals)
         shown = self.dialogs()
-        self.assertEqual([d["kind"] for d in shown], ["dialog", "notification"])
+        self.assertEqual([d["kind"] for d in shown], ["dialog", "confirmation"])
         self.assertEqual(shown[0]["argv"][1], "", "the text field starts empty")
-        self.assertEqual(shown[1]["argv"], ["2 copies saved beside the originals."])
+        self.assertEqual(shown[1]["argv"], ["2 copies saved", "Each copy is beside its original."])
         self.assertEqual(os.listdir(self.root / "tmp"), [])
 
     def test_without_date(self):
@@ -179,7 +179,19 @@ class WatermarkScriptTests(QuickActionCase):
         photo = self.document("id.jpg", "photo.jpg")
         self.run_quick_action([photo], {"dialog": [["Without date", "COPY"]]})
         self.assertEqual(self.exports(), [["--text", "COPY", "--no-date", "--", str(photo)]])
-        self.assertEqual(self.dialogs()[-1]["argv"], ["1 copy saved beside the originals."])
+        self.assertEqual(self.dialogs()[-1]["argv"], ["1 copy saved", "Each copy is beside its original."])
+
+    def test_success_confirmation_can_reveal_the_copies(self):
+        self.install()
+        photo, payslip = self.document("id.jpg", "photo.jpg"), self.document("payslip.pdf", "document.pdf")
+        self.run_quick_action([photo, payslip], {"dialog": [["With date", "COPY"]], "confirmation": "Reveal in Finder"})
+        shown = self.dialogs()
+        self.assertEqual([d["kind"] for d in shown], ["dialog", "confirmation", "reveal"])
+        self.assertEqual([os.path.realpath(p) for p in shown[2]["argv"]],
+                         [str(self.root / "docs" / "id_watermarked.jpg"), str(self.root / "docs" / "payslip_watermarked.pdf")])
+
+    def test_feedback_never_posts_a_notification(self):
+        self.assertNotIn("display notification", (QUICK_ACTION / "watermark.zsh").read_text(encoding="utf-8"))
 
     def test_cancel_writes_nothing_and_shows_no_error(self):
         self.install()
@@ -262,7 +274,7 @@ class WatermarkScriptTests(QuickActionCase):
         self.run_quick_action([photo], {"list": "rental"})
         shown = self.dialogs()
         self.assertEqual(shown[0], {"kind": "list", "argv": ["plain", "rental", "Custom text…"]})
-        self.assertEqual([d["kind"] for d in shown], ["list", "notification"])
+        self.assertEqual([d["kind"] for d in shown], ["list", "confirmation"])
         self.assertEqual(self.exports(), [["--preset", "rental", "--", str(photo)]])
 
         # A preset without text asks for it, keeping the preset's settings.

@@ -30,11 +30,11 @@ Before processing, the Quick Action SHALL ask for the watermark text in a dialog
 - **THEN** the files are watermarked with the `rental` preset without asking for text
 
 ### Requirement: Completion feedback
-The Quick Action SHALL report completion. When every file is saved, it SHALL post a notification with the number of saved copies. When any file failed or was excluded, it SHALL show an alert listing each affected file name with its reason and the saved / failed / excluded counts. When at least one copy was saved, the alert SHALL offer **Reveal in Finder**, which selects the saved copies. Feedback SHALL NOT include the watermark text.
+The Quick Action SHALL report completion. When every file is saved, it SHALL show a confirmation with the number of saved copies that closes by itself after a few seconds and offers **Reveal in Finder**. It SHALL NOT use a system notification, which macOS attributes to Script Editor. When any file failed or was excluded, it SHALL show an alert listing each affected file name with its reason and the saved / failed / excluded counts. When at least one copy was saved, the alert SHALL offer **Reveal in Finder**, which selects the saved copies. Feedback SHALL NOT include the watermark text.
 
 #### Scenario: All saved
 - **WHEN** three files are watermarked successfully
-- **THEN** a notification reports 3 saved copies and no dialog requires dismissal
+- **THEN** a confirmation reports 3 saved copies and closes by itself, so nothing requires dismissal
 
 #### Scenario: Partial failure
 - **WHEN** one of two selected files is a password-protected PDF

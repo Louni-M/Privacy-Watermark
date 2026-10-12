@@ -10,7 +10,7 @@ Watermarking a single document today means opening the app, adding the file, typ
 - Clear exit codes, a stderr summary using the app's outcome categories (saved / failed / excluded), and a `--help` text.
 - Optional named presets read from a user configuration file (`~/.config/pwm/presets.json`), so text and appearance need not be retyped.
 - `--strip-only` to remove EXIF/GPS metadata from images without adding a watermark.
-- A Finder Quick Action, **Watermark**, for selected JPG/JPEG/PNG/PDF files. It asks for the watermark text in a dialog, with today's date pre-selected, calls `pwm` and writes copies beside the originals. It then posts a completion notification and can reveal the results in Finder. The Quick Action locates `pwm` without relying on `PATH` and forces a UTF-8 locale, so accented text is not corrupted.
+- A Finder Quick Action, **Watermark**, for selected JPG/JPEG/PNG/PDF files. It asks for the watermark text in a dialog, with today's date pre-selected, calls `pwm` and writes copies beside the originals. It then confirms completion and can reveal the results in Finder. The Quick Action locates `pwm` without relying on `PATH` and forces a UTF-8 locale, so accented text is not corrupted.
 - `scripts/build-app.sh` embeds `pwm` in the universal app bundle. An install script installs the Quick Action in `~/Library/Services` and optionally links `pwm` into a user `bin` directory.
 - No third-party dependency: arguments use a small in-house parser rather than `swift-argument-parser`.
 

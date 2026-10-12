@@ -36,7 +36,7 @@
 - [x] 6.2 Implement `watermark.zsh`:
   - resolve `pwm` from the recorded path, then `/Applications`, then `~/Applications`, with an alert if it is missing;
   - show the preset list when presets exist, then the text dialog (Cancel / Without date / With date by default), passing text through argv or stdin only and re-prompting on the 200-character error;
-  - run `pwm`, then post a notification on full success or an alert with reasons and Reveal in Finder otherwise.
+  - run `pwm`, then show a self-closing confirmation with Reveal in Finder on full success, or an alert with reasons and Reveal in Finder otherwise.
 
   Verify with `zsh -n`, and with a test harness that stubs `osascript` and `pwm` and covers cancel, a missing `pwm`, partial failure and accented text under `LC_ALL=C`.
 - [x] 6.3 Implement `install.sh`, with an optional `--link [DIR]` and a `PATH` hint, and `uninstall.sh`. Neither needs administrator rights or touches quarantine, and uninstall removes only what install created. Then refresh services with `pbs -update`. Verify with a test that installs into a temporary `HOME`, checks the recorded `pwm` path, link, reinstall and uninstall, and confirms no other files changed.
