@@ -3,6 +3,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 developer_dir="$(xcode-select -p)"
 testing_dir="$developer_dir/Library/Developer"
+# The pwm end-to-end tests run the built binary, which swift test does not relink.
+swift build --product pwm
 if [[ -d "$testing_dir/Frameworks/Testing.framework" ]]; then
     # Standalone Command Line Tools ship Testing but SwiftPM does not currently
     # add its framework/interoperability search paths automatically.
